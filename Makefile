@@ -2,7 +2,7 @@ SHELL		:= /bin/bash
 BUILD		?= /tmp/build
 M		?= $(BUILD)/milestones
 MAKEDIR		:= $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
-SCRIPTDIR	:= $(MAKEDIR)../scripts
+SCRIPTDIR	:= $(MAKEDIR)/scripts
 RESOURCEDIR	:= $(MAKEDIR)/resources
 WORKSPACE	?= $(HOME)
 VENV		?= $(BUILD)/venv/aiab
@@ -130,8 +130,8 @@ $(M)/fabric: | $(M)/setup /opt/cni/bin/simpleovs /opt/cni/bin/static
 	sudo ip route replace 192.168.252.0/24 via 192.168.251.1 dev enb
 	kubectl apply -f $(RESOURCEDIR)/router.yaml
 	kubectl wait pod -n default --for=condition=Ready -l app=router --timeout=300s
-	kubectl -n default exec router ip route add 10.250.0.0/16 via 192.168.250.3
-	kubectl delete net-attach-def sgi-net
+	kubectl -n default exec router ip route add 20.250.0.0/16 via 192.168.250.3
+	kubectl delete net-attach-def core-net
 	touch $@
 
 $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric
@@ -139,15 +139,17 @@ $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fab
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
+		--set images.pullPolicy=Always \
 		omec-control-plane \
-		cord/omec-control-plane && \
+		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-control-plane && \
 	kubectl rollout status -n omec statefulset spgwc && \
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
+		--set images.pullPolicy=Always \
 		omec-user-plane \
-		cord/omec-user-plane && \
-	kubectl rollout status -n omec statefulset spgwu
+		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-user-plane && \
+	kubectl rollout status -n omec statefulset upf
 	touch $@
 
 # UE images includes kernel module, ue_ip.ko
@@ -168,7 +170,8 @@ $(M)/oaisim: | $(M)/ue-image $(M)/omec
 	sudo ip addr add 127.0.0.2/8 dev lo || true
 	$(eval mme_iface=$(shell ip -4 route list default | awk -F 'dev' '{ print $$2; exit }' | awk '{ print $$1 }'))
 	helm upgrade --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(AIABVALUES) \
-		--set config.enb.networks.s1_mme.interface=$(mme_iface)
+		--set config.enb.networks.s1_mme.interface=$(mme_iface) \
+		--set images.pullPolicy=IfNotPresent
 	kubectl rollout status -n omec statefulset ue
 	@timeout 60s bash -c \
 	"until ip addr show oip1 | grep -q inet; \
@@ -196,9 +199,9 @@ reset-test:
 clean: reset-test
 	helm delete --purge $(shell helm ls -q) || true
 	kubectl delete po router || true
-	kubectl delete net-attach-def sgi-net || true
-	sudo ovs-vsctl del-br br-s1u-net || true
-	sudo ovs-vsctl del-br br-sgi-net || true
+	kubectl delete net-attach-def core-net || true
+	sudo ovs-vsctl del-br br-access-net || true
+	sudo ovs-vsctl del-br br-core-net || true
 	sudo apt remove --purge openvswitch-switch -y
 	source "$(VENV)/bin/activate" && cd $(BUILD)/kubespray; \
 	ansible-playbook -b -i inventory/local/hosts.ini reset.yml

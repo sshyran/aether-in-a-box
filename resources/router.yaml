@@ -16,7 +16,7 @@
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
-  name: sgi-net
+  name: core-net
 spec:
   config: '{
     "type": "simpleovs",
@@ -28,7 +28,7 @@ spec:
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
-  name: s1u-net
+  name: access-net
 spec:
   config: '{
     "type": "simpleovs",
@@ -57,9 +57,9 @@ metadata:
     app: router
   annotations:
     k8s.v1.cni.cncf.io/networks: '[
-            { "name": "sgi-net", "interface": "sgi-rtr", "ips": "192.168.250.1/24" },
+            { "name": "core-net", "interface": "sgi-rtr", "ips": "192.168.250.1/24" },
             { "name": "enb-net", "interface": "enb-rtr", "ips": "192.168.251.1/24" },
-            { "name": "s1u-net", "interface": "s1u-rtr", "ips": "192.168.252.1/24" }
+            { "name": "access-net", "interface": "s1u-rtr", "ips": "192.168.252.1/24" }
     ]'
 spec:
   containers:

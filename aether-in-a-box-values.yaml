@@ -12,19 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-images:
-  tags:
-    init: docker.io/omecproject/pod-init:1.0.0
-    depCheck: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-    hssdb: docker.io/omecproject/c3po-hssdb:master-2c49778
-    hss: docker.io/omecproject/c3po-hss:master-2c49778
-    mme: docker.io/omecproject/openmme:master-ab37a71
-    mmeExporter: docker.io/omecproject/mme-exporter:paging-latest
-    spgwc: docker.io/omecproject/ngic-cp:central-cp-multi-upfs-e8257e7
-    bess: docker.io/omecproject/upf-epc-bess:master-554b670
-    cpiface: docker.io/omecproject/upf-epc-cpiface:master-554b670
-  pullPolicy: IfNotPresent
-
 # cassandra values
 cassandra:
   config:
@@ -35,8 +22,11 @@ resources:
   enabled: false
 
 config:
-  spgwu:
-    mode: "af_packet"
+  spgwc:
+    pfcp: true
+    ueIpPool:
+      ip: 20.250.0.0
+  upf:
     name: "oaisim"
     sriov:
       enabled: false
@@ -44,6 +34,9 @@ config:
       enabled: false
     cniPlugin: simpleovs
     ipam: static
+    cfgFiles:
+      upf.json:
+        mode: af_packet
   mme:
     cfgFiles:
       config.json:
@@ -56,12 +49,16 @@ config:
             dig1: 0
             dig2: 1
             dig3: -1
+          apnlist:
+            internet: "spgwc"
   hss:
     bootstrap:
-      key: "465b5ce8b199b49faa5f0a2ee238a6bc"
-      opc: "d4416644f6154936193433dd20a0ace0"
       users:
-        - imsiStart: "208014567891201"
+        - apn: "internet"
+          key: "465b5ce8b199b49faa5f0a2ee238a6bc"
+          opc: "d4416644f6154936193433dd20a0ace0"
+          sqn: 96
+          imsiStart: "208014567891201"
           msisdnStart: "1122334455"
           count: 10
   # oaisim values
