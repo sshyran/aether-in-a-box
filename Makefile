@@ -5,8 +5,8 @@ MAKEDIR		:= $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 SCRIPTDIR	:= $(MAKEDIR)../scripts
 RESOURCEDIR	:= $(MAKEDIR)/resources
 WORKSPACE	?= $(HOME)
-VENV		?= $(BUILD)/venv/ciab
-CIABVALUES	?= $(MAKEDIR)/comac-in-a-box-values.yaml
+VENV		?= $(BUILD)/venv/aiab
+AIABVALUES	?= $(MAKEDIR)/aether-in-a-box-values.yaml
 
 KUBESPRAY_VERSION ?= release-2.11
 DOCKER_VERSION	?= 18.09
@@ -29,10 +29,10 @@ cpu_model	:= $(shell lscpu | grep 'Model:' | awk '{print $$2}')
 os_vendor	:= $(shell lsb_release -i -s)
 os_release	:= $(shell lsb_release -r -s)
 
-ciab: $(M)/system-check $(M)/omec
+aiab: $(M)/system-check $(M)/omec
 oaisim: $(M)/oaisim
 
-.PHONY: ciab oaisim test reset-test clean
+.PHONY: aiab oaisim test reset-test clean
 
 $(M):
 	mkdir -p $(M)
@@ -138,13 +138,13 @@ $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fab
 	helm repo update
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
-		--values $(CIABVALUES) \
+		--values $(AIABVALUES) \
 		omec-control-plane \
 		cord/omec-control-plane && \
 	kubectl rollout status -n omec statefulset spgwc && \
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
-		--values $(CIABVALUES) \
+		--values $(AIABVALUES) \
 		omec-user-plane \
 		cord/omec-user-plane && \
 	kubectl rollout status -n omec statefulset spgwu
@@ -167,7 +167,7 @@ $(M)/ue-image: | $(M)/k8s-ready $(BUILD)/openairinterface
 $(M)/oaisim: | $(M)/ue-image $(M)/omec
 	sudo ip addr add 127.0.0.2/8 dev lo || true
 	$(eval mme_iface=$(shell ip -4 route list default | awk -F 'dev' '{ print $$2; exit }' | awk '{ print $$1 }'))
-	helm upgrade --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(CIABVALUES) \
+	helm upgrade --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(AIABVALUES) \
 		--set config.enb.networks.s1_mme.interface=$(mme_iface)
 	kubectl rollout status -n omec statefulset ue
 	@timeout 60s bash -c \
