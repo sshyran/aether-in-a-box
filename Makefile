@@ -139,14 +139,12 @@ $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fab
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
-		--set images.pullPolicy=Always \
 		omec-control-plane \
 		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-control-plane && \
 	kubectl rollout status -n omec statefulset spgwc && \
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
-		--set images.pullPolicy=Always \
 		omec-user-plane \
 		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-user-plane && \
 	kubectl rollout status -n omec statefulset upf
