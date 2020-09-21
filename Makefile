@@ -192,7 +192,8 @@ reset-test:
 	helm delete --purge oaisim || true
 	helm delete --purge omec-control-plane || true
 	helm delete --purge omec-user-plane || true
-	cd $(M); rm -f oaisim omec
+	kubectl delete po router || true
+	cd $(M); rm -f oaisim omec fabric
 
 clean: reset-test
 	helm delete --purge $(shell helm ls -q) || true
