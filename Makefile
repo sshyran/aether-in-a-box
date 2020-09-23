@@ -8,9 +8,9 @@ WORKSPACE	?= $(HOME)
 VENV		?= $(BUILD)/venv/aiab
 AIABVALUES	?= $(MAKEDIR)/aether-in-a-box-values.yaml
 
-KUBESPRAY_VERSION ?= release-2.11
-DOCKER_VERSION	?= 18.09
-K8S_VERSION	?= v1.15.3
+KUBESPRAY_VERSION ?= release-2.14
+DOCKER_VERSION	?= 19.03
+K8S_VERSION	?= v1.18.9
 HELM_VERSION	?= v2.16.1
 
 # used to start logging/monitoring and other infrastructure charts
@@ -88,7 +88,7 @@ $(M)/k8s-ready: | $(M)/setup $(BUILD)/kubespray $(VENV)/bin/activate $(M)/kubesp
 		-e "{'docker_version' : $(DOCKER_VERSION)}" \
 		-e "{'docker_iptables_enabled' : True}" \
 		-e "{'kube_version' : $(K8S_VERSION)}" \
-		-e "{'kube_network_plugin_multus' : True, 'multus_version' : v3.2}" \
+		-e "{'kube_network_plugin_multus' : True, 'multus_version' : stable, 'multus_cni_version' : 0.3.1}" \
 		-e "{'kube_proxy_metrics_bind_address' : 0.0.0.0:10249}" \
 		-e "{'kube_pods_subnet' : 192.168.0.0/17, 'kube_service_addresses' : 192.168.128.0/17}" \
 		-e "{'kube_apiserver_node_port_range' : 2000-36767}" \
@@ -130,7 +130,7 @@ $(M)/fabric: | $(M)/setup /opt/cni/bin/simpleovs /opt/cni/bin/static
 	sudo ip route replace 192.168.252.0/24 via 192.168.251.1 dev enb
 	kubectl apply -f $(RESOURCEDIR)/router.yaml
 	kubectl wait pod -n default --for=condition=Ready -l app=router --timeout=300s
-	kubectl -n default exec router ip route add 20.250.0.0/16 via 192.168.250.3
+	kubectl -n default exec router ip route add 10.250.0.0/16 via 192.168.250.3
 	kubectl delete net-attach-def core-net
 	touch $@
 

@@ -25,7 +25,7 @@ config:
   spgwc:
     pfcp: true
     ueIpPool:
-      ip: 20.250.0.0
+      ip: 10.250.0.0
   upf:
     name: "oaisim"
     sriov:
