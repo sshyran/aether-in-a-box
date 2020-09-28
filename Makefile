@@ -141,13 +141,13 @@ $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fab
 		--values $(AIABVALUES) \
 		omec-control-plane \
 		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-control-plane && \
-	kubectl rollout status -n omec statefulset spgwc && \
+	kubectl wait pod -n omec --for=condition=Ready -l release=omec-control-plane --timeout=300s && \
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
 		omec-user-plane \
 		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-user-plane && \
-	kubectl rollout status -n omec statefulset upf
+	kubectl wait pod -n omec --for=condition=Ready -l release=omec-user-plane --timeout=300s
 	touch $@
 
 # UE images includes kernel module, ue_ip.ko
@@ -182,9 +182,10 @@ $(M)/oaisim: | $(M)/ue-image $(M)/omec
 test: | $(M)/fabric $(M)/omec $(M)/oaisim
 	@sleep 5
 	@echo "Test1: ping from UE to SGI network gateway"
-	ping -I oip1 192.168.250.1 -c 3
+	ping -I oip1 192.168.250.1 -c 15
 	@echo "Test2: ping from UE to 8.8.8.8"
 	ping -I oip1 8.8.8.8 -c 3
+	@echo "Test3: ping from UE to google.com"
 	ping -I oip1 google.com -c 3
 	@echo "Finished to test"
 
