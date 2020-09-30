@@ -14,8 +14,8 @@ AIABVALUES	?= $(MAKEDIR)/aether-in-a-box-values.yaml
 
 KUBESPRAY_VERSION ?= release-2.14
 DOCKER_VERSION	?= 19.03
-K8S_VERSION	?= v1.18.9
-HELM_VERSION	?= v2.16.1
+K8S_VERSION	    ?= v1.18.9
+HELM_VERSION	?= v3.2.4
 
 # used to start logging/monitoring and other infrastructure charts
 INFRA_CHARTS	?=
@@ -109,7 +109,6 @@ $(M)/k8s-ready: | $(M)/setup $(BUILD)/kubespray $(VENV)/bin/activate $(M)/kubesp
 	touch $@
 
 $(M)/helm-ready: | $(M)/k8s-ready
-	helm init --wait --client-only
 	helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
 	helm repo add cord https://charts.opencord.org
 	touch $@
@@ -139,19 +138,18 @@ $(M)/fabric: | $(M)/setup /opt/cni/bin/simpleovs /opt/cni/bin/static
 	touch $@
 
 $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric
+	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
 	helm repo update
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
 		omec-control-plane \
 		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-control-plane && \
-	kubectl wait pod -n omec --for=condition=Ready -l release=omec-control-plane --timeout=300s && \
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
 		omec-user-plane \
 		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-user-plane && \
-	kubectl wait pod -n omec --for=condition=Ready -l release=omec-user-plane --timeout=300s
 	touch $@
 
 # UE images includes kernel module, ue_ip.ko
@@ -171,7 +169,7 @@ $(M)/ue-image: | $(M)/k8s-ready $(BUILD)/openairinterface
 $(M)/oaisim: | $(M)/ue-image $(M)/omec
 	sudo ip addr add 127.0.0.2/8 dev lo || true
 	$(eval mme_iface=$(shell ip -4 route list default | awk -F 'dev' '{ print $$2; exit }' | awk '{ print $$1 }'))
-	helm upgrade --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(AIABVALUES) \
+	helm upgrade --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim $(WORKSPACE)/cord/helm-charts/oaisim -f $(AIABVALUES) \
 		--set config.enb.networks.s1_mme.interface=$(mme_iface) \
 		--set images.pullPolicy=IfNotPresent
 	kubectl rollout status -n omec statefulset ue
@@ -194,11 +192,10 @@ test: | $(M)/fabric $(M)/omec $(M)/oaisim
 	@echo "Finished to test"
 
 reset-test:
-	helm delete --purge oaisim || true
-	helm delete --purge omec-control-plane || true
-	helm delete --purge omec-user-plane || true
-	kubectl delete po router || true
-	cd $(M); rm -f oaisim omec fabric
+	helm delete -n omec oaisim || true
+	helm delete -n omec omec-control-plane || true
+	helm delete -n omec omec-user-plane || true
+	cd $(M); rm -f oaisim omec
 
 clean: reset-test
 	helm delete --purge $(shell helm ls -q) || true
