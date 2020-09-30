@@ -21,6 +21,11 @@ cassandra:
 resources:
   enabled: false
 
+images:
+  tags:
+    mme: docker.io/omecproject/nucleus:master-a27ce58
+    spgwc: docker.io/omecproject/spgw:master-6ee2296
+
 config:
   spgwc:
     pfcp: true
