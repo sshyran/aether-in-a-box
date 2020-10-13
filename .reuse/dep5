@@ -1,0 +1,10 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: aether-in-a-box
+Upstream-Contact: Open Networking Foundation <info@opennetworking.org>
+Source: https://gerrit.opencord.org/aether-in-box
+
+# Sample paragraph, commented out:
+#
+# Files: src/*
+# Copyright: $YEAR $NAME <$CONTACT>
+# License: ...

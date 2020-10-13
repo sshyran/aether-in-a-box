@@ -1,3 +1,7 @@
+# Copyright 2018-present Open Networking Foundation
+#
+# SPDX-License-Identifier: LicenseRef-ONF-Member-Only-1.0
+
 SHELL		:= /bin/bash
 BUILD		?= /tmp/build
 M		?= $(BUILD)/milestones
