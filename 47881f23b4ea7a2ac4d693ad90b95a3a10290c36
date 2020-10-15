@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "749e988a_0d85394d",
+        "filename": "Makefile",
+        "patchSetId": 8
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1000012
+      },
+      "writtenOn": "2020-10-15T22:55:05Z",
+      "side": 1,
+      "message": "First ping usually takes more times. Could we change it back to 15?",
+      "range": {
+        "startLine": 191,
+        "startChar": 31,
+        "endLine": 191,
+        "endChar": 32
+      },
+      "revId": "47881f23b4ea7a2ac4d693ad90b95a3a10290c36",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
