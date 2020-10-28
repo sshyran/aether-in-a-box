@@ -52,7 +52,7 @@ $(M)/system-check: | $(M)
 		exit 1; \
 	fi
 	@if [[ $(os_vendor) =~ (Ubuntu) ]]; then \
-		if [[ ! $(os_release) =~ (16.04) ]]; then \
+		if [[ ! $(os_release) =~ (18.04) ]]; then \
 			echo "WARN: $(os_vendor) $(os_release) has not been tested."; \
 		fi; \
 		if dpkg --compare-versions 4.15 gt $(shell uname -r); then \
@@ -65,6 +65,10 @@ $(M)/system-check: | $(M)
 		echo "FAIL: unsupported OS."; \
 		exit 1; \
 	fi
+	@if [[ ! -d "$(WORKSPACE)/cord/aether-helm-charts" ]]; then \
+                echo "FATAL: Please clone aether-helm-charts under $(WORKSPACE)/cord directory."; \
+                exit 1; \
+        fi
 	touch $@
 
 $(M)/setup: | $(M)
@@ -140,16 +144,19 @@ $(M)/fabric: | $(M)/setup /opt/cni/bin/simpleovs /opt/cni/bin/static
 $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric
 	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
 	helm repo update
+	helm dep up $(WORKSPACE)/cord/aether-helm-charts/omec/omec-control-plane
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
 		omec-control-plane \
 		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-control-plane && \
+	kubectl wait pod -n omec --for=condition=Ready -l release=omec-control-plane --timeout=300s && \
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
 		omec-user-plane \
 		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-user-plane && \
+	kubectl wait pod -n omec --for=condition=Ready -l release=omec-user-plane --timeout=300s
 	touch $@
 
 # UE images includes kernel module, ue_ip.ko
@@ -161,15 +168,15 @@ $(BUILD)/openairinterface: | $(M)/setup
 $(M)/ue-image: | $(M)/k8s-ready $(BUILD)/openairinterface
 	cd $(BUILD)/openairinterface; \
 	sudo docker build . --target lte-uesoftmodem \
-		--build-arg build_base=omecproject/oai-base:1.0.0 \
+		--build-arg build_base=omecproject/oai-base:1.1.0 \
 		--file Dockerfile.ue \
-		--tag omecproject/lte-uesoftmodem:1.0.0
+		--tag omecproject/lte-uesoftmodem:1.1.0
 	touch $@
 
 $(M)/oaisim: | $(M)/ue-image $(M)/omec
 	sudo ip addr add 127.0.0.2/8 dev lo || true
 	$(eval mme_iface=$(shell ip -4 route list default | awk -F 'dev' '{ print $$2; exit }' | awk '{ print $$1 }'))
-	helm upgrade --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim $(WORKSPACE)/cord/helm-charts/oaisim -f $(AIABVALUES) \
+	helm upgrade --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(AIABVALUES) \
 		--set config.enb.networks.s1_mme.interface=$(mme_iface) \
 		--set images.pullPolicy=IfNotPresent
 	kubectl rollout status -n omec statefulset ue
@@ -198,7 +205,6 @@ reset-test:
 	cd $(M); rm -f oaisim omec
 
 clean: reset-test
-	helm delete --purge $(shell helm ls -q) || true
 	kubectl delete po router || true
 	kubectl delete net-attach-def core-net || true
 	sudo ovs-vsctl del-br br-access-net || true
