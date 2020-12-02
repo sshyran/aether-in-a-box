@@ -7,7 +7,10 @@ cassandra:
   config:
     cluster_size: 1
     seed_size: 1
-
+mongodb:
+  usePassword: false
+  persistence:
+    enabled: false
 resources:
   enabled: false
 

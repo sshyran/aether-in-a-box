@@ -33,10 +33,10 @@ cpu_model	:= $(shell lscpu | grep 'Model:' | awk '{print $$2}')
 os_vendor	:= $(shell lsb_release -i -s)
 os_release	:= $(shell lsb_release -r -s)
 
-aiab: $(M)/system-check $(M)/omec
+aiab: $(M)/system-check $(M)/5gc
 oaisim: $(M)/oaisim
 
-.PHONY: aiab oaisim test reset-test clean
+.PHONY: aiab oaisim test reset-test 5gc reset-5g-test clean
 
 $(M):
 	mkdir -p $(M)
@@ -159,6 +159,29 @@ $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fab
 	kubectl wait pod -n omec --for=condition=Ready -l release=omec-user-plane --timeout=300s
 	touch $@
 
+$(M)/5g-core: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric
+	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
+	helm repo update
+	helm dep up $(WORKSPACE)/cord/aether-helm-charts/omec/5g-control-plane
+	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+		--namespace omec \
+		--values $(AIABVALUES) \
+		5g-core-up \
+		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-user-plane && \
+	kubectl wait pod -n omec --for=condition=Ready -l release=5g-core-up --timeout=300s
+	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+		--namespace omec \
+		--values $(AIABVALUES) \
+		fgc-core \
+		$(WORKSPACE)/cord/aether-helm-charts/omec/5g-control-plane && \
+	kubectl wait pod -n omec --for=condition=Ready -l release=fgc-core --timeout=300s && \
+	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+		--namespace omec \
+		5g-ransim-plane \
+		$(WORKSPACE)/cord/aether-helm-charts/omec/5g-ran-sim && \
+	kubectl wait pod -n omec --for=condition=Ready -l release=5g-ransim-plane --timeout=300s
+	touch $@
+
 # UE images includes kernel module, ue_ip.ko
 # which should be built in the exactly same kernel version of the host machine
 $(BUILD)/openairinterface: | $(M)/setup
@@ -188,6 +211,10 @@ $(M)/oaisim: | $(M)/ue-image $(M)/omec
 	done"
 	touch $@
 
+5gc: | $(M)/fabric $(M)/5g-core
+	@sleep 5
+	@echo "Finished bringing up pods"
+
 test: | $(M)/fabric $(M)/omec $(M)/oaisim
 	@sleep 5
 	@echo "Test1: ping from UE to SGI network gateway"
@@ -203,6 +230,13 @@ reset-test:
 	helm delete -n omec omec-control-plane || true
 	helm delete -n omec omec-user-plane || true
 	cd $(M); rm -f oaisim omec
+
+reset-5g-test:
+	helm uninstall -n omec fgc-core || true
+	helm uninstall -n omec 5g-core-up || true
+	helm uninstall -n omec 5g-ransim-plane || true
+	helm uninstall -n omec mongo || true
+	cd $(M); rm -f 5g-core
 
 clean: reset-test
 	kubectl delete po router || true
