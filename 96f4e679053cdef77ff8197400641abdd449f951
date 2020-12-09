@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4cf852dc_4c9539bb",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1000012
+      },
+      "writtenOn": "2020-12-09T22:18:13Z",
+      "side": 1,
+      "message": "This will disable the use of locally build image, which will mainly block SD-Core development work. So please keep this additional configuration only on the test VM.",
+      "revId": "96f4e679053cdef77ff8197400641abdd449f951",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64bfcd58_5457f6b6",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1000012
+      },
+      "writtenOn": "2020-12-09T22:18:13Z",
+      "side": 1,
+      "message": "Same here.",
+      "revId": "96f4e679053cdef77ff8197400641abdd449f951",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
