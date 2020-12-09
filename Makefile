@@ -137,7 +137,7 @@ $(M)/fabric: | $(M)/setup /opt/cni/bin/simpleovs /opt/cni/bin/static
 	sudo ip route replace 192.168.252.0/24 via 192.168.251.1 dev enb
 	kubectl apply -f $(RESOURCEDIR)/router.yaml
 	kubectl wait pod -n default --for=condition=Ready -l app=router --timeout=300s
-	kubectl -n default exec router ip route add 10.250.0.0/16 via 192.168.250.3
+	kubectl -n default exec router ip route add 172.250.0.0/16 via 192.168.250.3
 	kubectl delete net-attach-def core-net
 	touch $@
 
@@ -148,12 +148,14 @@ $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fab
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
+		--set images.pullPolicy=Always \
 		omec-control-plane \
 		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-control-plane && \
 	kubectl wait pod -n omec --for=condition=Ready -l release=omec-control-plane --timeout=300s && \
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
+		--set images.pullPolicy=Always \
 		omec-user-plane \
 		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-user-plane && \
 	kubectl wait pod -n omec --for=condition=Ready -l release=omec-user-plane --timeout=300s
@@ -202,7 +204,8 @@ reset-test:
 	helm delete -n omec oaisim || true
 	helm delete -n omec omec-control-plane || true
 	helm delete -n omec omec-user-plane || true
-	cd $(M); rm -f oaisim omec
+	kubectl delete po router || true
+	cd $(M); rm -f oaisim omec fabric
 
 clean: reset-test
 	kubectl delete po router || true
