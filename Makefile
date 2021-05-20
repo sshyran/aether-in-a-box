@@ -178,6 +178,7 @@ $(M)/5g-core: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/
 	kubectl wait pod -n omec --for=condition=Ready -l release=fgc-core --timeout=300s && \
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
+		--values $(AIABVALUES) \
 		5g-ransim-plane \
 		$(WORKSPACE)/cord/aether-helm-charts/omec/5g-ran-sim && \
 	kubectl wait pod -n omec --for=condition=Ready -l release=5g-ransim-plane --timeout=300s
