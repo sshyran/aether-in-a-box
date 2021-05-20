@@ -15,10 +15,44 @@ resources:
   enabled: false
 
 config:
+  smf:
+    cfgFiles:
+      # https://github.com/free5gc/free5gc/blob/main/config/pcfcfg.yaml
+      smfcfg.conf:
+        configuration:
+          mongodb:       # the mongodb connected by this PCF
+            name: smf # name of the mongodb
+            url: mongodb://mongodb:27017
+  pcf:
+    cfgFiles:
+      # https://github.com/free5gc/free5gc/blob/main/config/pcfcfg.yaml
+      pcfcfg.conf:
+        info:
+          version: 1.0.0
+          description: PCF initial local configuration
+        configuration:
+          mongodb:       # the mongodb connected by this PCF
+            name: free5gc                  # name of the mongodb
+            url: mongodb://mongodb:27017
+  nrf:
+    cfgFiles:
+      # https://github.com/free5gc/free5gc/blob/main/config/nrfcfg.yaml
+      nrfcfg.conf:
+        configuration:
+          MongoDBName: free5gc # database name in MongoDB
+          MongoDBUrl: mongodb://mongodb:27017
+          #MongoDBUrl: mongodb://mongodb:27017 #works with db in omec name space
   spgwc:
     pfcp: true
-    ueIpPool:
-      ip: 172.250.0.0
+    jsonCfgFiles:
+      cp.json:
+        ip_pool_config:
+          ueIpPool:
+            ip: "172.250.0.0"
+            mask: "255.255.0.0"
+          staticUeIpPool:
+            ip: "172.250.1.0"
+            mask: "255.255.255.0"
   upf:
     name: "oaisim"
     sriov:
@@ -30,10 +64,14 @@ config:
     cfgFiles:
       upf.json:
         mode: af_packet
+        cpiface:
+          enable_ue_ip_alloc: false
+          ue_ip_pool: 172.250.0.0/16
   mme:
     cfgFiles:
       config.json:
         mme:
+          logging: debug
           mcc:
             dig1: 2
             dig2: 0
@@ -42,6 +80,11 @@ config:
             dig1: 0
             dig2: 1
             dig3: -1
+          plmnlist:
+            #plmn1 - aether common plmn, plmn2 is for comac-in-box
+            plmn1: "mcc=315,mnc=010"
+            plmn2: "mcc=208,mnc=01"
+            plmn3: "mcc=208,mnc=92"
           apnlist:
             internet: "spgwc"
   hss:
