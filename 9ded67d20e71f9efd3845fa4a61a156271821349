@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54f33a98_f4b0a6ea",
+        "filename": "aether-in-a-box-values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000012
+      },
+      "writtenOn": "2021-05-20T17:36:00Z",
+      "side": 1,
+      "message": "You can do it later but I\u0027d put it to the helm chart by default.",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 40
+      },
+      "revId": "9ded67d20e71f9efd3845fa4a61a156271821349",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33a1c731_e5242d90",
+        "filename": "aether-in-a-box-values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000012
+      },
+      "writtenOn": "2021-05-20T17:36:00Z",
+      "side": 1,
+      "message": "do we need plmns other than oaisim is using here?",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 35
+      },
+      "revId": "9ded67d20e71f9efd3845fa4a61a156271821349",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
