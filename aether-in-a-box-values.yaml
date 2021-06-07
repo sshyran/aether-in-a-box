@@ -44,7 +44,7 @@ config:
           #MongoDBUrl: mongodb://mongodb:27017 #works with db in omec name space
   spgwc:
     pfcp: true
-    jsonCfgFiles:
+    cfgFiles:
       cp.json:
         ip_pool_config:
           ueIpPool:
