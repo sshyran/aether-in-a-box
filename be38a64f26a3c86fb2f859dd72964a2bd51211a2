@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70db2ee8_94a6f9c2",
+        "filename": "aether-in-a-box-values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1000640
+      },
+      "writtenOn": "2021-06-07T22:16:56Z",
+      "side": 1,
+      "message": "Hyunsun we need to similar changes in app config ? and also in override files in Jenkins setup ?",
+      "revId": "be38a64f26a3c86fb2f859dd72964a2bd51211a2",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
