@@ -167,6 +167,12 @@ $(M)/5g-core: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
+		sim-app \
+		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-sub-provision && \
+	kubectl wait pod -n omec --for=condition=Ready -l release=sim-app --timeout=300s
+	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+		--namespace omec \
+		--values $(AIABVALUES) \
 		5g-core-up \
 		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-user-plane && \
 	kubectl wait pod -n omec --for=condition=Ready -l release=5g-core-up --timeout=300s
@@ -231,6 +237,7 @@ reset-test:
 	cd $(M); rm -f oaisim omec fabric
 
 reset-5g-test:
+	helm uninstall -n omec sim-app || true
 	helm uninstall -n omec fgc-core || true
 	helm uninstall -n omec 5g-core-up || true
 	helm uninstall -n omec 5g-ransim-plane || true
