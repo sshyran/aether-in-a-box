@@ -74,7 +74,8 @@ $(M)/system-check: | $(M)
 
 $(M)/setup: | $(M)
 	sudo $(SCRIPTDIR)/cloudlab-disksetup.sh
-	sudo apt update; sudo apt install -y software-properties-common python-pip jq httpie ipvsadm
+	sudo apt update; sudo apt install -y software-properties-common python3 python3-pip jq httpie ipvsadm
+	sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 	touch $@
 
 $(BUILD)/kubespray: | $(M)/setup
@@ -82,7 +83,7 @@ $(BUILD)/kubespray: | $(M)/setup
 	cd $(BUILD); git clone https://github.com/kubernetes-incubator/kubespray.git -b $(KUBESPRAY_VERSION)
 
 $(VENV)/bin/activate: | $(M)/setup
-	sudo pip install virtualenv
+	sudo pip3 install virtualenv
 	virtualenv $(VENV)
 
 $(M)/kubespray-requirements: $(BUILD)/kubespray | $(VENV)/bin/activate
@@ -96,7 +97,6 @@ $(M)/k8s-ready: | $(M)/setup $(BUILD)/kubespray $(VENV)/bin/activate $(M)/kubesp
 		-e "{'override_system_hostname' : False, 'disable_swap' : True}" \
 		-e "{'docker_version' : $(DOCKER_VERSION)}" \
 		-e "{'docker_iptables_enabled' : True}" \
-		-e "{'kube_version' : $(K8S_VERSION)}" \
 		-e "{'kube_network_plugin_multus' : True, 'multus_version' : stable, 'multus_cni_version' : 0.3.1}" \
 		-e "{'kube_proxy_metrics_bind_address' : 0.0.0.0:10249}" \
 		-e "{'kube_pods_subnet' : 192.168.0.0/17, 'kube_service_addresses' : 192.168.128.0/17}" \
