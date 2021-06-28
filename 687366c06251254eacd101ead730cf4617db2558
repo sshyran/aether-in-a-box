@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99314414_cd31c5f2",
+        "filename": "Makefile",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2021-06-28T17:22:56Z",
+      "side": 1,
+      "message": "There\u0027s also python3-venv and python3-virtualenv that would remove the later need to install virtualenv via pip.",
+      "range": {
+        "startLine": 77,
+        "startChar": 65,
+        "endLine": 77,
+        "endChar": 84
+      },
+      "revId": "687366c06251254eacd101ead730cf4617db2558",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e506a9d4_7607d662",
+        "filename": "Makefile",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2021-06-28T17:22:56Z",
+      "side": 1,
+      "message": "This is not generally a good idea, as the base system assumes in places that python2 is the default python.",
+      "range": {
+        "startLine": 78,
+        "startChar": 1,
+        "endLine": 78,
+        "endChar": 77
+      },
+      "revId": "687366c06251254eacd101ead730cf4617db2558",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "84a84117_ec0694f8",
+        "filename": "Makefile",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2021-06-28T17:22:56Z",
+      "side": 1,
+      "message": "This should be replaced with something like `python3 -m venv`",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 19
+      },
+      "revId": "687366c06251254eacd101ead730cf4617db2558",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
