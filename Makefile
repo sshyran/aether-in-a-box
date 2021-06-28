@@ -12,9 +12,8 @@ WORKSPACE	?= $(HOME)
 VENV		?= $(BUILD)/venv/aiab
 AIABVALUES	?= $(MAKEDIR)/aether-in-a-box-values.yaml
 
-KUBESPRAY_VERSION ?= release-2.14
+KUBESPRAY_VERSION ?= release-2.15
 DOCKER_VERSION	?= 19.03
-K8S_VERSION	?= v1.18.9
 HELM_VERSION	?= v3.2.4
 
 # used to start logging/monitoring and other infrastructure charts
@@ -33,7 +32,7 @@ cpu_model	:= $(shell lscpu | grep 'Model:' | awk '{print $$2}')
 os_vendor	:= $(shell lsb_release -i -s)
 os_release	:= $(shell lsb_release -r -s)
 
-omec: $(M)/system-check $(M)/omec
+omec: $(M)/omec
 oaisim: $(M)/oaisim
 5gc: $(M)/system-check $(M)/5g-core
 
@@ -74,7 +73,8 @@ $(M)/system-check: | $(M)
 
 $(M)/setup: | $(M)
 	sudo $(SCRIPTDIR)/cloudlab-disksetup.sh
-	sudo apt update; sudo apt install -y software-properties-common python-pip jq httpie ipvsadm
+	sudo apt update; sudo apt install -y software-properties-common python3 python3-pip jq httpie ipvsadm
+	sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 	touch $@
 
 $(BUILD)/kubespray: | $(M)/setup
@@ -96,7 +96,6 @@ $(M)/k8s-ready: | $(M)/setup $(BUILD)/kubespray $(VENV)/bin/activate $(M)/kubesp
 		-e "{'override_system_hostname' : False, 'disable_swap' : True}" \
 		-e "{'docker_version' : $(DOCKER_VERSION)}" \
 		-e "{'docker_iptables_enabled' : True}" \
-		-e "{'kube_version' : $(K8S_VERSION)}" \
 		-e "{'kube_network_plugin_multus' : True, 'multus_version' : stable, 'multus_cni_version' : 0.3.1}" \
 		-e "{'kube_proxy_metrics_bind_address' : 0.0.0.0:10249}" \
 		-e "{'kube_pods_subnet' : 192.168.0.0/17, 'kube_service_addresses' : 192.168.128.0/17}" \
