@@ -5,5 +5,5 @@
 [gerrit]
 host=gerrit.opencord.org
 port=29418
-project=aether-helm-charts.git
+project=aether-in-a-box.git
 defaultremote=origin
