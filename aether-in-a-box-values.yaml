@@ -14,6 +14,9 @@ mongodb:
 resources:
   enabled: false
 
+# Enable Nodeport service in UPF to view BESS graph
+service:
+  type: NodePort
 config:
   smf:
     cfgFiles:
@@ -65,6 +68,8 @@ config:
       upf.json:
         mode: af_packet
         cpiface:
+          dnn: "8internet"
+          hostname: "upf"
           enable_ue_ip_alloc: false
           ue_ip_pool: 172.250.0.0/16
   mme:
@@ -117,3 +122,56 @@ config:
       simapp.yaml:
         configuration:
           provision-network-slice: true
+          subscribers:
+          - ueId-start: 2089300007487
+            ueId-end: 2089300007487
+            plmnId: 20893
+            opc: "981d464c7c52eb6e5036234984ad0bcf"
+            op: ""
+            key: "5122250214c33e723a5dd523fc145fc0"
+            sequenceNumber: "16f3b3f70fc2"
+          device-groups:
+          - name:  "5g-gnbsim-user"
+            imsis:
+              - "2089300007487"
+              - "2089300007488"
+            ip-domain-name: "pool1"
+            ip-domain-expanded:
+              dnn: internet
+              dns-primary: "8.8.8.8"
+              mtu: 1460
+              ue-ip-pool: "172.250.0.0/16"
+            site-info: "aiab"
+          network-slices:
+          - name: "default"
+            slice-id:
+              sd: "010203"
+              sst: 1
+            site-device-group:
+            - "5g-gnbsim-user"
+            applications-information:
+            - app-name: "default-app"
+              end-port: 40000
+              endpoint: "1.1.1.1/32"
+              protocol: 17
+              start-port: 40000
+            deny-applications:
+            - "iot-app-deny"
+            permit-applications:
+            - "iot-app1-permit"
+            - "iot-app2-permit"
+            qos:
+              downlink: 20000000
+              traffic-class: "platinum"
+              uplink: 4000000
+            site-info:
+              gNodeBs:
+              - name: "aiab-gnb1"
+                tac: 1
+              plmn:
+                mcc: "208"
+                mnc: "93"
+              site-name: "aiab"
+              upf:
+                upf-name: "upf"
+                upf-port: 8805
