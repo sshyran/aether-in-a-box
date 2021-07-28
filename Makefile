@@ -83,6 +83,9 @@ $(BUILD)/kubespray: | $(M)/setup
 
 $(VENV)/bin/activate: | $(M)/setup
 	python3 -m venv $(VENV)
+	source "$(VENV)/bin/activate" && \
+	python -m pip install -U pip && \
+	deactivate
 
 $(M)/kubespray-requirements: $(BUILD)/kubespray | $(VENV)/bin/activate
 	source "$(VENV)/bin/activate" && \
