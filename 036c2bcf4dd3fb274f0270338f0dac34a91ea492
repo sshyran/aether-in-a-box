@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "e896ede9_b60884e8",
+        "filename": "aether-in-a-box-values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000580
+      },
+      "writtenOn": "2021-07-29T19:54:20Z",
+      "side": 1,
+      "message": "Commented for now. If anyone wants to use they can uncomment and use.",
+      "parentUuid": "83f4f441_a8d2d930",
+      "revId": "036c2bcf4dd3fb274f0270338f0dac34a91ea492",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9148775d_435393db",
         "filename": "aether-in-a-box-values.yaml",
         "patchSetId": 1
@@ -66,6 +84,24 @@
       "writtenOn": "2021-07-29T19:30:11Z",
       "side": 1,
       "message": "add one more field. Which describer this block as aiab user.",
+      "revId": "036c2bcf4dd3fb274f0270338f0dac34a91ea492",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1d21a27_7a2eead7",
+        "filename": "aether-in-a-box-values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1000580
+      },
+      "writtenOn": "2021-07-29T19:54:20Z",
+      "side": 1,
+      "message": "The device group name will classify Imsis into different groups",
+      "parentUuid": "9148775d_435393db",
       "revId": "036c2bcf4dd3fb274f0270338f0dac34a91ea492",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
@@ -89,6 +125,24 @@
     },
     {
       "key": {
+        "uuid": "44c22637_a3e78511",
+        "filename": "aether-in-a-box-values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1000580
+      },
+      "writtenOn": "2021-07-29T19:54:20Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "d786d039_b5e66805",
+      "revId": "036c2bcf4dd3fb274f0270338f0dac34a91ea492",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1be8ac6d_828d41b1",
         "filename": "aether-in-a-box-values.yaml",
         "patchSetId": 1
@@ -106,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "92047237_3c0782b9",
+        "filename": "aether-in-a-box-values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1000580
+      },
+      "writtenOn": "2021-07-29T19:54:20Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "1be8ac6d_828d41b1",
+      "revId": "036c2bcf4dd3fb274f0270338f0dac34a91ea492",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4a06a327_978210f8",
         "filename": "aether-in-a-box-values.yaml",
         "patchSetId": 1
@@ -117,6 +189,24 @@
       "writtenOn": "2021-07-29T19:30:11Z",
       "side": 1,
       "message": "5g-gnbsim-user ?",
+      "revId": "036c2bcf4dd3fb274f0270338f0dac34a91ea492",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "217a5226_ec2b5eaf",
+        "filename": "aether-in-a-box-values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1000580
+      },
+      "writtenOn": "2021-07-29T19:54:20Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "4a06a327_978210f8",
       "revId": "036c2bcf4dd3fb274f0270338f0dac34a91ea492",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
