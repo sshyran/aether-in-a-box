@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "83f4f441_a8d2d930",
+        "filename": "aether-in-a-box-values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000640
+      },
+      "writtenOn": "2021-07-29T19:36:29Z",
+      "side": 1,
+      "message": "ok. I think this piece of helmchart does not have good configuration like other helm charts.     \nconfig:\nWe should have something like this to enable/disable nodePort...\n      port: 8080\n      nodePort:\n        enabled: false\n        port: 30081",
+      "parentUuid": "cb31a6d8_8dee73cc",
+      "revId": "036c2bcf4dd3fb274f0270338f0dac34a91ea492",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9148775d_435393db",
         "filename": "aether-in-a-box-values.yaml",
         "patchSetId": 1
