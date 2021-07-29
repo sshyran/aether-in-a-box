@@ -16,6 +16,24 @@
       "revId": "036c2bcf4dd3fb274f0270338f0dac34a91ea492",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb31a6d8_8dee73cc",
+        "filename": "aether-in-a-box-values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000580
+      },
+      "writtenOn": "2021-07-29T19:29:16Z",
+      "side": 1,
+      "message": "This is to enable nodeport in upf. only then we can see the bess graph. by default the service is clusterIP.",
+      "parentUuid": "08baef12_326a6467",
+      "revId": "036c2bcf4dd3fb274f0270338f0dac34a91ea492",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
     }
   ]
 }
