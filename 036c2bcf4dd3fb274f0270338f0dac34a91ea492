@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08baef12_326a6467",
+        "filename": "aether-in-a-box-values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000640
+      },
+      "writtenOn": "2021-07-29T19:27:57Z",
+      "side": 1,
+      "message": "What is this for ?",
+      "revId": "036c2bcf4dd3fb274f0270338f0dac34a91ea492",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
