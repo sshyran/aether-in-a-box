@@ -122,6 +122,9 @@ config:
       simapp.yaml:
         configuration:
           provision-network-slice: true
+          sub-provision-endpt:
+            addr: webui
+            port: 5000
           subscribers:
           - ueId-start: 2089300007487
             ueId-end: 2089300007487
