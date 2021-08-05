@@ -11,6 +11,7 @@ RESOURCEDIR	:= $(MAKEDIR)/resources
 WORKSPACE	?= $(HOME)
 VENV		?= $(BUILD)/venv/aiab
 AIABVALUES	?= $(MAKEDIR)/aether-in-a-box-values.yaml
+4GUMBRELLAVALUES ?= $(MAKEDIR)/4g-umbrella-chart-values.yaml
 
 KUBESPRAY_VERSION ?= release-2.14
 DOCKER_VERSION	?= 19.03
@@ -162,6 +163,40 @@ $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fab
 	kubectl wait pod -n omec --for=condition=Ready -l release=omec-user-plane --timeout=300s
 	touch $@
 
+/usr/bin/yq:
+	sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64
+	sudo add-apt-repository -y ppa:rmescandon/yq
+	sudo apt update
+	sudo apt install yq -y
+
+$(4GUMBRELLAVALUES): $(AIABVALUES) /usr/bin/yq
+	yq p $(AIABVALUES) omec-control-plane > $@
+	yq p $(AIABVALUES) omec-user-plane >> $@
+	yq p $(AIABVALUES) omec-sub-provision >> $@
+	yq p $(AIABVALUES) 5g-control-plane >> $@
+	# Can't override this at the Helm command line because 'simapp.yaml' in path, has internal dot
+	sed -i 's/addr: webui/addr: config4g/g' $@
+
+# To install the 4G umbrella chart and run the 4G ping test:
+#   make sdcore-helm-charts-4g; make test
+sdcore-helm-charts-4g: $(M)/sdcore-helm-charts-4g
+
+$(M)/sdcore-helm-charts-4g: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric $(4GUMBRELLAVALUES)
+	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
+	kubectl apply -f $(RESOURCEDIR)/aether.registry.yaml
+	helm repo update
+	# Can't download the charts since the repo is private
+	# helm dep up $(WORKSPACE)/cord/aether-helm-charts/sdcore-helm-charts
+	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+		--namespace omec \
+		--values $(4GUMBRELLAVALUES) \
+		--set omec-control-plane.enable4G=true --set 5g-control-plane.enable5G=false \
+		sdcore-helm-charts-4g \
+		$(WORKSPACE)/cord/aether-helm-charts/sdcore-helm-charts && \
+	kubectl wait pod -n omec --for=condition=Ready -l release=sdcore-helm-charts-4g --timeout=300s && \
+	touch $@
+	touch $(M)/omec
+
 $(M)/5g-core: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric
 	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
 	helm repo update
@@ -235,8 +270,9 @@ reset-test:
 	helm delete -n omec oaisim || true
 	helm delete -n omec omec-control-plane || true
 	helm delete -n omec omec-user-plane || true
+	helm delete -n omec sdcore-helm-charts-4g || true
 	kubectl delete po router || true
-	cd $(M); rm -f oaisim omec fabric
+	cd $(M); rm -f oaisim omec fabric sdcore-helm-charts-4g
 
 reset-5g-test:
 	helm uninstall -n omec sim-app || true
