@@ -17,16 +17,16 @@ DOCKER_VERSION	?= 19.03
 K8S_VERSION	?= v1.18.9
 HELM_VERSION	?= v3.2.4
 
-# used to start logging/monitoring and other infrastructure charts
-INFRA_CHARTS	?=
-INFRA_PREREQS   = $(foreach chart,$(INFRA_CHARTS),$(M)/$(chart))
-
-KAFKA_CHART_VERSION ?= 0.13.3
-KAFKA_POD	:= "pod/cord-kafka-0"
-
 HELM_GLOBAL_ARGS ?=
-HELM_NEM_ARGS	?= $(HELM_GLOBAL_ARGS)
-HELM_ONOS_ARGS	?= $(HELM_GLOBAL_ARGS)
+
+# Allow installing local charts or specific versions of published charts.
+# E.g., to install the Aether 1.5 release:
+#    CHARTS=release-1.5 make test
+# Default is to install from the local charts.
+CHARTS     ?= local
+CONFIGFILE := configs/$(CHARTS)
+include $(CONFIGFILE)
+include configs/authentication
 
 cpu_family	:= $(shell lscpu | grep 'CPU family:' | awk '{print $$3}')
 cpu_model	:= $(shell lscpu | grep 'Model:' | awk '{print $$2}')
@@ -118,6 +118,12 @@ $(M)/k8s-ready: | $(M)/setup $(BUILD)/kubespray $(VENV)/bin/activate $(M)/kubesp
 $(M)/helm-ready: | $(M)/k8s-ready
 	helm repo add incubator https://charts.helm.sh/incubator
 	helm repo add cord https://charts.opencord.org
+	helm repo add atomix https://charts.atomix.io
+	helm repo add onosproject https://charts.onosproject.org
+	if [ "$(REPO_PASSWORD)" ]; then \
+		helm repo add aether --username ${REPO_USERNAME} --password ${REPO_PASSWORD} https://charts.aetherproject.org; \
+		helm repo add sdran --username ${REPO_USERNAME} --password ${REPO_PASSWORD} https://sdrancharts.onosproject.org; \
+	fi
 	touch $@
 
 /opt/cni/bin/simpleovs: | $(M)/k8s-ready
@@ -140,55 +146,65 @@ $(M)/fabric: | $(M)/setup /opt/cni/bin/simpleovs /opt/cni/bin/static
 	sudo ip route replace 192.168.252.0/24 via 192.168.251.1 dev enb
 	kubectl apply -f $(RESOURCEDIR)/router.yaml
 	kubectl wait pod -n default --for=condition=Ready -l app=router --timeout=300s
-	kubectl -n default exec router ip route add 172.250.0.0/16 via 192.168.250.3
+	kubectl -n default exec router -- ip route add 172.250.0.0/16 via 192.168.250.3
 	kubectl delete net-attach-def core-net
 	touch $@
 
-$(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric
+registry-secret: $(RESOURCEDIR)/aether.registry.yaml
+$(RESOURCEDIR)/aether.registry.yaml:
+	kubectl -n omec create secret docker-registry aether.registry \
+		--docker-server=https://registry.aetherproject.org \
+		--docker-username=${REGISTRY_USERNAME} \
+		--docker-password=${REGISTRY_CLI_SECRET} \
+		--dry-run=client --output=yaml > $@
+
+$(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric $(RESOURCEDIR)/aether.registry.yaml
 	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
+	kubectl apply -f $(RESOURCEDIR)/aether.registry.yaml
 	helm repo update
-	helm dep up $(WORKSPACE)/cord/aether-helm-charts/omec/omec-control-plane
+	if [ "$(CHARTS)" == "local" ]; then helm dep up $(OMEC_CONTROL_PLANE_CHART); fi
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
 		omec-control-plane \
-		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-control-plane && \
+		$(OMEC_CONTROL_PLANE_CHART) && \
 	kubectl wait pod -n omec --for=condition=Ready -l release=omec-control-plane --timeout=300s && \
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
 		omec-user-plane \
-		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-user-plane && \
+		$(OMEC_USER_PLANE_CHART) && \
 	kubectl wait pod -n omec --for=condition=Ready -l release=omec-user-plane --timeout=300s
 	touch $@
 
-$(M)/5g-core: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric
+$(M)/5g-core: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric $(RESOURCEDIR)/aether.registry.yaml
 	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
+	kubectl apply -f $(RESOURCEDIR)/aether.registry.yaml
 	helm repo update
-	helm dep up $(WORKSPACE)/cord/aether-helm-charts/omec/5g-control-plane
+	if [ "$(CHARTS)" == "local" ]; then helm dep up $(5GC_CONTROL_PLANE_CHART); fi
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
 		sim-app \
-		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-sub-provision && \
+		$(OMEC_SUB_PROVISION_CHART) && \
 	kubectl wait pod -n omec --for=condition=Ready -l release=sim-app --timeout=300s
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
 		5g-core-up \
-		$(WORKSPACE)/cord/aether-helm-charts/omec/omec-user-plane && \
+		$(OMEC_USER_PLANE_CHART) && \
 	kubectl wait pod -n omec --for=condition=Ready -l release=5g-core-up --timeout=300s
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
 		fgc-core \
-		$(WORKSPACE)/cord/aether-helm-charts/omec/5g-control-plane && \
+		$(5GC_CONTROL_PLANE_CHART) && \
 	kubectl wait pod -n omec --for=condition=Ready -l release=fgc-core --timeout=300s && \
 	helm upgrade --install $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(AIABVALUES) \
 		5g-ransim-plane \
-		$(WORKSPACE)/cord/aether-helm-charts/omec/5g-ran-sim && \
+		$(5G_RAN_SIM_CHART) && \
 	kubectl wait pod -n omec --for=condition=Ready -l release=5g-ransim-plane --timeout=300s
 	touch $@
 

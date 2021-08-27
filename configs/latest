@@ -1,0 +1,9 @@
+# Copyright 2021-present Open Networking Foundation
+#
+# SPDX-License-Identifier: LicenseRef-ONF-Member-Only-1.0
+
+OMEC_CONTROL_PLANE_CHART := aether/omec-control-plane
+OMEC_USER_PLANE_CHART    := aether/omec-user-plane
+OMEC_SUB_PROVISION_CHART := aether/omec-sub-provision
+5GC_CONTROL_PLANE_CHART  := aether/5g-control-plane
+5G_RAN_SIM_CHART         := aether/5g-ran-sim
