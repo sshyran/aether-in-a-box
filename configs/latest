@@ -7,3 +7,9 @@ OMEC_USER_PLANE_CHART    := aether/omec-user-plane
 OMEC_SUB_PROVISION_CHART := aether/omec-sub-provision
 5GC_CONTROL_PLANE_CHART  := aether/5g-control-plane
 5G_RAN_SIM_CHART         := aether/5g-ran-sim
+
+# For installing the ROC
+AETHER_ROC_UMBRELLA_CHART := sdran/aether-roc-umbrella
+ATOMIX_CONTROLLER_CHART   := atomix/atomix-controller
+ATOMIX_RAFT_STORAGE_CHART := atomix/atomix-raft-storage
+ONOS_OPERATOR_CHART       := onosproject/onos-operator
