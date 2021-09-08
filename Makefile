@@ -10,7 +10,13 @@ SCRIPTDIR	:= $(MAKEDIR)/scripts
 RESOURCEDIR	:= $(MAKEDIR)/resources
 WORKSPACE	?= $(HOME)
 VENV		?= $(BUILD)/venv/aiab
-AIABVALUES	?= $(MAKEDIR)/aether-in-a-box-values.yaml
+
+4G_CORE_VALUES ?= $(MAKEDIR)/4g-core-values.yaml
+5G_CORE_VALUES ?= $(MAKEDIR)/5g-core-values.yaml
+OAISIM_VALUES  ?= $(MAKEDIR)/oaisim-values.yaml
+ROC_VALUES     ?= $(MAKEDIR)/roc-values.yaml
+UPF_VALUES     ?= $(MAKEDIR)/upf-values.yaml
+RANSIM_VALUES  ?= $(MAKEDIR)/ransim-values.yaml
 
 KUBESPRAY_VERSION ?= release-2.14
 DOCKER_VERSION	?= 19.03
@@ -163,18 +169,21 @@ $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fab
 	kubectl -n omec get secret aether.registry || kubectl create -f $(RESOURCEDIR)/aether.registry.yaml
 	helm repo update
 	if [ "$(CHARTS)" == "local" ]; then helm dep up $(OMEC_CONTROL_PLANE_CHART); fi
-	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
-		--values $(AIABVALUES) \
+		--values $(4G_CORE_VALUES) \
+		sim-app \
+		$(OMEC_SUB_PROVISION_CHART) && \
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+		--namespace omec \
+		--values $(4G_CORE_VALUES) \
 		omec-control-plane \
 		$(OMEC_CONTROL_PLANE_CHART) && \
-	kubectl wait pod -n omec --for=condition=Ready -l release=omec-control-plane --timeout=300s && \
-	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
-		--values $(AIABVALUES) \
+		--values $(UPF_VALUES) \
 		omec-user-plane \
-		$(OMEC_USER_PLANE_CHART) && \
-	kubectl wait pod -n omec --for=condition=Ready -l release=omec-user-plane --timeout=300s
+		$(OMEC_USER_PLANE_CHART)
 	touch $@
 
 $(M)/5g-core: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric $(RESOURCEDIR)/aether.registry.yaml
@@ -182,30 +191,26 @@ $(M)/5g-core: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/
 	kubectl -n omec get secret aether.registry || kubectl creates -f $(RESOURCEDIR)/aether.registry.yaml
 	helm repo update
 	if [ "$(CHARTS)" == "local" ]; then helm dep up $(5GC_CONTROL_PLANE_CHART); fi
-	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
-		--values $(AIABVALUES) \
+		--values $(5G_CORE_VALUES) \
 		sim-app \
 		$(OMEC_SUB_PROVISION_CHART) && \
-	kubectl wait pod -n omec --for=condition=Ready -l release=sim-app --timeout=300s
-	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
-		--values $(AIABVALUES) \
+		--values $(UPF_VALUES) \
 		5g-core-up \
 		$(OMEC_USER_PLANE_CHART) && \
-	kubectl wait pod -n omec --for=condition=Ready -l release=5g-core-up --timeout=300s
-	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
-		--values $(AIABVALUES) \
+		--values $(5G_CORE_VALUES) \
 		fgc-core \
 		$(5GC_CONTROL_PLANE_CHART) && \
-	kubectl wait pod -n omec --for=condition=Ready -l release=fgc-core --timeout=300s && \
-	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
-		--values $(AIABVALUES) \
+		--values $(RANSIM_VALUES) \
 		5g-ransim-plane \
-		$(5G_RAN_SIM_CHART) && \
-	kubectl wait pod -n omec --for=condition=Ready -l release=5g-ransim-plane --timeout=300s
+		$(5G_RAN_SIM_CHART)
 	touch $@
 
 # UE images includes kernel module, ue_ip.ko
@@ -225,7 +230,7 @@ $(M)/ue-image: | $(M)/k8s-ready $(BUILD)/openairinterface
 $(M)/oaisim: | $(M)/ue-image $(M)/omec
 	sudo ip addr add 127.0.0.2/8 dev lo || true
 	$(eval mme_iface=$(shell ip -4 route list default | awk -F 'dev' '{ print $$2; exit }' | awk '{ print $$1 }'))
-	helm upgrade --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(AIABVALUES) \
+	helm upgrade --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(OAISIM_VALUES) \
 		--set config.enb.networks.s1_mme.interface=$(mme_iface) \
 		--set images.pullPolicy=IfNotPresent
 	kubectl rollout status -n omec statefulset ue
@@ -251,6 +256,7 @@ reset-test:
 	helm delete -n omec oaisim || true
 	helm delete -n omec omec-control-plane || true
 	helm delete -n omec omec-user-plane || true
+	helm delete -n omec sim-app || true
 	kubectl delete po router || true
 	cd $(M); rm -f oaisim omec fabric
 
