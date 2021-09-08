@@ -10,7 +10,15 @@ SCRIPTDIR	:= $(MAKEDIR)/scripts
 RESOURCEDIR	:= $(MAKEDIR)/resources
 WORKSPACE	?= $(HOME)
 VENV		?= $(BUILD)/venv/aiab
-AIABVALUES	?= $(MAKEDIR)/aether-in-a-box-values.yaml
+
+4G_CORE_VALUES ?= $(MAKEDIR)/4g-core-values.yaml
+5G_CORE_VALUES ?= $(MAKEDIR)/5g-core-values.yaml
+OAISIM_VALUES  ?= $(MAKEDIR)/oaisim-values.yaml
+ROC_VALUES     ?= $(MAKEDIR)/roc-values.yaml
+UPF_VALUES     ?= $(MAKEDIR)/upf-values.yaml
+RANSIM_VALUES  ?= $(MAKEDIR)/ransim-values.yaml
+ROC_4G_MODELS  ?= $(MAKEDIR)/roc-4g-models.json
+ROC_5G_MODELS  ?= $(MAKEDIR)/roc-5g-models.json
 
 KUBESPRAY_VERSION ?= release-2.14
 DOCKER_VERSION	?= 19.03
@@ -150,7 +158,7 @@ $(M)/fabric: | $(M)/setup /opt/cni/bin/simpleovs /opt/cni/bin/static
 	kubectl delete net-attach-def core-net
 	touch $@
 
-registry-secret: $(RESOURCEDIR)/aether.registry.yaml
+auth-secret: $(RESOURCEDIR)/aether.registry.yaml
 $(RESOURCEDIR)/aether.registry.yaml:
 	kubectl -n omec create secret docker-registry aether.registry \
 		--docker-server=https://registry.aetherproject.org \
@@ -163,49 +171,48 @@ $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fab
 	kubectl -n omec get secret aether.registry || kubectl create -f $(RESOURCEDIR)/aether.registry.yaml
 	helm repo update
 	if [ "$(CHARTS)" == "local" ]; then helm dep up $(OMEC_CONTROL_PLANE_CHART); fi
-	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
-		--values $(AIABVALUES) \
+		--values $(4G_CORE_VALUES) \
+		sim-app \
+		$(OMEC_SUB_PROVISION_CHART) && \
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+		--namespace omec \
+		--values $(4G_CORE_VALUES) \
 		omec-control-plane \
 		$(OMEC_CONTROL_PLANE_CHART) && \
-	kubectl wait pod -n omec --for=condition=Ready -l release=omec-control-plane --timeout=300s && \
-	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
-		--values $(AIABVALUES) \
+		--values $(UPF_VALUES) \
 		omec-user-plane \
-		$(OMEC_USER_PLANE_CHART) && \
-	kubectl wait pod -n omec --for=condition=Ready -l release=omec-user-plane --timeout=300s
+		$(OMEC_USER_PLANE_CHART)
 	touch $@
 
 $(M)/5g-core: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric $(RESOURCEDIR)/aether.registry.yaml
 	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
-	kubectl -n omec get secret aether.registry || kubectl creates -f $(RESOURCEDIR)/aether.registry.yaml
+	kubectl -n omec get secret aether.registry || kubectl create -f $(RESOURCEDIR)/aether.registry.yaml
 	helm repo update
 	if [ "$(CHARTS)" == "local" ]; then helm dep up $(5GC_CONTROL_PLANE_CHART); fi
-	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
-		--values $(AIABVALUES) \
+		--values $(5G_CORE_VALUES) \
 		sim-app \
 		$(OMEC_SUB_PROVISION_CHART) && \
-	kubectl wait pod -n omec --for=condition=Ready -l release=sim-app --timeout=300s
-	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
-		--values $(AIABVALUES) \
+		--values $(UPF_VALUES) \
 		5g-core-up \
 		$(OMEC_USER_PLANE_CHART) && \
-	kubectl wait pod -n omec --for=condition=Ready -l release=5g-core-up --timeout=300s
-	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
-		--values $(AIABVALUES) \
+		--values $(5G_CORE_VALUES) \
 		fgc-core \
 		$(5GC_CONTROL_PLANE_CHART) && \
-	kubectl wait pod -n omec --for=condition=Ready -l release=fgc-core --timeout=300s && \
-	helm upgrade --install $(HELM_GLOBAL_ARGS) \
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
-		--values $(AIABVALUES) \
+		--values $(RANSIM_VALUES) \
 		5g-ransim-plane \
-		$(5G_RAN_SIM_CHART) && \
-	kubectl wait pod -n omec --for=condition=Ready -l release=5g-ransim-plane --timeout=300s
+		$(5G_RAN_SIM_CHART)
 	touch $@
 
 # UE images includes kernel module, ue_ip.ko
@@ -225,7 +232,7 @@ $(M)/ue-image: | $(M)/k8s-ready $(BUILD)/openairinterface
 $(M)/oaisim: | $(M)/ue-image $(M)/omec
 	sudo ip addr add 127.0.0.2/8 dev lo || true
 	$(eval mme_iface=$(shell ip -4 route list default | awk -F 'dev' '{ print $$2; exit }' | awk '{ print $$1 }'))
-	helm upgrade --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(AIABVALUES) \
+	helm upgrade --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(OAISIM_VALUES) \
 		--set config.enb.networks.s1_mme.interface=$(mme_iface) \
 		--set images.pullPolicy=IfNotPresent
 	kubectl rollout status -n omec statefulset ue
@@ -236,6 +243,64 @@ $(M)/oaisim: | $(M)/ue-image $(M)/omec
 		sleep 3; \
 	done"
 	touch $@
+
+roc: $(M)/roc
+$(M)/roc: $(M)/helm-ready
+	kubectl get namespace aether-roc 2> /dev/null || kubectl create namespace aether-roc
+	helm repo update
+	if [ "$(CHARTS)" == "local" ]; then helm dep up $(AETHER_ROC_UMBRELLA_CHART); fi
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+		--namespace kube-system \
+		--values $(ROC_VALUES) \
+		atomix-controller \
+		$(ATOMIX_CONTROLLER_CHART)
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+		--namespace kube-system \
+		--values $(ROC_VALUES) \
+		atomix-raft-storage \
+		$(ATOMIX_RAFT_STORAGE_CHART)
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+		--namespace kube-system \
+		--values $(ROC_VALUES) \
+		onos-operator \
+		$(ONOS_OPERATOR_CHART)
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+		--namespace aether-roc \
+		--values $(ROC_VALUES) \
+		aether-roc-umbrella \
+		$(AETHER_ROC_UMBRELLA_CHART)
+	touch $@
+
+# Load the ROC 4G models.  Disable loading network slice from SimApp.
+roc-4g-models: $(M)/roc
+	sed -i 's/provision-network-slice: true/provision-network-slice: false/' $(4G_CORE_VALUES)
+	sed -i 's/# syncUrl/syncUrl/' $(4G_CORE_VALUES)
+	$(eval ONOS_CLI_POD := $(shell kubectl -n aether-roc get pods -l name=onos-cli -o name))
+	echo "ONOS CLI pod: ${ONOS_CLI_POD}"
+	until kubectl -n aether-roc exec ${ONOS_CLI_POD} -- \
+		curl -s -f -L -X PATCH "http://aether-roc-api:8181/aether-roc-api" \
+		--header 'Content-Type: application/json' \
+		--data-raw "$$(cat ${ROC_4G_MODELS})"; do sleep 5; done
+
+# Load the ROC 5G models.  Disable loading network slice from SimApp.
+roc-5g-models: $(M)/roc
+	sed -i 's/provision-network-slice: true/provision-network-slice: false/' $(5G_CORE_VALUES)
+	sed -i 's/# syncUrl/syncUrl/' $(5G_CORE_VALUES)
+	$(eval ONOS_CLI_POD := $(shell kubectl -n aether-roc get pods -l name=onos-cli -o name))
+	echo "ONOS CLI pod: ${ONOS_CLI_POD}"
+	until kubectl -n aether-roc exec ${ONOS_CLI_POD} -- \
+		curl -s -f -L -X PATCH "http://aether-roc-api:8181/aether-roc-api" \
+		--header 'Content-Type: application/json' \
+		--data-raw "$$(cat ${ROC_5G_MODELS})"; do sleep 5; done
+
+roc-clean:
+	@echo "This could take 2-3 minutes..."
+	sed -i 's/provision-network-slice: false/provision-network-slice: true/' $(4G_CORE_VALUES)
+	sed -i 's/  syncUrl/  # syncUrl/' $(4G_CORE_VALUES)
+	sed -i 's/provision-network-slice: false/provision-network-slice: true/' $(5G_CORE_VALUES)
+	sed -i 's/  syncUrl/  # syncUrl/' $(5G_CORE_VALUES)
+	kubectl delete namespace aether-roc || true
+	rm -rf $(M)/roc
 
 test: | $(M)/fabric $(M)/omec $(M)/oaisim
 	@sleep 5
@@ -248,18 +313,12 @@ test: | $(M)/fabric $(M)/omec $(M)/oaisim
 	@echo "Finished to test"
 
 reset-test:
-	helm delete -n omec oaisim || true
-	helm delete -n omec omec-control-plane || true
-	helm delete -n omec omec-user-plane || true
+	kubectl delete namespace omec || true
 	kubectl delete po router || true
 	cd $(M); rm -f oaisim omec fabric
 
 reset-5g-test:
-	helm uninstall -n omec sim-app || true
-	helm uninstall -n omec fgc-core || true
-	helm uninstall -n omec 5g-core-up || true
-	helm uninstall -n omec 5g-ransim-plane || true
-	helm uninstall -n omec mongo || true
+	kubectl delete namespace omec || true
 	cd $(M); rm -f 5g-core
 
 clean: reset-test
