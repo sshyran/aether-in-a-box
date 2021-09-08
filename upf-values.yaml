@@ -1,0 +1,24 @@
+# Copyright 2019-present Open Networking Foundation
+#
+# SPDX-License-Identifier: LicenseRef-ONF-Member-Only-1.0
+
+resources:
+  enabled: false
+
+config:
+  upf:
+    name: "oaisim"
+    sriov:
+      enabled: false
+    hugepage:
+      enabled: false
+    cniPlugin: simpleovs
+    ipam: static
+    cfgFiles:
+      upf.json:
+        mode: af_packet
+        cpiface:
+          dnn: "8internet"
+          hostname: "upf"
+          enable_ue_ip_alloc: false
+          ue_ip_pool: 172.250.0.0/16
