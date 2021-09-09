@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5e14558_822bbf43",
+        "filename": "upf-values.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000640
+      },
+      "writtenOn": "2021-09-09T01:12:19Z",
+      "side": 1,
+      "message": "This should be internet now. No need to have 8internet. @badrinath can confirm.",
+      "revId": "432b8df88564f9836b6ae23c1f61ddbfb83963c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
