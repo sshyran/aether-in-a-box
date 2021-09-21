@@ -130,7 +130,6 @@ $(M)/helm-ready: | $(M)/k8s-ready
 	helm repo add onosproject https://charts.onosproject.org
 	if [ "$(REPO_PASSWORD)" ]; then \
 		helm repo add aether --username ${REPO_USERNAME} --password ${REPO_PASSWORD} https://charts.aetherproject.org; \
-		helm repo add sdran --username ${REPO_USERNAME} --password ${REPO_PASSWORD} https://sdrancharts.onosproject.org; \
 	fi
 	touch $@
 
