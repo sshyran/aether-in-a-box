@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60cadaf9_302894a3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2021-10-05T16:12:53Z",
+      "side": 1,
+      "message": "This patch needs refactoring to work with recent changes to AiaB.",
+      "revId": "174dd193ce1109d4fa7b77edd063d28f685fc7a5",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
