@@ -32,7 +32,19 @@ onos-gui:
   service:
     type: NodePort
 
+aether-roc-gui:
+  ingress:
+    enabled: false
+  service:
+    type: NodePort
+
 aether-roc-gui-v3:
+  ingress:
+    enabled: false
+  service:
+    type: NodePort
+
+aether-roc-gui-v4:
   ingress:
     enabled: false
   service:
