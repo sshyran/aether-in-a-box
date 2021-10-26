@@ -327,7 +327,7 @@ clean: reset-test
 	sudo ovs-vsctl del-br br-core-net || true
 	sudo apt remove --purge openvswitch-switch -y
 	source "$(VENV)/bin/activate" && cd $(BUILD)/kubespray; \
-	ansible-playbook -b -i inventory/local/hosts.ini reset.yml
+	ansible-playbook -b -i inventory/local/hosts.ini reset.yml --extra-vars "reset_confirmation=yes"
 	@if [ -d /usr/local/etc/emulab ]; then \
 		mount | grep /mnt/extra/kubelet/pods | cut -d" " -f3 | sudo xargs umount; \
 		sudo rm -rf /mnt/extra/kubelet; \
