@@ -178,6 +178,11 @@ $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fab
 	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(4G_CORE_VALUES) \
+		subscriber-proxy \
+		$(SUBSCRIBER_PROXY_CHART) && \
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+		--namespace omec \
+		--values $(4G_CORE_VALUES) \
 		omec-control-plane \
 		$(OMEC_CONTROL_PLANE_CHART) && \
 	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
@@ -199,6 +204,11 @@ $(M)/5g-core: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/
 		$(OMEC_SUB_PROVISION_CHART) && \
 	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
+		--values $(5G_CORE_VALUES) \
+		subscriber-proxy \
+		$(SUBSCRIBER_PROXY_CHART) && \
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+	--namespace omec \
 		--values $(UPF_VALUES) \
 		5g-core-up \
 		$(OMEC_USER_PLANE_CHART) && \
