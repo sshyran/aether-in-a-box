@@ -5,6 +5,7 @@
 OMEC_CONTROL_PLANE_CHART := $(WORKSPACE)/cord/aether-helm-charts/omec/omec-control-plane
 OMEC_USER_PLANE_CHART    := $(WORKSPACE)/cord/aether-helm-charts/omec/omec-user-plane
 OMEC_SUB_PROVISION_CHART := $(WORKSPACE)/cord/aether-helm-charts/omec/omec-sub-provision
+SUBSCRIBER_PROXY_CHART := $(WORKSPACE)/cord/roc-helm-charts/subscriber-proxy
 5GC_CONTROL_PLANE_CHART  := $(WORKSPACE)/cord/aether-helm-charts/omec/5g-control-plane
 5G_RAN_SIM_CHART         := $(WORKSPACE)/cord/aether-helm-charts/omec/5g-ran-sim
 

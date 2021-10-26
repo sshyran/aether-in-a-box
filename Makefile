@@ -268,6 +268,12 @@ $(M)/roc: $(M)/helm-ready
 		--values $(ROC_VALUES) \
 		aether-roc-umbrella \
 		$(AETHER_ROC_UMBRELLA_CHART)
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+		--namespace aether-roc \
+		--values $(5G_CORE_VALUES) \
+		subscriber-proxy \
+		$(SUBSCRIBER_PROXY_CHART)
+
 	touch $@
 
 # Load the ROC 4G models.  Disable loading network slice from SimApp.
