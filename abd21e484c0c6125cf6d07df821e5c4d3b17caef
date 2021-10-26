@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d82358d6_ac2648fa",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1000342
+      },
+      "writtenOn": "2021-10-26T14:20:01Z",
+      "side": 1,
+      "message": "I think this should be moved below (with roc) and added to `aether-roc` namespace instead",
+      "revId": "abd21e484c0c6125cf6d07df821e5c4d3b17caef",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0599d4b_dd27cebb",
+        "filename": "configs/local",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000342
+      },
+      "writtenOn": "2021-10-26T14:20:01Z",
+      "side": 1,
+      "message": "I think this can be \ncord/roc-helm-charts/subscriber-proxy",
+      "revId": "abd21e484c0c6125cf6d07df821e5c4d3b17caef",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
