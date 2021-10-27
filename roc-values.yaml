@@ -57,3 +57,24 @@ prometheus:
   server:
     persistentVolume:
       enabled: false
+prometheus-amp:
+  alertmanager:
+    persistentVolume:
+      enabled: false
+  server:
+    persistentVolume:
+      enabled: false
+prometheus-acc:
+  alertmanager:
+    persistentVolume:
+      enabled: false
+  server:
+    persistentVolume:
+      enabled: false
+prometheus-ace:
+  alertmanager:
+    persistentVolume:
+      enabled: false
+  server:
+    persistentVolume:
+      enabled: false
