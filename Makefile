@@ -74,10 +74,6 @@ $(M)/system-check: | $(M)
 		echo "FAIL: unsupported OS."; \
 		exit 1; \
 	fi
-	@if [[ ! -d "$(WORKSPACE)/cord/aether-helm-charts" ]]; then \
-                echo "FATAL: Please clone aether-helm-charts under $(WORKSPACE)/cord directory."; \
-                exit 1; \
-        fi
 	touch $@
 
 $(M)/setup: | $(M)
@@ -128,7 +124,7 @@ $(M)/helm-ready: | $(M)/k8s-ready
 	helm repo add cord https://charts.opencord.org
 	helm repo add atomix https://charts.atomix.io
 	helm repo add onosproject https://charts.onosproject.org
-	if [ "$(REPO_PASSWORD)" ]; then \
+	@if [ "$(REPO_PASSWORD)" ]; then \
 		helm repo add aether --username ${REPO_USERNAME} --password ${REPO_PASSWORD} https://charts.aetherproject.org; \
 	fi
 	touch $@
