@@ -155,7 +155,7 @@ $(M)/fabric: | $(M)/setup /opt/cni/bin/simpleovs /opt/cni/bin/static
 
 auth-secret: $(RESOURCEDIR)/aether.registry.yaml
 $(RESOURCEDIR)/aether.registry.yaml: configs/authentication
-	kubectl -n omec create secret docker-registry aether.registry \
+	@kubectl -n omec create secret docker-registry aether.registry \
 		--docker-server=https://registry.aetherproject.org \
 		--docker-username=${REGISTRY_USERNAME} \
 		--docker-password=${REGISTRY_CLI_SECRET} \
