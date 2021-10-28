@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a01d8d3c_2ffc4cd6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000836
+      },
+      "writtenOn": "2021-10-28T12:12:41Z",
+      "side": 1,
+      "message": "Kindly review this PR that corrects the uplink and downlink bit rates. The updated values are in Mbps ",
+      "revId": "83ab77c096a3493d7c74fa5f9c505f79ea2c46c4",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
