@@ -87,9 +87,9 @@ config:
             - "iot-app1-permit"
             - "iot-app2-permit"
             qos:
-              downlink: 20000000
+              downlink: 20
               traffic-class: "platinum"
-              uplink: 4000000
+              uplink: 40
             site-info:
               gNodeBs:
               - name: "aiab-gnb1"
