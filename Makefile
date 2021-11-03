@@ -14,11 +14,11 @@ VENV		?= $(BUILD)/venv/aiab
 4G_CORE_VALUES ?= $(MAKEDIR)/4g-core-values.yaml
 5G_CORE_VALUES ?= $(MAKEDIR)/5g-core-values.yaml
 OAISIM_VALUES  ?= $(MAKEDIR)/oaisim-values.yaml
-ROC_VALUES     ?= $(MAKEDIR)/roc-values.yaml
+ROC_VALUES     ?= $(MAKEDIR)/roc-values-v4.yaml
 UPF_VALUES     ?= $(MAKEDIR)/upf-values.yaml
 RANSIM_VALUES  ?= $(MAKEDIR)/ransim-values.yaml
-ROC_4G_MODELS  ?= $(MAKEDIR)/roc-4g-models.json
-ROC_5G_MODELS  ?= $(MAKEDIR)/roc-5g-models.json
+ROC_4G_MODELS  ?= $(MAKEDIR)/roc-4g-models-v4.json
+ROC_5G_MODELS  ?= $(MAKEDIR)/roc-5g-models-v4.json
 
 KUBESPRAY_VERSION ?= release-2.17
 DOCKER_VERSION	?= '20.10'
