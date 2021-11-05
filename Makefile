@@ -316,7 +316,7 @@ reset-5g-test:
 	kubectl delete namespace omec || true
 	cd $(M); rm -f 5g-core
 
-clean: reset-test
+clean:
 	kubectl delete po router || true
 	kubectl delete net-attach-def core-net || true
 	sudo ovs-vsctl del-br br-access-net || true
