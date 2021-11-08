@@ -2,14 +2,15 @@
 #
 # SPDX-License-Identifier: LicenseRef-ONF-Member-Only-1.0
 
+# Support testing charts in the sdcore-helm-charts repo
 OMEC_CONTROL_PLANE_CHART := $(WORKSPACE)/cord/sdcore-helm-charts/omec-control-plane
-OMEC_USER_PLANE_CHART    := $(WORKSPACE)/cord/aether-helm-charts/omec/omec-user-plane
+OMEC_USER_PLANE_CHART    := aether/omec-user-plane
 OMEC_SUB_PROVISION_CHART := $(WORKSPACE)/cord/sdcore-helm-charts/omec-sub-provision
 5GC_CONTROL_PLANE_CHART  := $(WORKSPACE)/cord/sdcore-helm-charts/5g-control-plane
 5G_RAN_SIM_CHART         := $(WORKSPACE)/cord/sdcore-helm-charts/5g-ran-sim
 
-# For installing the ROC
+# Support testing aether-roc-umbrella chart
 AETHER_ROC_UMBRELLA_CHART := $(WORKSPACE)/cord/roc-helm-charts/aether-roc-umbrella
-ATOMIX_CONTROLLER_CHART   := $(WORKSPACE)/cord/atomix-helm-charts/atomix-controller
-ATOMIX_RAFT_STORAGE_CHART := $(WORKSPACE)/cord/atomix-helm-charts/atomix-raft-storage
-ONOS_OPERATOR_CHART       := $(WORKSPACE)/cord/onos-helm-charts/onos-operator
+ATOMIX_CONTROLLER_CHART   := atomix/atomix-controller
+ATOMIX_RAFT_STORAGE_CHART := atomix/atomix-raft-storage
+ONOS_OPERATOR_CHART       := onosproject/onos-operator

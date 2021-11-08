@@ -216,6 +216,11 @@ $(BUILD)/openairinterface: | $(M)/setup
 	mkdir -p $(BUILD)
 	cd $(BUILD); git clone https://github.com/opencord/openairinterface.git
 
+download-ue-image: | $(M)/k8s-ready
+	sudo docker pull ${OAISIM_UE_IMAGE}
+	sudo docker tag ${OAISIM_UE_IMAGE} omecproject/lte-uesoftmodem:1.1.0
+	touch $(M)/ue-image
+
 $(M)/ue-image: | $(M)/k8s-ready $(BUILD)/openairinterface
 	cd $(BUILD)/openairinterface; \
 	sudo docker build . --target lte-uesoftmodem \
