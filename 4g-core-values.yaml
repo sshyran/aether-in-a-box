@@ -20,6 +20,8 @@ config:
     pfcp: true
     cfgFiles:
       cp.json:
+        global:
+          gxConfig: 0
         ip_pool_config:
           ueIpPool:
             ip: "172.250.0.0"
