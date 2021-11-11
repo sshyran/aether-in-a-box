@@ -4,7 +4,7 @@
 
 # Support testing charts in the sdcore-helm-charts repo
 OMEC_CONTROL_PLANE_CHART := $(WORKSPACE)/cord/sdcore-helm-charts/omec-control-plane
-OMEC_USER_PLANE_CHART    := aether/omec-user-plane
+OMEC_USER_PLANE_CHART    := $(WORKSPACE)/cord/aether-helm-charts/omec/omec-user-plane
 OMEC_SUB_PROVISION_CHART := $(WORKSPACE)/cord/sdcore-helm-charts/omec-sub-provision
 5GC_CONTROL_PLANE_CHART  := $(WORKSPACE)/cord/sdcore-helm-charts/5g-control-plane
 5G_RAN_SIM_CHART         := $(WORKSPACE)/cord/sdcore-helm-charts/5g-ran-sim
