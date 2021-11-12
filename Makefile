@@ -165,7 +165,7 @@ $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fab
 	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
 	kubectl -n omec get secret aether.registry || kubectl create -f $(RESOURCEDIR)/aether.registry.yaml
 	helm repo update
-	if [ "$(CHARTS)" == "local" ]; then helm dep up $(OMEC_CONTROL_PLANE_CHART); fi
+	if [[ ${CHARTS} == "local" || ${CHARTS} == "local-sdcore" ]]; then helm dep up $(OMEC_CONTROL_PLANE_CHART); fi
 	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(4G_CORE_VALUES) \
@@ -187,7 +187,7 @@ $(M)/5g-core: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/
 	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
 	kubectl -n omec get secret aether.registry || kubectl create -f $(RESOURCEDIR)/aether.registry.yaml
 	helm repo update
-	if [ "$(CHARTS)" == "local" ]; then helm dep up $(5GC_CONTROL_PLANE_CHART); fi
+	if [[ ${CHARTS} == "local" || ${CHARTS} == "local-sdcore" ]]; then helm dep up $(5GC_CONTROL_PLANE_CHART); fi
 	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(5G_CORE_VALUES) \
