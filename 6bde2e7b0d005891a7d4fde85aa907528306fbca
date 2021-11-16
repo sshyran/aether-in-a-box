@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ffc7a2b7_f57e832b",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2021-11-16T19:19:48Z",
+      "side": 1,
+      "message": "Can we change default to \"false\" for the time being?",
+      "range": {
+        "startLine": 27,
+        "startChar": 27,
+        "endLine": 27,
+        "endChar": 31
+      },
+      "revId": "6bde2e7b0d005891a7d4fde85aa907528306fbca",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da868490_5cfc345c",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2021-11-16T19:19:48Z",
+      "side": 1,
+      "message": "Remove whitespace at end",
+      "range": {
+        "startLine": 279,
+        "startChar": 142,
+        "endLine": 279,
+        "endChar": 144
+      },
+      "revId": "6bde2e7b0d005891a7d4fde85aa907528306fbca",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5188b825_d6e08681",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2021-11-16T19:19:48Z",
+      "side": 1,
+      "message": "Remove whitespace at end",
+      "range": {
+        "startLine": 291,
+        "startChar": 140,
+        "endLine": 291,
+        "endChar": 141
+      },
+      "revId": "6bde2e7b0d005891a7d4fde85aa907528306fbca",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
