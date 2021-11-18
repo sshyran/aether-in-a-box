@@ -32,6 +32,12 @@
                     "description": "4G Integration Test",
                     "display-name": "ROC 4G Test Connectivity Service",
                     "id": "aiab-cs"
+                },
+                {
+                    "core-5g-endpoint": "http://config4g.omec.svc:5000/config",
+                    "description": "4G Connectivity service endpoints",
+                    "display-name": "Connectivity Service 4G",
+                    "id": "connectivity-service-4g"
                 }
             ]
         },
@@ -45,7 +51,8 @@
                             "imsi-range-from": 208014567891201,
                             "imsi-range-to": 208014567891202,
                             "imsi-id": "aiab-imsis",
-                            "display-name": "Valid IMSIs"                        }
+                            "display-name": "Valid IMSIs"
+                        }
                     ],
                     "ip-domain": "aiab-ip-pool",
                     "device": {
@@ -56,6 +63,87 @@
                         "traffic-class": "aiab-class-1"
                     },
                     "site": "aiab-site"
+                },
+                {
+                    "display-name": "Global Default Device Group",
+                    "id": "defaultent-defaultdg",
+                    "ip-domain": "defaultent-defaultip",
+                    "site": "defaultent-defaultsite"
+                },
+                {
+                    "device": {
+                        "mbr": {
+                            "downlink": 1000000,
+                            "uplink": 1000000
+                        },
+                        "traffic-class": "platinum-4g"
+                    },
+                    "display-name": "Menlo Park 4G Cameras",
+                    "id": "menlo-4g-cameras",
+                    "imsis": [
+                        {
+                            "imsi-id": "menlo-4g-pi2",
+                            "imsi-range-from": 315021000000002,
+                            "imsi-range-to": 315021000000002
+                        }
+                    ],
+                    "ip-domain": "ip-domain-4g-2",
+                    "site": "menlo-staging"
+                },
+                {
+                    "device": {
+                        "mbr": {
+                            "downlink": 1000000,
+                            "uplink": 1000000
+                        },
+                        "traffic-class": "platinum-4g"
+                    },
+                    "display-name": "Menlo Park 4G users",
+                    "id": "menlo-4g-users",
+                    "imsis": [
+                        {
+                            "imsi-id": "menlo-4g-pi1",
+                            "imsi-range-from": 315021000000001,
+                            "imsi-range-to": 315021000000001
+                        },
+                        {
+                            "imsi-id": "menlo-4g-users-test",
+                            "imsi-range-from": 315021000000003,
+                            "imsi-range-to": 315021000000004
+                        }
+                    ],
+                    "ip-domain": "ip-domain-4g",
+                    "site": "menlo-staging"
+                },
+                {
+                    "device": {
+                        "mbr": {
+                            "downlink": 1000000,
+                            "uplink": 1000000
+                        },
+                        "traffic-class": "platinum-4g"
+                    },
+                    "display-name": "NG40 4G Users",
+                    "id": "ng40-4g-users",
+                    "imsis": [
+                        {
+                            "imsi-id": "ng40-4g-imsis-3",
+                            "imsi-range-from": 315010999922341,
+                            "imsi-range-to": 315010999922350
+                        },
+                        {
+                            "imsi-id": "ng40-4g-imsis",
+                            "imsi-range-from": 315010999912341,
+                            "imsi-range-to": 315010999912356
+                        },
+                        {
+                            "imsi-id": "ng40-4g-imsis-2",
+                            "imsi-range-from": 315010206000001,
+                            "imsi-range-to": 315010206000011
+                        }
+                    ],
+                    "ip-domain": "ip-domain-4g",
+                    "site": "menlo-staging"
                 }
             ]
         },
@@ -71,6 +159,22 @@
                     "description": "AiaB Enterprise",
                     "display-name": "AiaB Corp.",
                     "id": "aiab-enterprise"
+                },
+                {
+                    "connectivity-service": [
+                        {
+                            "connectivity-service": "connectivity-service-4g",
+                            "enabled": true
+                        }
+                    ],
+                    "description": "Aether - Open Networking Foundation",
+                    "display-name": "Aether - ONF",
+                    "id": "aether-onf"
+                },
+                {
+                    "description": "This Enterprise holds discovered IMSIs that cannot be associated elsewhere",
+                    "display-name": "Default Enterprise",
+                    "id": "defaultent"
                 }
             ]
         },
@@ -84,6 +188,36 @@
                     "mtu": 1460,
                     "subnet": "172.250.0.0/16",
                     "enterprise": "aiab-enterprise"
+                },
+                {
+                    "admin-status": "ENABLE",
+                    "description": "Menlo Internet",
+                    "display-name": "Menlo Internet",
+                    "dnn": "internet-menlo",
+                    "dns-primary": "10.33.128.11",
+                    "dns-secondary": "1.1.1.1",
+                    "enterprise": "aether-onf",
+                    "id": "ip-domain-4g",
+                    "mtu": 1460,
+                    "subnet": "10.230.0.0/16"
+                },
+                {
+                    "description": "Global Default IP Domain",
+                    "display-name": "Global Default IP Domain",
+                    "enterprise": "defaultent",
+                    "id": "defaultent-defaultip",
+                    "subnet": "255.255.255.255/32"
+                },
+                {
+                    "admin-status": "ENABLE",
+                    "display-name": "Menlo Internet 2",
+                    "dnn": "internet-menlo2",
+                    "dns-primary": "10.33.128.11",
+                    "dns-secondary": "1.1.1.1",
+                    "enterprise": "aether-onf",
+                    "id": "ip-domain-4g-2",
+                    "mtu": 1460,
+                    "subnet": "10.231.0.0/16"
                 }
             ]
         },
@@ -109,6 +243,64 @@
                             "tac": "0001"
                         }
                     ]
+                },
+                {
+                    "description": "Global Default Site",
+                    "display-name": "Global Default Site",
+                    "enterprise": "defaultent",
+                    "id": "defaultent-defaultsite",
+                    "imsi-definition": {
+                        "format": "SSSSSSSSSSSSSSS",
+                        "mcc": "000",
+                        "mnc": "00"
+                    }
+                },
+                {
+                    "display-name": "ONF -- Menlo Park Staging",
+                    "enterprise": "aether-onf",
+                    "id": "menlo-staging",
+                    "imsi-definition": {
+                        "enterprise": 1,
+                        "format": "SSSSSSSSSSSSSSS",
+                        "mcc": "315",
+                        "mnc": "021"
+                    },
+                    "small-cell": [
+                        {
+                            "address": "tac-205",
+                            "enable": true,
+                            "small-cell-id": "tac-205",
+                            "tac": "00CD"
+                        },
+                        {
+                            "address": "tac-301",
+                            "enable": true,
+                            "small-cell-id": "tac-301",
+                            "tac": "012D"
+                        },
+                        {
+                            "address": "tac-302",
+                            "enable": true,
+                            "small-cell-id": "tac-302",
+                            "tac": "012E"
+                        }
+                    ]
+                }
+            ]
+        },
+        "template-4.0.0": {
+            "template": [
+                {
+                    "default-behavior": "ALLOW-ALL",
+                    "description": "Default QOS profile",
+                    "display-name": "Default",
+                    "id": "template-4g",
+                    "slice": {
+                        "mbr": {
+                            "downlink": 12000000,
+                            "uplink": 12000000
+                        }
+                    }
                 }
             ]
         },
@@ -121,6 +313,14 @@
                     "pdb": 100,
                     "arp": 1,
                     "pelr": 3,
+                    "qci": 1
+                },
+                {
+                    "display-name": "Platinum class 4G",
+                    "id": "platinum-4g",
+                    "pdb": 100,
+                    "pelr": 3,
+                    "arp": 1,
                     "qci": 1
                 }
             ]
@@ -136,6 +336,22 @@
                     "enterprise": "aiab-enterprise",
                     "port": 8805,
                     "config-endpoint": "http://upf-http.omec.svc:8080"
+                },
+                {
+                    "address": "upf.aether-sdcore-upf2.svc.stg.menlo.aetherproject.net",
+                    "display-name": "Menlo UPF2",
+                    "enterprise": "aether-onf",
+                    "id": "menlo-4g-upf2",
+                    "port": 8805,
+                    "site": "menlo-staging"
+                },
+                {
+                    "address": "upf.aether-sdcore-upf1.svc.stg.menlo.aetherproject.net",
+                    "display-name": "Menlo UPF1",
+                    "enterprise": "aether-onf",
+                    "id": "menlo-4g-upf",
+                    "port": 8805,
+                    "site": "menlo-staging"
                 }
             ]
         },
@@ -159,12 +375,60 @@
                     "site": "aiab-site",
                     "slice": {
                         "mbr": {
-                          "uplink": 10000000,
-                          "downlink": 5000000,
-                          "uplink-burst-size": 600000,
-                          "downlink-burst-size": 600000
+                            "uplink": 10000000,
+                            "downlink": 5000000,
+                            "uplink-burst-size": 600000,
+                            "downlink-burst-size": 600000
                         }
                     }
+                },
+                {
+                    "default-behavior": "ALLOW-ALL",
+                    "device-group": [
+                        {
+                            "device-group": "menlo-4g-cameras",
+                            "enable": true
+                        }
+                    ],
+                    "display-name": "4G Camera Slice",
+                    "enterprise": "aether-onf",
+                    "id": "vcs-cameras-4g",
+                    "sd": 66052,
+                    "site": "menlo-staging",
+                    "slice": {
+                        "mbr": {
+                            "downlink": 25000000,
+                            "uplink": 100000000
+                        }
+                    },
+                    "sst": 1,
+                    "upf": "menlo-4g-upf2"
+                },
+                {
+                    "default-behavior": "ALLOW-ALL",
+                    "device-group": [
+                        {
+                            "device-group": "menlo-4g-users",
+                            "enable": true
+                        },
+                        {
+                            "device-group": "ng40-4g-users",
+                            "enable": true
+                        }
+                    ],
+                    "display-name": "4G Users Slice",
+                    "enterprise": "aether-onf",
+                    "id": "vcs-staging-4g",
+                    "sd": 66051,
+                    "site": "menlo-staging",
+                    "slice": {
+                        "mbr": {
+                            "downlink": 200000000,
+                            "uplink": 40000000
+                        }
+                    },
+                    "sst": 1,
+                    "upf": "menlo-4g-upf"
                 }
             ]
         }
