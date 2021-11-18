@@ -43,6 +43,31 @@ config:
             op: ""
             key: "465b5ce8b199b49faa5f0a2ee238a6bc"
             sequenceNumber: 96
+          - ueId-start: 315010206000001
+            ueId-end: 315010206000011
+            plmnId: 315010
+            opc: 69d5c2eb2e2e624750541d3bbc692ba5
+            key: 000102030405060708090a0b0c0d0e0f
+            sequenceNumber: 135
+          - ueId-start: 315010999912341
+            ueId-end: 315010999912356
+            plmnId: 315010
+            opc: 69d5c2eb2e2e624750541d3bbc692ba5
+            key: 000102030405060708090a0b0c0d0e0f
+            sequenceNumber: 135
+          - ueId-start: 315010999922341
+            ueId-end: 315010999922350
+            # ueId-end: 315010999924340
+            plmnId: 315010
+            opc: 69d5c2eb2e2e624750541d3bbc692ba5
+            key: 000102030405060708090a0b0c0d0e0f
+            sequenceNumber: 135
+          - ueId-start: 315021000000001
+            ueId-end: 315021000000010
+            plmnId: 315021
+            opc: 69d5c2eb2e2e624750541d3bbc692ba5
+            key: 000102030405060708090a0b0c0d0e0f
+            sequenceNumber: 135
           device-groups:
           - name:  "4g-oaisim-user"
             imsis:
