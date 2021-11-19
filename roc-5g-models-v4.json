@@ -79,6 +79,7 @@
                 {
                     "admin-status": "ENABLE",
                     "display-name": "IP pool",
+                    "dnn": "internet",
                     "dns-primary": "8.8.8.8",
                     "id": "aiab-ip-pool",
                     "mtu": 1460,
