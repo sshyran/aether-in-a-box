@@ -24,6 +24,30 @@
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bff1cd15_fae4bc07",
+        "filename": "roc-5g-models-v4.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2021-12-02T15:58:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "972dc010_60d7e010",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 6
+      },
+      "revId": "e098382a0da7f760c660e500cb5dd134dcfe0a63",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e6c72f4d_97e796e3",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-12-01T16:12:28Z",
       "side": 1,
       "message": "Same comment",
+      "range": {
+        "startLine": 90,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 8
+      },
+      "revId": "e098382a0da7f760c660e500cb5dd134dcfe0a63",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c896218_4e9396be",
+        "filename": "roc-5g-models-v4.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2021-12-02T15:58:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e6c72f4d_97e796e3",
       "range": {
         "startLine": 90,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5cc966e8_87eb42b5",
+        "filename": "roc-5g-models-v4.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2021-12-02T15:58:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9957b39_85046dde",
+      "range": {
+        "startLine": 110,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 7
+      },
+      "revId": "e098382a0da7f760c660e500cb5dd134dcfe0a63",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a542fa0f_14bf8cf2",
@@ -83,6 +155,30 @@
       "writtenOn": "2021-12-01T16:12:28Z",
       "side": 1,
       "message": "Same comment",
+      "range": {
+        "startLine": 136,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 8
+      },
+      "revId": "e098382a0da7f760c660e500cb5dd134dcfe0a63",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00c8b867_3e2d7729",
+        "filename": "roc-5g-models-v4.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2021-12-02T15:58:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a542fa0f_14bf8cf2",
       "range": {
         "startLine": 136,
         "startChar": 0,
