@@ -38,7 +38,7 @@
         "device-group-4.0.0": {
             "device-group": [
                 {
-                    "display-name": "Unkown-Inventory",
+                    "display-name": "Unknown-Inventory",
                     "id": "defaultent-defaultsite-default",
                     "ip-domain": "defaultent-defaultip",
                     "site": "defaultent-defaultsite",
@@ -68,8 +68,8 @@
                     "id": "aiab-device-group",
                     "imsis": [
                         {
-                            "imsi-range-from": 2089300007487,
-                            "imsi-range-to": 2089300007488,
+                            "imsi-range-from": 208930010007487,
+                            "imsi-range-to": 208930010007488,
                             "imsi-id": "aiab-imsis",
                             "display-name": "Valid IMSIs"                        }
                     ],
@@ -154,7 +154,7 @@
                         "mcc": "208",
                         "mnc": "93",
                         "enterprise": 1,
-                        "format": "SSSSSSSSSSSSSSS"
+                        "format": "CCCNNEEESSSSSSS"
                     },
                     "small-cell": [
                         {
