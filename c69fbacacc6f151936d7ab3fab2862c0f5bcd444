@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc943edd_7462c0d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2022-01-05T01:27:58Z",
+      "side": 1,
+      "message": "I assume that the too-short IMSI\u0027s are there because they are what gNBsim is configured to use.  If so, are there changes needed to get gNBsim to use the new IMSIs?",
+      "revId": "c69fbacacc6f151936d7ab3fab2862c0f5bcd444",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
