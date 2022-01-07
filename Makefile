@@ -321,6 +321,18 @@ test: | $(M)/fabric $(M)/omec $(M)/oaisim
 	ping -I oip1 google.com -c 3
 	@echo "Finished to test"
 
+5g-test: | $(M)/5g-core
+	@echo "Test: Registration + UE initiated PDU Session Establishment + User Data packets"
+	@sleep 5
+	@rm -f /tmp/gnbsim.out
+	kubectl -n omec exec gnbsim-0 -- ./gnbsim 2>&1 | tee /tmp/gnbsim.out
+	@echo ""
+	@echo "Test summary:"
+	@grep "Result: " /tmp/gnbsim.out
+	@[ "$$(grep -c "Result: PASS" /tmp/gnbsim.out)" == "5" ] \
+		&& echo "*** TEST PASSED ***" \
+		|| (echo "*** TEST FAILED ***" && exit 1)
+
 reset-test:
 	kubectl delete namespace omec || true
 	kubectl delete po router || true

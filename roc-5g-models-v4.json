@@ -68,8 +68,8 @@
                     "id": "aiab-device-group",
                     "imsis": [
                         {
-                            "imsi-range-from": 2089300007487,
-                            "imsi-range-to": 2089300007488,
+                            "imsi-range-from": 208930100007487,
+                            "imsi-range-to": 208930100007501,
                             "imsi-id": "aiab-imsis",
                             "display-name": "Valid IMSIs"                        }
                     ],
