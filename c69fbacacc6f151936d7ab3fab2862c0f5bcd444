@@ -16,6 +16,24 @@
       "message": "I assume that the too-short IMSI\u0027s are there because they are what gNBsim is configured to use.  If so, are there changes needed to get gNBsim to use the new IMSIs?",
       "revId": "c69fbacacc6f151936d7ab3fab2862c0f5bcd444",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b98a430_64fb31b8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2022-01-07T21:30:31Z",
+      "side": 1,
+      "message": "The IMSI\u0027s used by gNBsim are configured in its Helm chart values.yaml file: https://gerrit.opencord.org/plugins/gitiles/sdcore-helm-charts/+/refs/heads/master/5g-ran-sim/values.yaml#87",
+      "parentUuid": "fc943edd_7462c0d1",
+      "revId": "c69fbacacc6f151936d7ab3fab2862c0f5bcd444",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
