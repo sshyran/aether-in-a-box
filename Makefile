@@ -333,13 +333,17 @@ test: | $(M)/fabric $(M)/omec $(M)/oaisim
 		&& echo "*** TEST PASSED ***" \
 		|| (echo "*** TEST FAILED ***" && exit 1)
 
-reset-test:
-	kubectl delete namespace omec || true
+cleanup-omec:
+	helm delete -n omec $$(helm -n omec ls -q) || true
+	@echo ""
+	@echo "Wait for all pods to terminate..."
+	kubectl wait -n omec --for=delete --all=true -l app!=ue pod --timeout=180s || true
+
+reset-test: cleanup-omec
 	kubectl delete po router || true
 	cd $(M); rm -f oaisim omec fabric
 
-reset-5g-test:
-	kubectl delete namespace omec || true
+reset-5g-test: cleanup-omec
 	cd $(M); rm -f 5g-core
 
 clean:
