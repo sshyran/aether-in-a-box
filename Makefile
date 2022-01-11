@@ -25,6 +25,7 @@ DOCKER_VERSION	?= '20.10'
 K8S_VERSION	?= v1.20.11
 HELM_VERSION	?= v3.6.3
 ENABLE_SUBSCRIBER_PROXY ?= false
+GNBSIM_COLORS ?= true
 
 HELM_GLOBAL_ARGS ?=
 
@@ -325,7 +326,11 @@ test: | $(M)/fabric $(M)/omec $(M)/oaisim
 	@echo "Test: Registration + UE initiated PDU Session Establishment + User Data packets"
 	@sleep 5
 	@rm -f /tmp/gnbsim.out
-	kubectl -n omec exec gnbsim-0 -- ./gnbsim 2>&1 | tee /tmp/gnbsim.out
+	@if [[ ${GNBSIM_COLORS} == "true" ]]; then \
+		kubectl -n omec exec gnbsim-0 -- ./gnbsim 2>&1 | tee /tmp/gnbsim.out; \
+	else \
+		kubectl -n omec exec gnbsim-0 -- ./gnbsim 2>&1 | sed -u "s,\x1B\[[0-9;]*[a-zA-Z],,g" | tee /tmp/gnbsim.out; \
+	fi
 	@echo ""
 	@echo "Test summary:"
 	@grep "Result: " /tmp/gnbsim.out
