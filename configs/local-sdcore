@@ -8,6 +8,7 @@ OMEC_USER_PLANE_CHART    := aether/omec-user-plane
 OMEC_SUB_PROVISION_CHART := $(WORKSPACE)/cord/sdcore-helm-charts/omec-sub-provision
 5GC_CONTROL_PLANE_CHART  := $(WORKSPACE)/cord/sdcore-helm-charts/5g-control-plane
 5G_RAN_SIM_CHART         := $(WORKSPACE)/cord/sdcore-helm-charts/5g-ran-sim
+5G_TEST_APPS_CHART       := $(WORKSPACE)/cord/sdcore-helm-charts/5g-test-apps
 
 # Support testing aether-roc-umbrella chart
 AETHER_ROC_UMBRELLA_CHART := $(WORKSPACE)/cord/roc-helm-charts/aether-roc-umbrella

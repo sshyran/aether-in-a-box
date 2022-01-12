@@ -19,6 +19,7 @@ UPF_VALUES     ?= $(MAKEDIR)/upf-values.yaml
 RANSIM_VALUES  ?= $(MAKEDIR)/ransim-values.yaml
 ROC_4G_MODELS  ?= $(MAKEDIR)/roc-4g-models-v4.json
 ROC_5G_MODELS  ?= $(MAKEDIR)/roc-5g-models-v4.json
+TEST_APP_VALUES?= $(MAKEDIR)/5g-test-apps-values.yaml
 
 KUBESPRAY_VERSION ?= release-2.17
 DOCKER_VERSION	?= '20.10'
@@ -350,6 +351,19 @@ reset-test: cleanup-omec
 
 reset-5g-test: cleanup-omec
 	cd $(M); rm -f 5g-core
+
+reset-dbtestapp:
+	helm uninstall --namespace omec 5g-test-app
+
+dbtestapp:
+	helm repo update
+	if [ "$(CHARTS)" == "local" ]; then helm dep up $(5G_TEST_APPS_CHART); fi
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+		--namespace omec \
+		5g-test-app \
+		--values $(TEST_APP_VALUES) \
+		$(5G_TEST_APPS_CHART)
+	@echo "Finished to dbtestapp"
 
 clean:
 	kubectl delete po router || true
