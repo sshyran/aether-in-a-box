@@ -43,6 +43,8 @@ config:
     cfgFiles:
       simapp.yaml:
         configuration:
+          MongoDBName: free5gc # database name in MongoDB
+          MongoDBUrl: mongodb://mongodb:27017
           provision-network-slice: true
           sub-provision-endpt:
             addr: webui
