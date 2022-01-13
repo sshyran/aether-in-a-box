@@ -15,7 +15,7 @@ config:
     mnc_length: 2
   ue:
     sim:
-      msin: "4567891201"
+      msin: "0167891201"
       api_key: "465b5ce8b199b49faa5f0a2ee238a6bc"
       opc: "d4416644f6154936193433dd20a0ace0"
       msisdn: "1122334456"

@@ -40,8 +40,8 @@ config:
             addr: config4g
             port: 5000
           subscribers:
-          - ueId-start: 208014567891201
-            ueId-end: 208014567891211
+          - ueId-start: 208010167891201
+            ueId-end: 208010167891211
             plmnId: 20801
             opc: "d4416644f6154936193433dd20a0ace0"
             op: ""
@@ -50,8 +50,8 @@ config:
           device-groups:
           - name:  "4g-oaisim-user"
             imsis:
-              - "208014567891201"
-              - "208014567891202"
+              - "208010167891201"
+              - "208010167891202"
             ip-domain-name: "pool1"
             ip-domain-expanded:
               dnn: internet
