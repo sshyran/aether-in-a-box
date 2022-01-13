@@ -38,7 +38,7 @@
         "device-group-4.0.0": {
             "device-group": [
                 {
-                    "display-name": "Unkown-Inventory",
+                    "display-name": "Unknown-Inventory",
                     "id": "defaultent-defaultsite-default",
                     "ip-domain": "defaultent-defaultip",
                     "site": "defaultent-defaultsite",
@@ -154,7 +154,7 @@
                         "mcc": "208",
                         "mnc": "93",
                         "enterprise": 1,
-                        "format": "SSSSSSSSSSSSSSS"
+                        "format": "CCCNNEESSSSSSSS"
                     },
                     "small-cell": [
                         {
