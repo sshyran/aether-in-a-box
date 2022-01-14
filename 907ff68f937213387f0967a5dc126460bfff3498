@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "200e2622_0d953864",
+        "filename": "oaisim-values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2022-01-14T16:47:12Z",
+      "side": 1,
+      "message": "Any reason to not just leave this as 45?",
+      "range": {
+        "startLine": 18,
+        "startChar": 13,
+        "endLine": 18,
+        "endChar": 15
+      },
+      "revId": "907ff68f937213387f0967a5dc126460bfff3498",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
