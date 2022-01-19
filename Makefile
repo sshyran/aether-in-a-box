@@ -340,7 +340,7 @@ test: | $(M)/fabric $(M)/omec $(M)/oaisim
 		|| (echo "*** TEST FAILED ***" && exit 1)
 
 cleanup-omec:
-	helm delete -n omec $$(helm -n omec ls -q) || true
+	helm delete -n omec $$(helm -n omec ls -qa) || true
 	@echo ""
 	@echo "Wait for all pods to terminate..."
 	kubectl wait -n omec --for=delete --all=true -l app!=ue pod --timeout=180s || true
