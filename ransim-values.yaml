@@ -70,6 +70,15 @@ config:
               plmnId:
                 mcc: 208
                 mnc: 93
+            - profileType: uetriggservicereq
+              profileName: profile4
+              enable: false
+              gnbName: gnb1
+              startImsi: 208930100007497
+              ueCount: 5
+              plmnId:
+                mcc: 208
+                mnc: 93
             - profileType: deregister
               profileName: profile4
               enable: false
