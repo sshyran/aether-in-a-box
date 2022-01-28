@@ -48,7 +48,7 @@ omec: $(M)/system-check $(M)/omec
 oaisim: $(M)/oaisim
 5gc: $(M)/system-check $(M)/5g-core
 
-.PHONY: omec oaisim 5gc test reset-test 5g-core reset-5g-test clean
+.PHONY: omec oaisim 5gc test reset-test reset-ue 5g-core reset-5g-test clean
 
 $(M):
 	mkdir -p $(M)
@@ -348,6 +348,12 @@ cleanup-omec:
 reset-test: cleanup-omec
 	kubectl delete po router || true
 	cd $(M); rm -f oaisim omec fabric
+
+reset-ue:
+	helm delete -n omec oaisim || true
+	kubectl wait -n omec --for=delete pod enb-0 || true
+	kubectl wait -n omec --for=delete pod ue-0 || true
+	cd $(M); rm -f oaisim
 
 reset-5g-test: cleanup-omec
 	cd $(M); rm -f 5g-core
