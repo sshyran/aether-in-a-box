@@ -11,7 +11,7 @@ resources:
 config:
   managedByConfigPod:
     enabled: true
-    # syncUrl: http://sdcore-adapter-v2.aether-roc.svc:8080/synchronize
+    # syncUrl: http://sdcore-adapter-v3.aether-roc.svc:8080/synchronize
   smf:
     cfgFiles:
       # https://github.com/free5gc/free5gc/blob/main/config/pcfcfg.yaml
@@ -79,16 +79,6 @@ config:
               dns-primary: "8.8.8.8"
               mtu: 1460
               ue-ip-pool: "172.250.0.0/16"
-              ue-dnn-qos:
-                dnn-mbr-downlink: 20000000
-                dnn-mbr-uplink: 4000000
-                bitrate-unit: bps
-                traffic-class:  #default bearer QCI/ARP
-                  name: "platinum"
-                  qci: 9
-                  arp: 6
-                  pdb: 300
-                  pelr: 6
             site-info: "aiab"
           network-slices:
           - name: "default"
@@ -97,11 +87,21 @@ config:
               sst: 1
             site-device-group:
             - "5g-gnbsim-user"
-            application-filtering-rules:
-            - rule-name: "ALLOW-ALL"
-              priority: 250
-              action: "permit"
-              endpoint: "0.0.0.0/0"
+            applications-information:
+            - app-name: "default-app"
+              end-port: 40000
+              endpoint: "1.1.1.1/32"
+              protocol: 17
+              start-port: 40000
+            deny-applications:
+            - "iot-app-deny"
+            permit-applications:
+            - "iot-app1-permit"
+            - "iot-app2-permit"
+            qos:
+              downlink: 20
+              traffic-class: "platinum"
+              uplink: 40
             site-info:
               gNodeBs:
               - name: "aiab-gnb1"

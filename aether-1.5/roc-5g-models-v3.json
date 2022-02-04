@@ -40,9 +40,9 @@
         "connectivity-service-3.0.0": {
             "connectivity-service": [
                 {
-                    "core-5g-endpoint": "http://config4g.omec.svc:5000/config",
-                    "description": "4G Integration Test",
-                    "display-name": "ROC 4G Test Connectivity Service",
+                    "core-5g-endpoint": "http://webui.omec.svc:5000/config",
+                    "description": "5G Integration Test",
+                    "display-name": "ROC 5G Test Connectivity Service",
                     "id": "aiab-cs"
                 }
             ]
@@ -54,8 +54,8 @@
                     "id": "aiab-device-group",
                     "imsis": [
                         {
-                            "imsi-range-from": 208014567891201,
-                            "imsi-range-to": 208014567891202,
+                            "imsi-range-from": 208930100007487,
+                            "imsi-range-to": 208930100007488,
                             "name": "aiab-imsis"
                         }
                     ],
@@ -101,7 +101,7 @@
                     "id": "aiab-site",
                     "imsi-definition": {
                         "mcc": "208",
-                        "mnc": "01",
+                        "mnc": "93",
                         "enterprise": 0,
                         "format": "SSSSSSSSSSSSSSS"
                     }
