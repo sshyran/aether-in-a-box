@@ -2,10 +2,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Configure auth for private Helm repos.  Override with your credentials.
-REPO_USERNAME := onfstaff
-REPO_PASSWORD :=
-
 # Configure auth for private Docker registry.  Override with credentials
 # obtained from https://registry.aetherproject.org.
 REGISTRY_USERNAME   := myuser

@@ -43,6 +43,8 @@ cpu_family	:= $(shell lscpu | grep 'CPU family:' | awk '{print $$3}')
 cpu_model	:= $(shell lscpu | grep 'Model:' | awk '{print $$2}')
 os_vendor	:= $(shell lsb_release -i -s)
 os_release	:= $(shell lsb_release -r -s)
+USER		:= $(shell whoami)
+
 
 omec: $(M)/system-check $(M)/omec
 oaisim: $(M)/oaisim
@@ -120,6 +122,7 @@ $(M)/k8s-ready: | $(M)/setup $(BUILD)/kubespray $(VENV)/bin/activate $(M)/kubesp
 	sudo cp -f /etc/kubernetes/admin.conf $(HOME)/.kube/config
 	sudo chown $(shell id -u):$(shell id -g) $(HOME)/.kube/config
 	kubectl wait pod -n kube-system --for=condition=Ready --all
+	sudo adduser $(USER) docker
 	touch $@
 
 $(M)/helm-ready: | $(M)/k8s-ready
@@ -127,10 +130,10 @@ $(M)/helm-ready: | $(M)/k8s-ready
 	helm repo add cord https://charts.opencord.org
 	helm repo add atomix https://charts.atomix.io
 	helm repo add onosproject https://charts.onosproject.org
-	@if [ "$(REPO_PASSWORD)" ]; then \
-		helm repo add aether --username ${REPO_USERNAME} --password ${REPO_PASSWORD} https://charts.aetherproject.org; \
-	fi
+	helm repo add aether https://charts.aetherproject.org
 	touch $@
+
+node-prep: | $(M)/k8s-ready $(M)/fabric $(M)/oaisim-lo
 
 /opt/cni/bin/simpleovs: | $(M)/k8s-ready
 	sudo cp $(RESOURCEDIR)/simpleovs /opt/cni/bin/
@@ -220,20 +223,23 @@ $(BUILD)/openairinterface: | $(M)/setup
 	cd $(BUILD); git clone https://github.com/opencord/openairinterface.git
 
 download-ue-image: | $(M)/k8s-ready
-	sudo docker pull ${OAISIM_UE_IMAGE}
-	sudo docker tag ${OAISIM_UE_IMAGE} omecproject/lte-uesoftmodem:1.1.0
+	sg docker -c "docker pull ${OAISIM_UE_IMAGE} && \
+		docker tag ${OAISIM_UE_IMAGE} omecproject/lte-uesoftmodem:1.1.0"
 	touch $(M)/ue-image
 
 $(M)/ue-image: | $(M)/k8s-ready $(BUILD)/openairinterface
 	cd $(BUILD)/openairinterface; \
-	sudo docker build . --target lte-uesoftmodem \
+	sg docker -c "docker build . --target lte-uesoftmodem \
 		--build-arg build_base=omecproject/oai-base:1.1.0 \
 		--file Dockerfile.ue \
-		--tag omecproject/lte-uesoftmodem:1.1.0
+		--tag omecproject/lte-uesoftmodem:1.1.0"
 	touch $@
 
-$(M)/oaisim: | $(M)/ue-image $(M)/omec
+$(M)/oaisim-lo:
 	sudo ip addr add 127.0.0.2/8 dev lo || true
+	touch $@
+
+$(M)/oaisim: | $(M)/ue-image $(M)/omec $(M)/oaisim-lo
 	$(eval mme_iface=$(shell ip -4 route list default | awk -F 'dev' '{ print $$2; exit }' | awk '{ print $$1 }'))
 	helm upgrade --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(OAISIM_VALUES) \
 		--set config.enb.networks.s1_mme.interface=$(mme_iface) \
