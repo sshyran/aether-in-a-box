@@ -11,12 +11,10 @@ RESOURCEDIR	:= $(MAKEDIR)/resources
 WORKSPACE	?= $(HOME)
 VENV		?= $(BUILD)/venv/aiab
 
-4G_CORE_VALUES ?= $(MAKEDIR)/4g-core-values.yaml
-5G_CORE_VALUES ?= $(MAKEDIR)/5g-core-values.yaml
+4G_CORE_VALUES ?= $(MAKEDIR)/sd-core-4g-values.yaml
+5G_CORE_VALUES ?= $(MAKEDIR)/sd-core-5g-values.yaml
 OAISIM_VALUES  ?= $(MAKEDIR)/oaisim-values.yaml
 ROC_VALUES     ?= $(MAKEDIR)/roc-values.yaml
-UPF_VALUES     ?= $(MAKEDIR)/upf-values.yaml
-RANSIM_VALUES  ?= $(MAKEDIR)/ransim-values.yaml
 ROC_4G_MODELS  ?= $(MAKEDIR)/roc-4g-models.json
 ROC_5G_MODELS  ?= $(MAKEDIR)/roc-5g-models.json
 TEST_APP_VALUES?= $(MAKEDIR)/5g-test-apps-values.yaml
@@ -171,49 +169,24 @@ $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fab
 	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
 	kubectl -n omec get secret aether.registry || kubectl create -f $(RESOURCEDIR)/aether.registry.yaml
 	helm repo update
-	if [[ "${CHARTS}" == "local" || "${CHARTS}" == "local-sdcore" ]]; then helm dep up $(OMEC_CONTROL_PLANE_CHART); fi
+	if [[ "${CHARTS}" == "local" || "${CHARTS}" == "local-sdcore" ]]; then helm dep up $(SD_CORE_CHART); fi
 	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(4G_CORE_VALUES) \
-		sim-app \
-		$(OMEC_SUB_PROVISION_CHART) && \
-	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
-		--namespace omec \
-		--values $(4G_CORE_VALUES) \
-		omec-control-plane \
-		$(OMEC_CONTROL_PLANE_CHART) && \
-	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
-		--namespace omec \
-		--values $(UPF_VALUES) \
-		omec-user-plane \
-		$(OMEC_USER_PLANE_CHART)
+		sd-core \
+		$(SD_CORE_CHART)
 	touch $@
 
 $(M)/5g-core: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric $(RESOURCEDIR)/aether.registry.yaml
 	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
 	kubectl -n omec get secret aether.registry || kubectl create -f $(RESOURCEDIR)/aether.registry.yaml
 	helm repo update
-	if [[ "${CHARTS}" == "local" || "${CHARTS}" == "local-sdcore" ]]; then helm dep up $(5GC_CONTROL_PLANE_CHART); fi
+	if [[ "${CHARTS}" == "local" || "${CHARTS}" == "local-sdcore" ]]; then helm dep up $(SD_CORE_CHART); fi
 	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values $(5G_CORE_VALUES) \
-		sim-app \
-		$(OMEC_SUB_PROVISION_CHART) && \
-	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
-		--namespace omec \
-		--values $(UPF_VALUES) \
-		5g-core-up \
-		$(OMEC_USER_PLANE_CHART) && \
-	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
-		--namespace omec \
-		--values $(5G_CORE_VALUES) \
-		fgc-core \
-		$(5GC_CONTROL_PLANE_CHART) && \
-	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
-		--namespace omec \
-		--values $(RANSIM_VALUES) \
-		5g-ransim-plane \
-		$(5G_RAN_SIM_CHART)
+		sd-core \
+		$(SD_CORE_CHART)
 	touch $@
 
 # UE images includes kernel module, ue_ip.ko
@@ -330,6 +303,7 @@ test: | $(M)/fabric $(M)/omec $(M)/oaisim
 	@echo "Finished to test"
 
 5g-test: | $(M)/5g-core
+	@if [[ "${CHARTS}" == "release-1.6" ]]; then echo "[NOTE] 5G Test not supported for Aether 1.6, exiting..."; exit 1; fi
 	@echo "Test: Registration + UE initiated PDU Session Establishment + User Data packets"
 	@sleep 5
 	@rm -f /tmp/gnbsim.out
