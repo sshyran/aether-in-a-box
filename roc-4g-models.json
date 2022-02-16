@@ -105,12 +105,12 @@
                                 {
                                     "sim-id": "aiab-sim-1",
                                     "display-name": "UE 1 Sim",
-                                    "imsi": 67891201
+                                    "imsi": 208010167891201
                                 },
                                 {
                                     "sim-id": "aiab-sim-2",
                                     "display-name": "UE 2 Sim",
-                                    "imsi": 67891202
+                                    "imsi": 208010167891202
                                 } 
                             ],
                             "device-group": [
