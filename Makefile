@@ -258,7 +258,7 @@ roc-4g-models: $(M)/roc
 	sed -i 's/provision-network-slice: true/provision-network-slice: false/' $(4G_CORE_VALUES)
 	sed -i 's/# syncUrl/syncUrl/' $(4G_CORE_VALUES)
 	if [ "${ENABLE_SUBSCRIBER_PROXY}" == "true" ] ; then \
-		sed -i 's/addr: config4g/addr: subscriber-proxy.aether-roc.svc.cluster.local/' $(4G_CORE_VALUES) ; \
+		sed -i '/sub-proxy-endpt/{n;s/.*/              addr: subscriber-proxy.aether-roc.svc.cluster.local/}' $(4G_CORE_VALUES) ; \
 	fi
 	$(eval ONOS_CLI_POD := $(shell kubectl -n aether-roc get pods -l name=onos-cli -o name))
 	echo "ONOS CLI pod: ${ONOS_CLI_POD}"
@@ -272,7 +272,7 @@ roc-5g-models: $(M)/roc
 	sed -i 's/provision-network-slice: true/provision-network-slice: false/' $(5G_CORE_VALUES)
 	sed -i 's/# syncUrl/syncUrl/' $(5G_CORE_VALUES)
 	if [ "${ENABLE_SUBSCRIBER_PROXY}" == "true" ] ; then \
-		sed -i 's/addr: webui/addr: subscriber-proxy.aether-roc.svc.cluster.local/' $(5G_CORE_VALUES) ;\
+		sed -i '/sub-proxy-endpt/{n;s/.*/              addr: subscriber-proxy.aether-roc.svc.cluster.local/}' $(5G_CORE_VALUES) ;\
 	fi
 	$(eval ONOS_CLI_POD := $(shell kubectl -n aether-roc get pods -l name=onos-cli -o name))
 	echo "ONOS CLI pod: ${ONOS_CLI_POD}"

@@ -170,76 +170,76 @@
                                 {
                                     "sim-id": "aiab-sim-1",
                                     "display-name": "UE 1 Sim",
-                                    "imsi": 7487
+                                    "imsi": 201930100007487
                                 },
                                 {
                                     "sim-id": "aiab-sim-2",
                                     "display-name": "UE 2 Sim",
-                                    "imsi": 7488
+                                    "imsi": 201930100007488
                                 },
                                 {
                                     "sim-id": "aiab-sim-3",
                                     "display-name": "UE 3 Sim",
-                                    "imsi": 7489
+                                    "imsi": 201930100007489
                                 },
                                 {
                                     "sim-id": "aiab-sim-4",
                                     "display-name": "UE 4 Sim",
-                                    "imsi": 7490
+                                    "imsi": 201930100007490
                                 },
                                 {
                                     "sim-id": "aiab-sim-5",
                                     "display-name": "UE 5 Sim",
-                                    "imsi": 7491
+                                    "imsi": 201930100007491
                                 },
                                 {
                                     "sim-id": "aiab-sim-6",
                                     "display-name": "UE 6 Sim",
-                                    "imsi": 7492
+                                    "imsi": 201930100007492
                                 },
                                 {
                                     "sim-id": "aiab-sim-7",
                                     "display-name": "UE 7 Sim",
-                                    "imsi": 7493
+                                    "imsi": 201930100007493
                                 },
                                 {
                                     "sim-id": "aiab-sim-8",
                                     "display-name": "UE 8 Sim",
-                                    "imsi": 7494
+                                    "imsi": 201930100007494
                                 },                                {
                                     "sim-id": "aiab-sim-9",
                                     "display-name": "UE 9 Sim",
-                                    "imsi": 7495
+                                    "imsi": 201930100007495
                                 },
                                 {
                                     "sim-id": "aiab-sim-10",
                                     "display-name": "UE 10 Sim",
-                                    "imsi": 7496
+                                    "imsi": 201930100007496
                                 },
                                 {
                                     "sim-id": "aiab-sim-11",
                                     "display-name": "UE 11 Sim",
-                                    "imsi": 7497
+                                    "imsi": 201930100007497
                                 },
                                 {
                                     "sim-id": "aiab-sim-12",
                                     "display-name": "UE 12 Sim",
-                                    "imsi": 7498
+                                    "imsi": 201930100007498
                                 },
                                 {
                                     "sim-id": "aiab-sim-13",
                                     "display-name": "UE 13 Sim",
-                                    "imsi": 7499
+                                    "imsi": 201930100007499
                                 },
                                 {
                                     "sim-id": "aiab-sim-14",
                                     "display-name": "UE 14 Sim",
-                                    "imsi": 7500
+                                    "imsi": 201930100007500
                                 },
                                 {
                                     "sim-id": "aiab-sim-15",
                                     "display-name": "UE 15 Sim",
-                                    "imsi": 7501
+                                    "imsi": 201930100007501
                                 }
                             ],
                             "device-group": [
