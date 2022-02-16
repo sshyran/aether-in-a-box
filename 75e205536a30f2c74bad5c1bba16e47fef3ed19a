@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "882a7904_d539e796",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2022-02-16T19:12:10Z",
+      "side": 1,
+      "message": "I\u0027m testing this PR in an AiaB like so:\n\n CHARTS\u003dlatest ENABLE_SUBSCRIBER_PROXY\u003dtrue make roc-4g-models test\n\n CHARTS\u003dlatest ENABLE_SUBSCRIBER_PROXY\u003dtrue make roc-5g-models 5g-test\n\nIn both cases I see the sdcore-adapter fail to push the Device Group to the core with the following message:\n\n 2022-02-16T18:03:22.725Z\tWARN\tsynchronizer\tsynchronizer/synchronize-device.go:57\tDG \n aiab-device-group failed to synchronize Core: Failed to format IMSI in dg aiab-device-group: Failed \n to convert all Subscriber digits",
+      "revId": "75e205536a30f2c74bad5c1bba16e47fef3ed19a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
