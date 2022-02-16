@@ -45,6 +45,9 @@ config:
         configuration:
           provision-network-slice: true
           sub-provision-endpt:
+            addr: webui.omec.svc.cluster.local
+            port: 5000
+          sub-proxy-endpt:
             addr: webui
             port: 5000
           subscribers:
