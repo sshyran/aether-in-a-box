@@ -19,14 +19,14 @@ import:
     v3:
       enabled: false
     v4:
-      enabled: true
+      enabled: false
   sdcore-adapter:
     v2_1:
       enabled: false
     v3:
       enabled: false
     v4:
-      enabled: true
+      enabled: false
   sdcore-test-dummy:
     enabled: false
 
@@ -36,7 +36,7 @@ onos-gui:
   service:
     type: NodePort
 
-aether-roc-gui-v4:
+aether-roc-gui-v2:
   ingress:
     enabled: false
   service:
