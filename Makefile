@@ -313,7 +313,7 @@ test: | $(M)/fabric $(M)/omec $(M)/oaisim
 5g-test: | $(M)/5g-core
 	@if [[ "${CHARTS}" == "release-1.6" ]]; then echo "[NOTE] 5G Test not supported for Aether 1.6, exiting..."; exit 1; fi
 	@echo "Test: Registration + UE initiated PDU Session Establishment + User Data packets"
-	@sleep 5
+	@sleep 60
 	@rm -f /tmp/gnbsim.out
 	@if [[ ${GNBSIM_COLORS} == "true" ]]; then \
 		kubectl -n omec exec gnbsim-0 -- ./gnbsim 2>&1 | tee /tmp/gnbsim.out; \
