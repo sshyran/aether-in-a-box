@@ -46,6 +46,30 @@
       },
       "revId": "8056ae29ce824fc4609fcaeb2aed2f7f0d856156",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "82592184_026c08fd",
+        "filename": "sd-core-5g-values.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2022-03-04T18:28:34Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "020aac9e_c6c186fe",
+      "range": {
+        "startLine": 218,
+        "startChar": 22,
+        "endLine": 218,
+        "endChar": 27
+      },
+      "revId": "8056ae29ce824fc4609fcaeb2aed2f7f0d856156",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
