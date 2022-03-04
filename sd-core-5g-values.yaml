@@ -4,6 +4,9 @@
 
 5g-control-plane:
   enable5G: true
+  images:
+    repository: "registry.opennetworking.org/docker.io/"
+
   mongodb:
     usePassword: false
     persistence:
@@ -45,6 +48,9 @@
 
 omec-sub-provision:
   enable: true
+  images:
+    repository: "registry.opennetworking.org/docker.io/"
+
   config:
     simapp:
       cfgFiles:
@@ -139,6 +145,8 @@ omec-user-plane:
       ipam: static
       cfgFiles:
         upf.json:
+          log_level: "trace"
+          gtppsc: true
           mode: af_packet
           cpiface:
             dnn: "internet"
@@ -150,8 +158,8 @@ omec-user-plane:
   enable: true
   resources:
     enabled: false
-
-  #images:
+  images:
+    repository: "registry.opennetworking.org/docker.io/"
   #  tags:
   #    gnbsim: add overriding image tag here
   config:
@@ -198,6 +206,6 @@ omec-user-plane:
                   mcc: 208
                   mnc: 93
           logger:
-            logLevel: info # how detailed the log will be, values: trace, debug, info, warn, error, fatal, panic
+            logLevel: trace # how detailed the log will be, values: trace, debug, info, warn, error, fatal, panic
 omec-control-plane:
   enable4G: false
