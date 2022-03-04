@@ -2,6 +2,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+images:
+  repository: "registry.opennetworking.org/docker.io/"
+  #Secrets must be manually created in the namespace.
+  pullSecrets:
+    - name: aether.registry
 config:
   dbtestapp:
     replica: 2

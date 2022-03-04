@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJodHRwczovL3JlZ2lzdHJ5LmFldGhlcnByb2plY3Qub3JnIjp7InVzZXJuYW1lIjoibXl1c2VyIiwicGFzc3dvcmQiOiJteS1jbGktc2VjcmV0IiwiYXV0aCI6ImJYbDFjMlZ5T20xNUxXTnNhUzF6WldOeVpYUT0ifX19
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: aether.registry
+  namespace: omec
+type: kubernetes.io/dockerconfigjson
