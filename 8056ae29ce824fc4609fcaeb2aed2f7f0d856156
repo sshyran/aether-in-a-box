@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "991e9723_702426f9",
+        "filename": "sd-core-5g-values.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2022-03-04T18:08:44Z",
+      "side": 1,
+      "message": "Do we need this as default?  It seems to generate a lot of output.",
+      "range": {
+        "startLine": 218,
+        "startChar": 22,
+        "endLine": 218,
+        "endChar": 27
+      },
+      "revId": "8056ae29ce824fc4609fcaeb2aed2f7f0d856156",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
