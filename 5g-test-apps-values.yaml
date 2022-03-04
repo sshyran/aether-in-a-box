@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+images:
+  repository: "registry.opennetworking.org/docker.io/"
 config:
   dbtestapp:
     replica: 2
