@@ -320,12 +320,7 @@ test: | $(M)/fabric $(M)/omec $(M)/oaisim
 	else \
 		kubectl -n omec exec gnbsim-0 -- ./gnbsim 2>&1 | sed -u "s,\x1B\[[0-9;]*[a-zA-Z],,g" | tee /tmp/gnbsim.out; \
 	fi
-	@echo ""
-	@echo "Test summary:"
-	@grep "Result: " /tmp/gnbsim.out
-	@[ "$$(grep -c "Result: PASS" /tmp/gnbsim.out)" == "5" ] \
-		&& echo "*** TEST PASSED ***" \
-		|| (echo "*** TEST FAILED ***" && exit 1)
+	@grep -q "Simulation Result: PASS" /tmp/gnbsim.out
 
 cleanup-omec:
 	helm delete -n omec $$(helm -n omec ls -qa) || true
