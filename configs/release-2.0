@@ -2,12 +2,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-SD_CORE_CHART            := aether/sd-core --version 0.10.11
+SD_CORE_CHART            := aether/sd-core --version 0.10.16
 
 # For installing the ROC
-AETHER_ROC_UMBRELLA_CHART := aether/aether-roc-umbrella --version 2.0.39
+AETHER_ROC_UMBRELLA_CHART := aether/aether-roc-umbrella --version 2.0.43
 ATOMIX_CONTROLLER_CHART   := atomix/atomix-controller --version 0.6.9
-ATOMIX_RAFT_STORAGE_CHART := atomix/atomix-raft-storage --version 0.1.20
+ATOMIX_RAFT_STORAGE_CHART := atomix/atomix-raft-storage --version 0.1.25
 ONOS_OPERATOR_CHART       := onosproject/onos-operator --version 0.5.1
 
 # Config files to use
