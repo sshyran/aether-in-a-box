@@ -35,7 +35,6 @@ HELM_GLOBAL_ARGS ?=
 CHARTS     ?= local
 CONFIGFILE := configs/$(CHARTS)
 include $(CONFIGFILE)
-include configs/authentication
 
 cpu_family	:= $(shell lscpu | grep 'CPU family:' | awk '{print $$3}')
 cpu_model	:= $(shell lscpu | grep 'Model:' | awk '{print $$2}')
@@ -157,17 +156,8 @@ $(M)/fabric: | $(M)/setup /opt/cni/bin/simpleovs /opt/cni/bin/static
 	kubectl delete net-attach-def core-net
 	touch $@
 
-auth-secret: $(RESOURCEDIR)/aether.registry.yaml
-$(RESOURCEDIR)/aether.registry.yaml: configs/authentication
-	@kubectl -n omec create secret docker-registry aether.registry \
-		--docker-server=https://registry.aetherproject.org \
-		--docker-username=${REGISTRY_USERNAME} \
-		--docker-password=${REGISTRY_CLI_SECRET} \
-		--dry-run=client --output=yaml > $@
-
-$(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric $(RESOURCEDIR)/aether.registry.yaml
+$(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric
 	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
-	kubectl -n omec get secret aether.registry || kubectl create -f $(RESOURCEDIR)/aether.registry.yaml
 	helm repo update
 	if [[ "${CHARTS}" == "local" || "${CHARTS}" == "local-sdcore" ]]; then helm dep up $(SD_CORE_CHART); fi
 	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
@@ -177,9 +167,8 @@ $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fab
 		$(SD_CORE_CHART)
 	touch $@
 
-$(M)/5g-core: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric $(RESOURCEDIR)/aether.registry.yaml
+$(M)/5g-core: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric
 	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
-	kubectl -n omec get secret aether.registry || kubectl create -f $(RESOURCEDIR)/aether.registry.yaml
 	helm repo update
 	if [[ "${CHARTS}" == "local" || "${CHARTS}" == "local-sdcore" ]]; then helm dep up $(SD_CORE_CHART); fi
 	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
