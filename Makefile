@@ -156,6 +156,7 @@ $(M)/fabric: | $(M)/setup /opt/cni/bin/simpleovs /opt/cni/bin/static
 	kubectl delete net-attach-def core-net
 	touch $@
 
+4g-core-only: | $(M)/omec
 $(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric
 	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
 	helm repo update
@@ -201,10 +202,24 @@ $(M)/oaisim-lo:
 	sudo ip addr add 127.0.0.2/8 dev lo || true
 	touch $@
 
-$(M)/oaisim: | $(M)/ue-image $(M)/omec $(M)/oaisim-lo
-	$(eval mme_iface=$(shell ip -4 route list default | awk -F 'dev' '{ print $$2; exit }' | awk '{ print $$1 }'))
+oaisim-only: | $(M)/helm-ready $(M)/ue-image $(M)/oaisim-lo
+	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
+	kubectl apply -f resources/busybox-sleep.yaml --namespace=omec
+	helm repo update
 	helm upgrade --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(OAISIM_VALUES) \
-		--set config.enb.networks.s1_mme.interface=$(mme_iface) \
+		--set images.pullPolicy=IfNotPresent
+	kubectl rollout status -n omec statefulset ue
+	@timeout 60s bash -c \
+	"until ip addr show oip1 | grep -q inet; \
+	do \
+		echo 'Waiting for UE 1 gets IP address'; \
+		sleep 3; \
+	done"
+	touch $(M)/oaisim $(M)/omec $(M)/fabric
+
+
+$(M)/oaisim: | $(M)/ue-image $(M)/omec $(M)/oaisim-lo
+	helm upgrade --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(OAISIM_VALUES) \
 		--set images.pullPolicy=IfNotPresent
 	kubectl rollout status -n omec statefulset ue
 	@timeout 60s bash -c \
