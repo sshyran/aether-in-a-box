@@ -1,0 +1,14 @@
+# Create a pod with app: mme label so that oaisim will start
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox-sleep
+  labels:
+    app: mme
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    args:
+    - sleep
+    - "1000000"
