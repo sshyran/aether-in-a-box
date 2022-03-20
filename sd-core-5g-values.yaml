@@ -133,7 +133,6 @@ omec-user-plane:
   enable: true
   resources:
     enabled: false
-
   config:
     upf:
       name: "oaisim"
@@ -141,18 +140,26 @@ omec-user-plane:
         enabled: false
       hugepage:
         enabled: false
-      cniPlugin: simpleovs
+      cniPlugin: macvlan
       ipam: static
+      routes:
+        - to: ${NODE_IP}
+          via: 169.254.1.1
+      enb:
+        subnet: ${RAN_SUBNET}
+      access:
+        iface: ${DATA_IFACE}
+      core:
+        iface: ${DATA_IFACE}
       cfgFiles:
         upf.json:
+          mode: af_packet
+          hwcksum: true
           log_level: "trace"
           gtppsc: true
-          mode: af_packet
           cpiface:
             dnn: "internet"
             hostname: "upf"
-            enable_ue_ip_alloc: false
-            ue_ip_pool: 172.250.0.0/16
 
 5g-ran-sim:
   enable: true
