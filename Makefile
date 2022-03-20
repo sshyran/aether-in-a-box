@@ -20,11 +20,23 @@ ROC_5G_MODELS  ?= $(MAKEDIR)/roc-5g-models.json
 TEST_APP_VALUES?= $(MAKEDIR)/5g-test-apps-values.yaml
 
 KUBESPRAY_VERSION ?= release-2.17
-DOCKER_VERSION	?= '20.10'
-K8S_VERSION	?= v1.20.11
-HELM_VERSION	?= v3.6.3
+DOCKER_VERSION	  ?= '20.10'
+K8S_VERSION	  ?= v1.20.11
+HELM_VERSION	  ?= v3.6.3
+
+ENABLE_ROUTER ?= true
+ENABLE_OAISIM ?= true
+ENABLE_GNBSIM ?= true
 ENABLE_SUBSCRIBER_PROXY ?= false
 GNBSIM_COLORS ?= true
+
+DATA_IFACE ?= data
+MME_IP ?=
+ifeq ($(DATA_IFACE), data)
+	RAN_SUBNET := 192.168.251.0/24
+else
+	RAN_SUBNET := $(shell ip route | grep $${DATA_IFACE} | awk '/kernel/ {print $$1}')
+endif
 
 HELM_GLOBAL_ARGS ?=
 
@@ -42,12 +54,7 @@ os_vendor	:= $(shell lsb_release -i -s)
 os_release	:= $(shell lsb_release -r -s)
 USER		:= $(shell whoami)
 
-
-omec: $(M)/system-check $(M)/omec
-oaisim: $(M)/oaisim
-5gc: $(M)/system-check $(M)/5g-core
-
-.PHONY: omec oaisim 5gc test reset-test reset-ue 5g-core reset-5g-test clean
+.PHONY: 4g-core 5g-core oaisim test reset-test reset-ue 5g-core reset-5g-test clean
 
 $(M):
 	mkdir -p $(M)
@@ -107,7 +114,7 @@ $(M)/k8s-ready: | $(M)/setup $(BUILD)/kubespray $(VENV)/bin/activate $(M)/kubesp
 		-e "{'kube_version' : $(K8S_VERSION)}" \
 		-e "{'kube_network_plugin_multus' : True, 'multus_version' : stable, 'multus_cni_version' : 0.3.1}" \
 		-e "{'kube_proxy_metrics_bind_address' : 0.0.0.0:10249}" \
-		-e "{'kube_pods_subnet' : 192.168.0.0/17, 'kube_service_addresses' : 192.168.128.0/17}" \
+		-e "{'kube_pods_subnet' : 192.168.84.0/24, 'kube_service_addresses' : 192.168.85.0/24}" \
 		-e "{'kube_apiserver_node_port_range' : 2000-36767}" \
 		-e "{'kubeadm_enabled': True}" \
 		-e "{'kube_feature_gates' : [SCTPSupport=True]}" \
@@ -130,51 +137,80 @@ $(M)/helm-ready: | $(M)/k8s-ready
 	helm repo add aether https://charts.aetherproject.org
 	touch $@
 
-node-prep: | $(M)/k8s-ready $(M)/fabric $(M)/oaisim-lo
-
-/opt/cni/bin/simpleovs: | $(M)/k8s-ready
-	sudo cp $(RESOURCEDIR)/simpleovs /opt/cni/bin/
-
 /opt/cni/bin/static: | $(M)/k8s-ready
 	mkdir -p $(BUILD)/cni-plugins; cd $(BUILD)/cni-plugins; \
 	wget https://github.com/containernetworking/plugins/releases/download/v0.8.2/cni-plugins-linux-amd64-v0.8.2.tgz && \
 	tar xvfz cni-plugins-linux-amd64-v0.8.2.tgz
 	sudo cp $(BUILD)/cni-plugins/static /opt/cni/bin/
 
-# TODO: need to connect ONOS
-$(M)/fabric: | $(M)/setup /opt/cni/bin/simpleovs /opt/cni/bin/static
-	sudo apt install -y openvswitch-switch
-	sudo ovs-vsctl --may-exist add-br br-enb-net
-	sudo ovs-vsctl --may-exist add-port br-enb-net enb -- set Interface enb type=internal
-	sudo ip addr add 192.168.251.4/24 dev enb || true
-	sudo ip link set enb up
-	sudo ethtool --offload enb tx off
-	sudo ip route replace 192.168.252.0/24 via 192.168.251.1 dev enb
-	kubectl apply -f $(RESOURCEDIR)/router.yaml
-	kubectl wait pod -n default --for=condition=Ready -l app=router --timeout=300s
-	kubectl -n default exec router -- ip route add 172.250.0.0/16 via 192.168.250.3
-	kubectl delete net-attach-def core-net
-	touch $@
+node-prep: | $(M)/helm-ready /opt/cni/bin/static
 
-4g-core: | $(M)/omec
-$(M)/omec: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric
-	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
-	helm repo update
-	if [[ "${CHARTS}" == "local" || "${CHARTS}" == "local-sdcore" ]]; then helm dep up $(SD_CORE_CHART); fi
-	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+$(M)/router-pod:
+	sudo ip link add $(DATA_IFACE) type dummy || true;
+	sudo ip link set $(DATA_IFACE) up || true;
+	DATA_IFACE=$(DATA_IFACE) envsubst < $(RESOURCEDIR)/router.yaml | kubectl apply -f -
+	kubectl wait pod -n default --for=condition=Ready -l app=router --timeout=300s
+	@touch $@
+
+$(M)/router-host:
+	sudo ip link add core link $(DATA_IFACE) type macvlan mode bridge
+	sudo ip link set core up
+	sudo ip addr add 192.168.250.1/24 dev core
+	sudo ip link add access link $(DATA_IFACE) type macvlan mode bridge
+	sudo ip link set access up
+	sudo ip addr add 192.168.252.1/24 dev access
+	sudo sysctl -w net.ipv4.ip_forward=1;
+	$(eval oiface := $(shell ip route list default | awk -F 'dev' '{ print $$2; exit }' | awk '{ print $$1 }'))
+	sudo ip route add 172.250.0.0/16 via 192.168.250.3
+	sudo iptables -t nat -A POSTROUTING -s 172.250.0.0/16 -o $(oiface) -j MASQUERADE
+	@touch $@
+
+4g-core: node-prep
+ifeq ($(ENABLE_ROUTER),true)
+ifeq ($(ENABLE_OAISIM),true)
+4g-core: $(M)/router-pod
+else
+4g-core: $(M)/router-host
+endif
+endif
+4g-core: $(M)/omec
+$(M)/omec:
+	@if [[ "${CHARTS}" == "local" || "${CHARTS}" == "local-sdcore" ]]; then \
+		helm dep up $(SD_CORE_CHART); \
+	else \
+		helm repo update; \
+	fi
+	DATA_IFACE=${DATA_IFACE} RAN_SUBNET=${RAN_SUBNET} envsubst < $(4G_CORE_VALUES) | \
+	helm upgrade --create-namespace --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
-		--values $(4G_CORE_VALUES) \
+		--values - \
 		sd-core \
 		$(SD_CORE_CHART)
-	touch $@
+	@if [[ "${ENABLE_OAISIM}" == "false" ]]; then \
+		$(eval mme_ip := $(shell ip -4 -o addr show $${DATA_IFACE} | awk '{print $$4}' | cut -d'/' -f1)) \
+		echo "Your MME IP is $(mme_ip)"; \
+	fi
+	@touch $@
 
-$(M)/5g-core: | $(M)/helm-ready /opt/cni/bin/simpleovs /opt/cni/bin/static $(M)/fabric
-	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
-	helm repo update
-	if [[ "${CHARTS}" == "local" || "${CHARTS}" == "local-sdcore" ]]; then helm dep up $(SD_CORE_CHART); fi
-	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+5g-core: node-prep
+ifeq ($(ENABLE_ROUTER),true)
+ifeq ($(ENABLE_GNBSIM),true)
+5g-core: $(M)/router-pod
+else
+5g-core: $(M)/router-host
+endif
+endif
+5g-core: $(M)/5g-core
+$(M)/5g-core:
+	@if [[ "${CHARTS}" == "local" || "${CHARTS}" == "local-sdcore" ]]; then \
+	        helm dep up $(SD_CORE_CHART); \
+	else \
+	        helm repo update; \
+	fi
+	DATA_IFACE=${DATA_IFACE} RAN_SUBNET=${RAN_SUBNET} envsubst < $(5G_CORE_VALUES) | \
+	helm upgrade --create-namespace --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
-		--values $(5G_CORE_VALUES) \
+		--values - \
 		sd-core \
 		$(SD_CORE_CHART)
 	touch $@
@@ -199,27 +235,44 @@ $(M)/ue-image: | $(M)/k8s-ready $(BUILD)/openairinterface
 	touch $@
 
 $(M)/oaisim-lo:
-	sudo ip addr add 127.0.0.2/8 dev lo || true
-	touch $@
+	@sudo ip addr add 127.0.0.2/8 dev lo || true
+	@touch $@
 
 oaisim-standalone: | $(M)/helm-ready $(M)/ue-image $(M)/oaisim-lo
-	kubectl get namespace omec 2> /dev/null || kubectl create namespace omec
-	kubectl apply -f resources/busybox-sleep.yaml --namespace=omec
+	@ip link show $(DATA_IFACE) > /dev/null || (echo DATA_IFACE is not set or does not exist; exit 1)
+	@if [[ "${MME_IP}" == "" ]]; then \
+	        echo MME_IP is not set; \
+	        exit 1; \
+	else \
+	        ping -c 3 $(MME_IP) > /dev/null || (echo MME $(MME_IP) is not reachable; exit 1) \
+	fi
+	sudo ip route add 192.168.252.0/24 via $(MME_IP)
 	helm repo update
-	helm upgrade --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(OAISIM_VALUES) \
-		--set images.pullPolicy=IfNotPresent
+	helm upgrade --create-namespace --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(OAISIM_VALUES) \
+	        --set config.enb.networks.s1u.interface=$(DATA_IFACE) \
+	        --set config.enb.networks.s1_mme.interface=$(DATA_IFACE) \
+	        --set config.enb.mme.address=$(MME_IP) \
+	        --set config.enb.mme.isLocal=false \
+	        --set images.pullPolicy=IfNotPresent
 	kubectl rollout status -n omec statefulset ue
+	@echo "Test: registration"
 	@timeout 60s bash -c \
 	"until ip addr show oip1 | grep -q inet; \
 	do \
-		echo 'Waiting for UE 1 gets IP address'; \
-		sleep 3; \
+	        echo 'Waiting for UE 1 gets IP address'; \
+	        sleep 3; \
 	done"
-	touch $(M)/oaisim $(M)/omec $(M)/fabric
+	@echo "Test: ping from UE to 8.8.8.8"
+	ping -I oip1 8.8.8.8 -c 3
+	@touch $(M)/oaisim $(M)/omec
 
-
-$(M)/oaisim: | $(M)/ue-image $(M)/omec $(M)/oaisim-lo
-	helm upgrade --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(OAISIM_VALUES) \
+oaisim: | $(M)/oaisim
+$(M)/oaisim: | $(M)/ue-image $(M)/router-pod $(M)/oaisim-lo
+	sudo ip link add enb link $(DATA_IFACE) type macvlan mode bridge || true
+	sudo ip link set enb up || true
+	sudo ip addr add 192.168.251.3/24 dev enb || true
+	sudo ip route add 192.168.252.0/24 via 192.168.251.1 || true
+	helm upgrade --create-namespace --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(OAISIM_VALUES) \
 		--set images.pullPolicy=IfNotPresent
 	kubectl rollout status -n omec statefulset ue
 	@timeout 60s bash -c \
@@ -304,7 +357,30 @@ roc-clean:
 	kubectl delete namespace aether-roc || true
 	rm -rf $(M)/roc
 
-test: | $(M)/fabric $(M)/omec $(M)/oaisim
+omec-clean:
+	helm delete -n omec $$(helm -n omec ls -qa) || true
+	@echo ""
+	@echo "Wait for all pods to terminate..."
+	kubectl wait -n omec --for=delete --all=true -l app!=ue pod --timeout=180s || true
+
+router-clean:
+	@kubectl delete net-attach-def router-net 2>/dev/null || true
+	@kubectl delete po router 2>/dev/null || true
+	kubectl wait --for=delete -l app=router pod --timeout=180s 2>/dev/null || true
+	sudo ip link del access || true
+	sudo ip link del core || true
+	$(eval oiface := $(shell ip route list default | awk -F 'dev' '{ print $$2; exit }' | awk '{ print $$1 }'))
+	sudo iptables -t nat -D POSTROUTING -s 172.250.0.0/16 -o $(oiface) -j MASQUERADE || true
+	@sudo ip link del data 2>/dev/null || true
+	@cd $(M); rm -f router-pod router-host
+
+oaisim-clean: reset-ue
+	@sudo ip addr del 127.0.0.2/8 dev lo 2>/dev/null || true
+	@sudo ip link del enb 2>/dev/null || true
+	@sudo ip route del 192.168.252.0/24 || true
+	@cd $(M); rm -f oaisim-lo
+
+test: | 4g-core $(M)/oaisim
 	@sleep 5
 	@echo "Test1: ping from UE to SGI network gateway"
 	ping -I oip1 192.168.250.1 -c 15
@@ -314,7 +390,7 @@ test: | $(M)/fabric $(M)/omec $(M)/oaisim
 	ping -I oip1 google.com -c 3
 	@echo "Finished to test"
 
-5g-test: | $(M)/5g-core
+5g-test: | 5g-core
 	@if [[ "${CHARTS}" == "release-1.6" ]]; then echo "[NOTE] 5G Test not supported for Aether 1.6, exiting..."; exit 1; fi
 	@echo "Test: Registration + UE initiated PDU Session Establishment + User Data packets"
 	@sleep 60
@@ -326,15 +402,8 @@ test: | $(M)/fabric $(M)/omec $(M)/oaisim
 	fi
 	@grep -q "Simulation Result: PASS" /tmp/gnbsim.out
 
-cleanup-omec:
-	helm delete -n omec $$(helm -n omec ls -qa) || true
-	@echo ""
-	@echo "Wait for all pods to terminate..."
-	kubectl wait -n omec --for=delete --all=true -l app!=ue pod --timeout=180s || true
-
-reset-test: cleanup-omec
-	kubectl delete po router || true
-	cd $(M); rm -f oaisim omec fabric
+reset-test: | oaisim-clean omec-clean router-clean
+	@cd $(M); rm -f omec oaisim 5g-core
 
 reset-ue:
 	helm delete -n omec oaisim || true
@@ -342,7 +411,7 @@ reset-ue:
 	kubectl wait -n omec --for=delete pod ue-0 || true
 	cd $(M); rm -f oaisim
 
-reset-5g-test: cleanup-omec
+reset-5g-test: omec-clean
 	cd $(M); rm -f 5g-core
 
 reset-dbtestapp:
@@ -358,12 +427,7 @@ dbtestapp:
 		$(5G_TEST_APPS_CHART)
 	@echo "Finished to dbtestapp"
 
-clean:
-	kubectl delete po router || true
-	kubectl delete net-attach-def core-net || true
-	sudo ovs-vsctl del-br br-access-net || true
-	sudo ovs-vsctl del-br br-core-net || true
-	sudo apt remove --purge openvswitch-switch -y
+clean: | oaisim-clean router-clean
 	source "$(VENV)/bin/activate" && cd $(BUILD)/kubespray; \
 	ansible-playbook -b -i inventory/local/hosts.ini reset.yml --extra-vars "reset_confirmation=yes"
 	@if [ -d /usr/local/etc/emulab ]; then \
