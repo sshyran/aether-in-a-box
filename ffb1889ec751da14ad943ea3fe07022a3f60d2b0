@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e6b3705_dd2bdcef",
+        "filename": "Makefile",
+        "patchSetId": 8
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2022-03-23T22:22:57Z",
+      "side": 0,
+      "message": "Can we keep this?  I use it to download pre-built OAISIM images so that I don\u0027t need to wait for it to be built. I.e.,\n\n$ make download-ue-image OAISIM_UE_IMAGE\u003dandybavier/lte-uesoftmodem:1.1.0-$(uname -r)",
+      "range": {
+        "startLine": 187,
+        "startChar": 0,
+        "endLine": 191,
+        "endChar": 20
+      },
+      "revId": "ffb1889ec751da14ad943ea3fe07022a3f60d2b0",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
