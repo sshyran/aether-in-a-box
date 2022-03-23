@@ -22,6 +22,30 @@
       },
       "revId": "ffb1889ec751da14ad943ea3fe07022a3f60d2b0",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c91e319b_f94d4dbb",
+        "filename": "Makefile",
+        "patchSetId": 8
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1000012
+      },
+      "writtenOn": "2022-03-23T22:34:07Z",
+      "side": 0,
+      "message": "Ah, you\u0027re using kernel version specific image. That\u0027s great. Sure, added it back.",
+      "parentUuid": "0e6b3705_dd2bdcef",
+      "range": {
+        "startLine": 187,
+        "startChar": 0,
+        "endLine": 191,
+        "endChar": 20
+      },
+      "revId": "ffb1889ec751da14ad943ea3fe07022a3f60d2b0",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }

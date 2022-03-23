@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d78b53c8_e58dfe77",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000012
+      },
+      "writtenOn": "2022-03-23T22:34:07Z",
+      "side": 1,
+      "message": "I still have to fix 5g test, so will keep WIP, but the rest of the part is ready to review.",
+      "revId": "2c21a6df8a5cc64a04b61a5107a6399e04fbb599",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
