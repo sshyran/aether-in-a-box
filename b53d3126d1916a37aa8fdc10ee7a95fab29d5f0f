@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07e7963d_2b777b13",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000012
+      },
+      "writtenOn": "2022-03-24T07:59:42Z",
+      "side": 1,
+      "message": "Patch is ready to review. 5G test has dependency on https://gerrit.opencord.org/c/sdcore-helm-charts/+/31918",
+      "revId": "b53d3126d1916a37aa8fdc10ee7a95fab29d5f0f",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
