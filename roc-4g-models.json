@@ -180,8 +180,8 @@
                                     "sst": 1,
                                     "upf": "aiab-upf",
                                     "mbr": {
-                                        "uplink": 10000000,
-                                        "downlink": 5000000
+                                        "uplink": 100000000,
+                                        "downlink": 100000000
                                     },
                                     "priority-traffic-rule": []
                                 }
@@ -190,13 +190,12 @@
                     ],
                     "traffic-class": [
                         {
-                            "description": "High Priority TC",
-                            "display-name": "Class 1",
+                            "display-name": "Default bearer QCI/ARP",
                             "traffic-class-id": "aiab-class-1",
-                            "pdb": 100,
-                            "arp": 1,
-                            "pelr": 3,
-                            "qci": 1
+                            "pdb": 300,
+                            "arp": 6,
+                            "pelr": 6,
+                            "qci": 9
                         }
                     ]
                 }
