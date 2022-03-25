@@ -29,6 +29,22 @@ import:
       enabled: false
   sdcore-test-dummy:
     enabled: false
+  prometheus:
+    acc:
+      enabled: false
+    amp:
+      enabled: false
+    ace:
+      enabled: false
+  demo-exporter:
+    enabled: false
+  prom-label-proxy:
+    acc:
+      enabled: false
+    amp:
+      enabled: false
+  subscriber-proxy:
+    enabled: false
 
 onos-gui:
   ingress:
@@ -39,6 +55,14 @@ onos-gui:
 aether-roc-gui-v2:
   ingress:
     enabled: false
+  grafana:
+    proxyEnabled: false
+  prometheus:
+    acc:
+      proxyEnabled: false
+    amp:
+      proxyEnabled: false
+    site: []
   service:
     type: NodePort
 
