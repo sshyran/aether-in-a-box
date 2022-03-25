@@ -29,6 +29,24 @@ import:
       enabled: false
   sdcore-test-dummy:
     enabled: false
+  grafana:
+    enabled: false
+  prometheus:
+    acc:
+      enabled: false
+    amp:
+      enabled: false
+    ace:
+      enabled: false
+  demo-exporter:
+    enabled: false
+  prom-label-proxy:
+    acc:
+      enabled: false
+    amp:
+      enabled: false
+  subscriber-proxy:
+    enabled: false
 
 onos-gui:
   ingress:
