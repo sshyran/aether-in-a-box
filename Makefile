@@ -36,7 +36,12 @@ ifeq ($(DATA_IFACE), data)
 else
 	RAN_SUBNET := $(shell ip route | grep $${DATA_IFACE} | awk '/kernel/ {print $$1}')
 endif
-NODE_IP ?= $(shell ip route list default | awk -F 'src' '{ print $$2; exit }' | awk '{ print $$1 }')
+
+NODE_IP ?= $(shell ip route get 8.8.8.8 | grep -oP 'src \K\S+')
+ifndef NODE_IP
+$(error NODE_IP is not set)
+endif
+
 MME_IP  ?=
 
 HELM_GLOBAL_ARGS ?=
