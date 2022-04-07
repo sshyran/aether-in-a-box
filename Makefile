@@ -20,15 +20,18 @@ ROC_5G_MODELS  ?= $(MAKEDIR)/roc-5g-models.json
 TEST_APP_VALUES?= $(MAKEDIR)/5g-test-apps-values.yaml
 
 KUBESPRAY_VERSION ?= release-2.17
-DOCKER_VERSION	  ?= '20.10'
+DOCKER_VERSION    ?= '20.10'
 K8S_VERSION	  ?= v1.20.11
 HELM_VERSION	  ?= v3.6.3
+KUBECTL_VERSION   ?= v1.23.0
 
 ENABLE_ROUTER ?= true
 ENABLE_OAISIM ?= true
 ENABLE_GNBSIM ?= true
 ENABLE_SUBSCRIBER_PROXY ?= false
 GNBSIM_COLORS ?= true
+
+CTR_CMD := sudo /var/lib/rancher/rke2/bin/ctr --address /run/k3s/containerd/containerd.sock --namespace k8s.io
 
 DATA_IFACE ?= data
 ifeq ($(DATA_IFACE), data)
@@ -60,7 +63,7 @@ os_vendor	:= $(shell lsb_release -i -s)
 os_release	:= $(shell lsb_release -r -s)
 USER		:= $(shell whoami)
 
-.PHONY: 4g-core 5g-core oaisim test reset-test reset-ue reset-5g-test clean
+.PHONY: 4g-core 5g-core oaisim test reset-test reset-ue reset-5g-test node-prep-rke2 clean clean-rke2
 
 $(M):
 	mkdir -p $(M)
@@ -93,7 +96,7 @@ $(M)/system-check: | $(M)
 
 $(M)/setup: | $(M)
 	sudo $(SCRIPTDIR)/cloudlab-disksetup.sh
-	sudo apt update; sudo apt install -y software-properties-common python3 python3-pip python3-venv jq httpie ipvsadm
+	sudo apt update; sudo apt install -y software-properties-common python3 python3-pip python3-venv jq httpie ipvsadm apparmor apparmor-utils
 	touch $@
 
 $(BUILD)/kubespray: | $(M)/setup
@@ -135,6 +138,36 @@ $(M)/k8s-ready: | $(M)/setup $(BUILD)/kubespray $(VENV)/bin/activate $(M)/kubesp
 	sudo adduser $(USER) docker
 	touch $@
 
+$(M)/k8s-ready-rke2: | $(M)/setup
+	sudo mkdir -p /etc/rancher/rke2/
+	[ -d /usr/local/etc/emulab ] && [ ! -e /var/lib/rancher ] && sudo ln -s /var/lib/rancher /mnt/extra/rancher || true  # that link gets deleted on cleanup
+	echo "cni: multus,calico" >> config.yaml
+	echo "cluster-cidr: 192.168.84.0/24" >> config.yaml
+	echo "service-cidr: 192.168.85.0/24" >> config.yaml
+	echo "kubelet-arg:" >> config.yaml
+	echo "- --allowed-unsafe-sysctls="net.*"" >> config.yaml
+	echo "- --node-ip="$(NODE_IP)"" >> config.yaml
+	echo "pause-image: k8s.gcr.io/pause:3.3" >> config.yaml
+	echo "kube-proxy-arg:" >> config.yaml
+	echo "- --metrics-bind-address="0.0.0.0:10249"" >> config.yaml
+	echo "- --proxy-mode="ipvs"" >> config.yaml
+	echo "kube-apiserver-arg:" >> config.yaml
+	echo "- --service-node-port-range="2000-36767"" >> config.yaml
+	sudo mv config.yaml /etc/rancher/rke2/
+	curl -sfL https://get.rke2.io | sudo INSTALL_RKE2_VERSION=v1.21.6+rke2r1 sh -
+	sudo systemctl enable rke2-server.service
+	sudo systemctl start rke2-server.service
+	sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml wait nodes --for=condition=Ready --all --timeout=300s
+	sudo /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml wait deployment -n kube-system --for=condition=available --all --timeout=300s
+	curl -LO "https://dl.k8s.io/release/$(KUBECTL_VERSION)/bin/linux/amd64/kubectl"
+	sudo chmod +x kubectl
+	sudo mv kubectl /usr/local/bin/
+	kubectl version --client
+	mkdir -p $(HOME)/.kube
+	sudo cp /etc/rancher/rke2/rke2.yaml $(HOME)/.kube/config
+	sudo chown -R $(shell id -u):$(shell id -g) $(HOME)/.kube
+	touch $@
+
 $(M)/helm-ready: | $(M)/k8s-ready
 	helm repo add incubator https://charts.helm.sh/incubator
 	helm repo add cord https://charts.opencord.org
@@ -143,13 +176,25 @@ $(M)/helm-ready: | $(M)/k8s-ready
 	helm repo add aether https://charts.aetherproject.org
 	touch $@
 
-/opt/cni/bin/static: | $(M)/k8s-ready
+$(M)/helm-ready-rke2: | $(M)/k8s-ready-rke2
+	curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+	chmod 700 get_helm.sh
+	sudo DESIRED_VERSION=$(HELM_VERSION) ./get_helm.sh
+	helm repo add incubator https://charts.helm.sh/incubator
+	helm repo add cord https://charts.opencord.org
+	helm repo add atomix https://charts.atomix.io
+	helm repo add onosproject https://charts.onosproject.org
+	helm repo add aether https://charts.aetherproject.org
+	touch $@
+
+/opt/cni/bin/static: | $(M)/k8s-ready-rke2
 	mkdir -p $(BUILD)/cni-plugins; cd $(BUILD)/cni-plugins; \
 	wget https://github.com/containernetworking/plugins/releases/download/v0.8.2/cni-plugins-linux-amd64-v0.8.2.tgz && \
 	tar xvfz cni-plugins-linux-amd64-v0.8.2.tgz
 	sudo cp $(BUILD)/cni-plugins/static /opt/cni/bin/
 
 node-prep: | $(M)/helm-ready /opt/cni/bin/static
+node-prep-rke2:	| $(M)/helm-ready-rke2 /opt/cni/bin/static
 
 $(M)/router-pod:
 	sudo ip link add $(DATA_IFACE) type dummy || true;
@@ -171,7 +216,7 @@ $(M)/router-host:
 	sudo iptables -t nat -A POSTROUTING -s 172.250.0.0/16 -o $(oiface) -j MASQUERADE
 	@touch $@
 
-4g-core: node-prep
+4g-core: node-prep-rke2
 ifeq ($(ENABLE_ROUTER),true)
 ifeq ($(ENABLE_OAISIM),true)
 4g-core: $(M)/router-pod
@@ -198,7 +243,7 @@ $(M)/omec:
 	fi
 	@touch $@
 
-5g-core: node-prep
+5g-core: node-prep-rke2
 ifeq ($(ENABLE_ROUTER),true)
 ifeq ($(ENABLE_GNBSIM),true)
 5g-core: $(M)/router-pod
@@ -227,17 +272,23 @@ $(BUILD)/openairinterface: | $(M)/setup
 	mkdir -p $(BUILD)
 	cd $(BUILD); git clone https://github.com/opencord/openairinterface.git
 
-download-ue-image: | $(M)/k8s-ready
-	sg docker -c "docker pull ${OAISIM_UE_IMAGE} && \
-		docker tag ${OAISIM_UE_IMAGE} omecproject/lte-uesoftmodem:1.1.0"
-	touch $(M)/ue-image
+download-ue-image: | $(M)/k8s-ready-rke2 $(BUILD)/openairinterface
+	[ -e /tmp/lte-uesoftmodem.tar ] || ($(CTR_CMD) image pull docker.io/${OAISIM_UE_IMAGE} && \
+		$(CTR_CMD) image tag docker.io/${OAISIM_UE_IMAGE} docker.io/omecproject/lte-uesoftmodem:1.1.0)
+	touch $(M)/ue-image /tmp/lte-uesoftmodem.tar
 
-$(M)/ue-image: | $(M)/k8s-ready $(BUILD)/openairinterface
+/tmp/lte-uesoftmodem.tar: $(BUILD)/openairinterface
+	systemctl list-units --full -all | grep "docker.service" || sudo apt install -y docker.io
+	sudo adduser $(USER) docker
 	cd $(BUILD)/openairinterface; \
 	sg docker -c "docker build . --target lte-uesoftmodem \
 		--build-arg build_base=omecproject/oai-base:1.1.0 \
 		--file Dockerfile.ue \
 		--tag omecproject/lte-uesoftmodem:1.1.0"
+	sg docker -c "docker save -o /tmp/lte-uesoftmodem.tar omecproject/lte-uesoftmodem:1.1.0"
+
+$(M)/ue-image: $(M)/k8s-ready-rke2 /tmp/lte-uesoftmodem.tar
+	$(CTR_CMD) images import /tmp/lte-uesoftmodem.tar
 	touch $@
 
 $(M)/oaisim-lo:
@@ -432,6 +483,11 @@ dbtestapp:
 		--values $(TEST_APP_VALUES) \
 		$(5G_TEST_APPS_CHART)
 	@echo "Finished to dbtestapp"
+
+clean-rke2: | oaisim-clean router-clean
+	sudo /usr/local/bin/rke2-uninstall.sh
+	sudo rm -rf /usr/local/bin/kubectl
+	rm -rf $(M)
 
 clean: | oaisim-clean router-clean
 	source "$(VENV)/bin/activate" && cd $(BUILD)/kubespray; \
