@@ -1,0 +1,6 @@
+[Match]
+Name=access
+
+[Network]
+IPForward=yes
+Address=192.168.252.1/24

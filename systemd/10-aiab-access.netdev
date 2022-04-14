@@ -1,0 +1,6 @@
+[NetDev]
+Name=access
+Kind=macvlan
+
+[MACVLAN]
+Mode=bridge

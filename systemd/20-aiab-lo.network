@@ -1,0 +1,6 @@
+[Match]
+Name=lo
+
+[Address]
+Address=127.0.0.2/8
+Scope=host

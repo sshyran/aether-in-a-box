@@ -1,0 +1,6 @@
+[NetDev]
+Name=core
+Kind=macvlan
+
+[MACVLAN]
+Mode=bridge
