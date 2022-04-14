@@ -3,9 +3,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 SHELL		:= /bin/bash
-BUILD		?= /tmp/build
-M		?= $(BUILD)/milestones
 MAKEDIR		:= $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
+BUILD		?= $(MAKEDIR)/build
+M           	?= $(BUILD)/milestones
 SCRIPTDIR	:= $(MAKEDIR)/scripts
 RESOURCEDIR	:= $(MAKEDIR)/resources
 WORKSPACE	?= $(HOME)
@@ -34,14 +34,23 @@ ENABLE_SUBSCRIBER_PROXY ?= false
 GNBSIM_COLORS ?= true
 
 K8S_INSTALL := rke2
-CTR_CMD := sudo /var/lib/rancher/rke2/bin/ctr --address /run/k3s/containerd/containerd.sock --namespace k8s.io
+CTR_CMD     := sudo /var/lib/rancher/rke2/bin/ctr --address /run/k3s/containerd/containerd.sock --namespace k8s.io
 
 DATA_IFACE ?= data
 ifeq ($(DATA_IFACE), data)
 	RAN_SUBNET := 192.168.251.0/24
 else
 	RAN_SUBNET := $(shell ip route | grep $${DATA_IFACE} | awk '/kernel/ {print $$1}')
+	DATA_IFACE_PATH := $(shell find /*/systemd/network -maxdepth 1 -not -type d -name '*$(DATA_IFACE).network' -print)
+	DATA_IFACE_CONF ?= $(shell basename $(DATA_IFACE_PATH)).d
 endif
+
+# systemd-networkd and systemd configs
+LO_NETCONF            := /etc/systemd/network/20-aiab-lo.network
+OAISIM_NETCONF        := $(LO_NETCONF) /etc/systemd/network/10-aiab-enb.netdev /etc/systemd/network/20-aiab-enb.network
+ROUTER_POD_NETCONF    := /etc/systemd/network/10-aiab-dummy.netdev /etc/systemd/network/20-aiab-dummy.network
+ROUTER_HOST_NETCONF   := /etc/systemd/network/10-aiab-access.netdev /etc/systemd/network/20-aiab-access.network /etc/systemd/network/10-aiab-core.netdev /etc/systemd/network/20-aiab-core.network /etc/systemd/network/$(DATA_IFACE_CONF)/macvlan.conf
+UE_NAT_CONF           := /etc/systemd/system/aiab-ue-nat.service
 
 NODE_IP ?= $(shell ip route get 8.8.8.8 | grep -oP 'src \K\S+')
 ifndef NODE_IP
@@ -97,15 +106,22 @@ $(M)/system-check: | $(M)
 	fi
 	touch $@
 
+$(M)/interface-check: | $(M)
+ifeq ($(DATA_IFACE_CONF), .d)
+	@echo
+	@echo FATAL: Could not find systemd-networkd config for interface $(DATA_IFACE), exiting now!; exit 1
+endif
+	touch $@
+
 ifeq ($(K8S_INSTALL),kubespray)
-$(M)/setup: | $(M)
+$(M)/setup: | $(M) $(M)/interface-check
 	sudo $(SCRIPTDIR)/cloudlab-disksetup.sh
 	sudo apt update; sudo apt install -y software-properties-common python3 python3-pip python3-venv jq httpie ipvsadm
 	touch $@
 endif
 
 ifeq ($(K8S_INSTALL),rke2)
-$(M)/setup: | $(M)
+$(M)/setup: | $(M) $(M)/interface-check
 	sudo $(SCRIPTDIR)/cloudlab-disksetup.sh
 	sudo apt update; sudo apt install -y software-properties-common python3 python3-pip python3-venv jq httpie ipvsadm apparmor apparmor-utils
 	systemctl list-units --full -all | grep "docker.service" || sudo apt install -y docker.io
@@ -213,24 +229,18 @@ endif
 
 node-prep: | $(M)/helm-ready /opt/cni/bin/static
 
-$(M)/router-pod:
-	sudo ip link add $(DATA_IFACE) type dummy || true;
-	sudo ip link set $(DATA_IFACE) up || true;
+$(M)/router-pod: $(ROUTER_POD_NETCONF)
+	sudo systemctl restart systemd-networkd
 	DATA_IFACE=$(DATA_IFACE) envsubst < $(RESOURCEDIR)/router.yaml | kubectl apply -f -
 	kubectl wait pod -n default --for=condition=Ready -l app=router --timeout=300s
 	@touch $@
 
-$(M)/router-host:
-	sudo ip link add core link $(DATA_IFACE) type macvlan mode bridge
-	sudo ip link set core up
-	sudo ip addr add 192.168.250.1/24 dev core
-	sudo ip link add access link $(DATA_IFACE) type macvlan mode bridge
-	sudo ip link set access up
-	sudo ip addr add 192.168.252.1/24 dev access
-	sudo sysctl -w net.ipv4.ip_forward=1;
+$(M)/router-host: $(ROUTER_HOST_NETCONF) $(UE_NAT_CONF)
+	sudo systemctl daemon-reload
+	sudo systemctl enable aiab-ue-nat.service
+	sudo systemctl start aiab-ue-nat.service
+	sudo systemctl restart systemd-networkd
 	$(eval oiface := $(shell ip route list default | awk -F 'dev' '{ print $$2; exit }' | awk '{ print $$1 }'))
-	sudo ip route add 172.250.0.0/16 via 192.168.250.3
-	sudo iptables -t nat -A POSTROUTING -s 172.250.0.0/16 -o $(oiface) -j MASQUERADE
 	@touch $@
 
 4g-core: node-prep
@@ -323,11 +333,14 @@ $(M)/ue-image: $(M)/k8s-ready $(BUILD)/openairinterface
 	touch $@
 endif
 
-$(M)/oaisim-lo:
-	@sudo ip addr add 127.0.0.2/8 dev lo || true
-	@touch $@
+/etc/systemd/%:
+	@sudo mkdir -p $(@D)
+	@sed 's/DATA_IFACE/$(DATA_IFACE)/g' $(MAKEDIR)/systemd/$(@F) > /tmp/$(@F)
+	@sudo cp /tmp/$(@F) $@
+	echo "Installed $@"
 
-oaisim-standalone: | $(M)/helm-ready $(M)/ue-image $(M)/oaisim-lo
+oaisim-standalone: | $(M)/helm-ready $(M)/ue-image $(LO_NETCONF)
+	sudo systemctl restart systemd-networkd
 	@ip link show $(DATA_IFACE) > /dev/null || (echo DATA_IFACE is not set or does not exist; exit 1)
 	@if [[ "${MME_IP}" == "" ]]; then \
 	        echo MME_IP is not set; \
@@ -356,11 +369,8 @@ oaisim-standalone: | $(M)/helm-ready $(M)/ue-image $(M)/oaisim-lo
 	@touch $(M)/oaisim $(M)/omec
 
 oaisim: | $(M)/oaisim
-$(M)/oaisim: | $(M)/ue-image $(M)/router-pod $(M)/oaisim-lo
-	sudo ip link add enb link $(DATA_IFACE) type macvlan mode bridge || true
-	sudo ip link set enb up || true
-	sudo ip addr add 192.168.251.3/24 dev enb || true
-	sudo ip route add 192.168.252.0/24 via 192.168.251.1 || true
+$(M)/oaisim: | $(M)/ue-image $(M)/router-pod $(OAISIM_NETCONF)
+	sudo systemctl restart systemd-networkd
 	helm upgrade --create-namespace --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(OAISIM_VALUES) \
 		--set images.pullPolicy=IfNotPresent
 	kubectl rollout status -n omec statefulset ue
@@ -506,6 +516,10 @@ reset-5g-test: omec-clean
 reset-dbtestapp:
 	helm uninstall --namespace omec 5g-test-app
 
+refresh-4g: reset-ue
+	kubectl -n omec delete pod mme-0
+	kubectl wait -n omec --for='condition=ready' pod mme-0 --timeout=300s
+
 dbtestapp:
 	helm repo update
 	if [ "$(CHARTS)" == "local" ]; then helm dep up $(5G_TEST_APPS_CHART); fi
@@ -516,15 +530,19 @@ dbtestapp:
 		$(5G_TEST_APPS_CHART)
 	@echo "Finished to dbtestapp"
 
+clean-systemd:
+	cd /etc/systemd/network && sudo rm -f 10-aiab* 20-aiab* */macvlan.conf
+	cd /etc/systemd/system && sudo rm -f aiab*.service && sudo systemctl daemon-reload
+
 ifeq ($(K8S_INSTALL),rke2)
-clean: | oaisim-clean router-clean
-	sudo /usr/local/bin/rke2-uninstall.sh
+clean: | oaisim-clean router-clean clean-systemd
+	sudo /usr/local/bin/rke2-uninstall.sh || true
 	sudo rm -rf /usr/local/bin/kubectl
 	rm -rf $(M)
 endif
 
 ifeq ($(K8S_INSTALL),kubespray)
-clean: | oaisim-clean router-clean
+clean: | oaisim-clean router-clean clean-systemd
 	source "$(VENV)/bin/activate" && cd $(BUILD)/kubespray; \
 	ansible-playbook -b -i inventory/local/hosts.ini reset.yml --extra-vars "reset_confirmation=yes"
 	@if [ -d /usr/local/etc/emulab ]; then \
