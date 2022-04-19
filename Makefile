@@ -535,14 +535,14 @@ clean-systemd:
 	cd /etc/systemd/system && sudo rm -f aiab*.service && sudo systemctl daemon-reload
 
 ifeq ($(K8S_INSTALL),rke2)
-clean: | oaisim-clean router-clean clean-systemd
+clean: | roc-clean oaisim-clean router-clean clean-systemd
 	sudo /usr/local/bin/rke2-uninstall.sh || true
 	sudo rm -rf /usr/local/bin/kubectl
 	rm -rf $(M)
 endif
 
 ifeq ($(K8S_INSTALL),kubespray)
-clean: | oaisim-clean router-clean clean-systemd
+clean: | roc-clean oaisim-clean router-clean clean-systemd
 	source "$(VENV)/bin/activate" && cd $(BUILD)/kubespray; \
 	ansible-playbook -b -i inventory/local/hosts.ini reset.yml --extra-vars "reset_confirmation=yes"
 	@if [ -d /usr/local/etc/emulab ]; then \
