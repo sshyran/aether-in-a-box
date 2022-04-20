@@ -27,6 +27,8 @@ import:
       enabled: false
     v4:
       enabled: false
+    v2: # This is the new v2, not the old one...
+      enabled: true
   sdcore-test-dummy:
     enabled: false
   prometheus:
