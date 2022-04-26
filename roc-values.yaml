@@ -14,21 +14,15 @@ global:
 
 import:
   aether-roc-gui:
-    v2_1:
-      enabled: false
-    v3:
-      enabled: false
-    v4:
+    v2-1:
+      enabled: true
+    v2-0: # This is the new v2, not the old one...
       enabled: false
   sdcore-adapter:
-    v2_1:
-      enabled: false
-    v3:
-      enabled: false
-    v4:
-      enabled: false
-    v2: # This is the new v2, not the old one...
+    v2-1:
       enabled: true
+    v2-0: # This is the new v2, not the old one...
+      enabled: false
   sdcore-test-dummy:
     enabled: false
   prometheus:
@@ -54,7 +48,7 @@ onos-gui:
   service:
     type: NodePort
 
-aether-roc-gui-v2:
+aether-roc-gui-v2-1:
   ingress:
     enabled: false
   grafana:
@@ -89,3 +83,12 @@ prometheus-ace:
   server:
     persistentVolume:
       enabled: false
+
+sdcore-adapter-v2-1:
+  defaultTarget: aiab-enterprise
+
+enterprises:
+  - id: aiab-enterprise
+    name: AiaB Enterprise
+    lat: 52.5150
+    long: 13.3885
