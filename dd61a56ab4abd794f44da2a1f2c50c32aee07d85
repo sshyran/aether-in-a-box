@@ -16,6 +16,24 @@
       "message": "The AiaB CI test also requires the changes in this patch: https://gerrit.opencord.org/c/aether-in-a-box/+/32307\n\nI will incorporate these changes into that patch.",
       "revId": "dd61a56ab4abd794f44da2a1f2c50c32aee07d85",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8259ae6_729d9550",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000342
+      },
+      "writtenOn": "2022-04-27T16:37:30Z",
+      "side": 1,
+      "message": "Thanks Andy - i will abandon this one",
+      "parentUuid": "53092911_8eea9f12",
+      "revId": "dd61a56ab4abd794f44da2a1f2c50c32aee07d85",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
