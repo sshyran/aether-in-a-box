@@ -14,20 +14,14 @@ global:
 
 import:
   aether-roc-gui:
-    v2_1:
+    v2-0:
       enabled: false
-    v3:
-      enabled: false
-    v4:
-      enabled: false
+    v2-1:
+      enabled: true
   sdcore-adapter:
-    v2_1:
+    v2-0:
       enabled: false
-    v3:
-      enabled: false
-    v4:
-      enabled: false
-    v2: # This is the new v2, not the old one...
+    v2-1: # This is the new v2, not the old one...
       enabled: true
   sdcore-test-dummy:
     enabled: false
@@ -54,7 +48,7 @@ onos-gui:
   service:
     type: NodePort
 
-aether-roc-gui-v2:
+aether-roc-gui-v2-1:
   ingress:
     enabled: false
   grafana:
