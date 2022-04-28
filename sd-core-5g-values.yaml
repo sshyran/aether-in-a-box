@@ -17,7 +17,7 @@
   config:
     managedByConfigPod:
       enabled: true
-      # syncUrl: http://sdcore-adapter-v2.aether-roc.svc:8080/synchronize
+      # syncUrl: http://sdcore-adapter-v2-1.aether-roc.svc:8080/synchronize
     smf:
       cfgFiles:
         # https://github.com/free5gc/free5gc/blob/main/config/pcfcfg.yaml
