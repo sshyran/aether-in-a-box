@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b27ef70c_bcc71da8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000342
+      },
+      "writtenOn": "2022-04-29T09:07:16Z",
+      "side": 1,
+      "message": "Andy - now that that onos-config problems have been fixed in ROC 2.1.11, \nthe defaultent (which is necessary for subscriber-proxy) can be added back\nin to the ROC deployment.\n\nAnother way to do this is to have one file for this default ent, which can be\nloaded before the 4g or 5g config is loaded (would spare repeating the text)",
+      "revId": "e1ffabc8cdd7794c7a5858a779f4a34dd617ee13",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
