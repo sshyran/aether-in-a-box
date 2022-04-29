@@ -92,3 +92,5 @@ enterprises:
     name: AiaB Enterprise
     lat: 52.5150
     long: 13.3885
+  - id: defaultent
+    name: Default Enterprise
