@@ -36,6 +36,11 @@ GNBSIM_COLORS ?= true
 K8S_INSTALL := rke2
 CTR_CMD     := sudo /var/lib/rancher/rke2/bin/ctr --address /run/k3s/containerd/containerd.sock --namespace k8s.io
 
+PROXY_ENABLED   := true
+HTTP_PROXY      ?= ${http_proxy}
+HTTPS_PROXY     ?= ${https_proxy}
+NO_PROXY        ?= ${no_proxy}
+
 DATA_IFACE ?= data
 ifeq ($(DATA_IFACE), data)
 	RAN_SUBNET := 192.168.251.0/24
@@ -121,12 +126,32 @@ $(M)/setup: | $(M) $(M)/interface-check
 endif
 
 ifeq ($(K8S_INSTALL),rke2)
-$(M)/setup: | $(M) $(M)/interface-check
+$(M)/initial-setup: | $(M) $(M)/interface-check
 	sudo $(SCRIPTDIR)/cloudlab-disksetup.sh
 	sudo apt update; sudo apt install -y software-properties-common python3 python3-pip python3-venv jq httpie ipvsadm apparmor apparmor-utils
 	systemctl list-units --full -all | grep "docker.service" || sudo apt install -y docker.io
 	sudo adduser $(USER) docker || true
-	touch $@
+
+ifeq ($(PROXY_ENABLED),true)
+$(M)/proxy-setting: | $(M)
+    echo "HTTP_PROXY=$(HTTP_PROXY)" >> rke2-server
+    echo "HTTPS_PROXY=$(HTTPS_PROXY)" >> rke2-server
+    echo "NO_PROXY=$(NO_PROXY),.cluster.local,.svc,$(NODE_IP),192.168.84.0/24,192.168.85.0/24,$(RAN_SUBNET)" >> rke2-server
+    sudo mv rke2-server /etc/default/
+    echo "[Service]" >> http-proxy.conf
+    echo "Environment='HTTP_PROXY=$(HTTP_PROXY)'" >> http-proxy.conf
+    echo "Environment='HTTPS_PROXY=$(HTTPS_PROXY)'" >> http-proxy.conf
+    echo "Environment='NO_PROXY=$(NO_PROXY)'" >> http-proxy.conf
+    sudo mkdir -p /etc/systemd/system/docker.service.d
+    sudo mv http-proxy.conf /etc/systemd/system/docker.service.d
+    sudo systemctl daemon-reload
+    sudo systemctl restart docker
+else
+$(M)/proxy-setting: | $(M)
+    @echo -n ""
+endif
+$(M)/setup: | $(M)/initial-setup $(M)/proxy-setting
+    touch $@
 endif
 
 $(BUILD)/kubespray: | $(M)/setup
@@ -325,6 +350,7 @@ download-ue-image: | $(M)/k8s-ready $(BUILD)/openairinterface
 $(M)/ue-image: $(M)/k8s-ready $(BUILD)/openairinterface
 	cd $(BUILD)/openairinterface; \
 	sg docker -c "docker build . --target lte-uesoftmodem \
+		--build-arg http_proxy=$(HTTP_PROXY)/ \
 		--build-arg build_base=omecproject/oai-base:1.1.0 \
 		--file Dockerfile.ue \
 		--tag omecproject/lte-uesoftmodem:1.1.0 && \
@@ -371,6 +397,7 @@ oaisim-standalone: | $(M)/helm-ready $(M)/ue-image $(LO_NETCONF)
 oaisim: | $(M)/oaisim
 $(M)/oaisim: | $(M)/ue-image $(M)/router-pod $(OAISIM_NETCONF)
 	sudo systemctl restart systemd-networkd
+	sleep 1
 	helm upgrade --create-namespace --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(OAISIM_VALUES) \
 		--set images.pullPolicy=IfNotPresent
 	kubectl rollout status -n omec statefulset ue
