@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: spgwc
+  namespace: omec
+spec:
+  endpoints:
+    - path: /metrics
+      port: metrics9089
+  namespaceSelector:
+    matchNames:
+      - omec
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: spgwc-metrics
