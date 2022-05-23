@@ -107,6 +107,8 @@ omec-sub-provision:
 
 omec-user-plane:
   enable: true
+  servicemonitor:
+    enabled: true
   images:
     repository: "registry.opennetworking.org/docker.io/"
   resources:

@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2021-present Open Networking Foundation <info@opennetworking.org>
+
+resources:
+  - ./hss-metrics.yaml
+  - ./mme-metrics.yaml
+  - ./spgwc-metrics.yaml
+  - ./hss-monitor.yaml
+  - ./mme-monitor.yaml
+  - ./spgwc-monitor.yaml
+
+configmapGenerator:
+  - name: grafana-ops-dashboards
+    namespace: cattle-dashboards
+    files:
+      - ./aiab-dashboard.json
+    options:
+      labels:
+        grafana_dashboard: "1"
