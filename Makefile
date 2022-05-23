@@ -36,6 +36,13 @@ GNBSIM_COLORS ?= true
 K8S_INSTALL := rke2
 CTR_CMD     := sudo /var/lib/rancher/rke2/bin/ctr --address /run/k3s/containerd/containerd.sock --namespace k8s.io
 
+PROXY_ENABLED   := false
+HTTP_PROXY      ?= ${http_proxy}
+HTTPS_PROXY     ?= ${https_proxy}
+NO_PROXY        ?= ${no_proxy}
+
+ONECLOUD	:= false
+
 DATA_IFACE ?= data
 ifeq ($(DATA_IFACE), data)
 	RAN_SUBNET := 192.168.251.0/24
@@ -116,6 +123,12 @@ ifeq ($(DATA_IFACE_CONF), .d)
 	@echo
 	@echo FATAL: Could not find systemd-networkd config for interface $(DATA_IFACE), exiting now!; exit 1
 endif
+	@echo "Add network configuration for enb interface"
+	@if [[ "${ONECLOUD}" ==  "true" ]]; then \
+		sudo cp netplan/01-enb-static-config.yaml /etc/netplan ; \
+		sudo netplan apply ; \
+		sleep 1 ; \
+	fi
 	touch $@
 
 ifeq ($(K8S_INSTALL),kubespray)
@@ -126,11 +139,33 @@ $(M)/setup: | $(M) $(M)/interface-check
 endif
 
 ifeq ($(K8S_INSTALL),rke2)
-$(M)/setup: | $(M) $(M)/interface-check
+$(M)/initial-setup: | $(M) $(M)/interface-check
 	sudo $(SCRIPTDIR)/cloudlab-disksetup.sh
 	sudo apt update; sudo apt install -y software-properties-common python3 python3-pip python3-venv jq httpie ipvsadm apparmor apparmor-utils
 	systemctl list-units --full -all | grep "docker.service" || sudo apt install -y docker.io
 	sudo adduser $(USER) docker || true
+
+ifeq ($(PROXY_ENABLED),true)
+$(M)/proxy-setting: | $(M)
+	echo "Defaults env_keep += \"HTTP_PROXY HTTPS_PROXY NO_PROXY http_proxy https_proxy no_proxy\"" | sudo EDITOR='tee -a' visudo -f /etc/sudoers.d/proxy
+    echo "HTTP_PROXY=$(HTTP_PROXY)" >> rke2-server
+    echo "HTTPS_PROXY=$(HTTPS_PROXY)" >> rke2-server
+    echo "NO_PROXY=$(NO_PROXY),.cluster.local,.svc,$(NODE_IP),192.168.84.0/24,192.168.85.0/24,$(RAN_SUBNET)" >> rke2-server
+    sudo mv rke2-server /etc/default/
+    echo "[Service]" >> http-proxy.conf
+    echo "Environment='HTTP_PROXY=$(HTTP_PROXY)'" >> http-proxy.conf
+    echo "Environment='HTTPS_PROXY=$(HTTPS_PROXY)'" >> http-proxy.conf
+    echo "Environment='NO_PROXY=$(NO_PROXY)'" >> http-proxy.conf
+    sudo mkdir -p /etc/systemd/system/docker.service.d
+    sudo mv http-proxy.conf /etc/systemd/system/docker.service.d
+    sudo systemctl daemon-reload
+	sudo systemctl restart docker
+else
+$(M)/proxy-setting: | $(M)
+	@echo -n ""
+endif
+
+$(M)/setup: | $(M)/initial-setup $(M)/proxy-setting
 	touch $@
 endif
 
@@ -153,6 +188,9 @@ ifeq ($(K8S_INSTALL),kubespray)
 $(M)/k8s-ready: | $(M)/setup $(BUILD)/kubespray $(VENV)/bin/activate $(M)/kubespray-requirements
 	source "$(VENV)/bin/activate" && cd $(BUILD)/kubespray; \
 	ansible-playbook -b -i inventory/local/hosts.ini \
+		-e "{'http_proxy' : $(HTTP_PROXY)}" \
+        -e "{'https_proxy' : $(HTTPS_PROXY)}" \
+        -e "{'no_proxy' : $(NO_PROXY)}" \
 		-e "{'override_system_hostname' : False, 'disable_swap' : True}" \
 		-e "{'docker_version' : $(DOCKER_VERSION)}" \
 		-e "{'docker_iptables_enabled' : True}" \
@@ -315,6 +353,7 @@ download-ue-image: | $(M)/k8s-ready $(BUILD)/openairinterface
 $(M)/ue-image: | $(M)/k8s-ready $(BUILD)/openairinterface
 	cd $(BUILD)/openairinterface; \
 	sg docker -c "docker build . --target lte-uesoftmodem \
+		--build-arg http_proxy=$(HTTP_PROXY)/ \
 		--build-arg build_base=omecproject/oai-base:1.1.0 \
 		--file Dockerfile.ue \
 		--tag omecproject/lte-uesoftmodem:1.1.0"
@@ -332,6 +371,7 @@ download-ue-image: | $(M)/k8s-ready $(BUILD)/openairinterface
 $(M)/ue-image: $(M)/k8s-ready $(BUILD)/openairinterface
 	cd $(BUILD)/openairinterface; \
 	sg docker -c "docker build . --target lte-uesoftmodem \
+		--build-arg http_proxy=$(HTTP_PROXY)/ \
 		--build-arg build_base=omecproject/oai-base:1.1.0 \
 		--file Dockerfile.ue \
 		--tag omecproject/lte-uesoftmodem:1.1.0 && \
@@ -378,6 +418,7 @@ oaisim-standalone: | $(M)/helm-ready $(M)/ue-image $(LO_NETCONF)
 oaisim: | $(M)/oaisim
 $(M)/oaisim: | $(M)/ue-image $(M)/router-pod $(OAISIM_NETCONF)
 	sudo systemctl restart systemd-networkd
+	sleep 1
 	helm upgrade --create-namespace --install $(HELM_GLOBAL_ARGS) --namespace omec oaisim cord/oaisim -f $(OAISIM_VALUES) \
 		--set images.pullPolicy=IfNotPresent
 	kubectl rollout status -n omec statefulset ue
@@ -519,10 +560,12 @@ test: | 4g-core $(M)/oaisim
 	@sleep 5
 	@echo "Test1: ping from UE to SGI network gateway"
 	ping -I oip1 192.168.250.1 -c 15
-	@echo "Test2: ping from UE to 8.8.8.8"
-	ping -I oip1 8.8.8.8 -c 3
-	@echo "Test3: ping from UE to google.com"
-	ping -I oip1 google.com -c 3
+	@if [ "${PROXY_ENABLED}" == "false" ] ; then \
+		@echo "Test2: ping from UE to 8.8.8.8" ; \
+		ping -I oip1 8.8.8.8 -c 3 ; \
+		@echo "Test3: ping from UE to google.com" ; \
+		ping -I oip1 google.com -c 3 ; \
+	fi
 	@echo "Finished to test"
 
 5g-test: | 5g-core
