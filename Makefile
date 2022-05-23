@@ -52,6 +52,11 @@ ROUTER_POD_NETCONF    := /etc/systemd/network/10-aiab-dummy.netdev /etc/systemd/
 ROUTER_HOST_NETCONF   := /etc/systemd/network/10-aiab-access.netdev /etc/systemd/network/20-aiab-access.network /etc/systemd/network/10-aiab-core.netdev /etc/systemd/network/20-aiab-core.network /etc/systemd/network/$(DATA_IFACE_CONF)/macvlan.conf
 UE_NAT_CONF           := /etc/systemd/system/aiab-ue-nat.service
 
+# monitoring
+RANCHER_MONITORING_CRD_CHART := rancher/rancher-monitoring-crd
+RANCHER_MONITORING_CHART     := rancher/rancher-monitoring
+MONITORING_VALUES            ?= $(MAKEDIR)/monitoring.yaml
+
 NODE_IP ?= $(shell ip route get 8.8.8.8 | grep -oP 'src \K\S+')
 ifndef NODE_IP
 $(error NODE_IP is not set)
@@ -175,6 +180,7 @@ $(M)/helm-ready: | $(M)/k8s-ready
 	helm repo add atomix https://charts.atomix.io
 	helm repo add onosproject https://charts.onosproject.org
 	helm repo add aether https://charts.aetherproject.org
+	helm repo add rancher http://charts.rancher.io/
 	touch $@
 endif
 
@@ -218,6 +224,7 @@ $(M)/helm-ready: | $(M)/k8s-ready
 	helm repo add atomix https://charts.atomix.io
 	helm repo add onosproject https://charts.onosproject.org
 	helm repo add aether https://charts.aetherproject.org
+	helm repo add rancher http://charts.rancher.io/
 	touch $@
 endif
 
@@ -456,6 +463,33 @@ roc-clean:
 	kubectl delete namespace aether-roc || true
 	rm -rf $(M)/roc
 
+monitoring: $(M)/monitoring
+$(M)/monitoring: $(M)/helm-ready
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+		--namespace=cattle-monitoring-system \
+		--create-namespace \
+		--values=$(MONITORING_VALUES) \
+		rancher-monitoring-crd \
+		$(RANCHER_MONITORING_CRD_CHART)
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+		--namespace=cattle-monitoring-system \
+		--create-namespace \
+		--values=$(MONITORING_VALUES) \
+		rancher-monitoring \
+		$(RANCHER_MONITORING_CHART)
+	touch $(M)/monitoring
+
+monitoring-4g: $(M)/monitoring
+	kubectl create namespace omec || true
+	kubectl create namespace cattle-dashboards || true
+	kubectl apply -k resources/4g-monitoring
+
+
+monitoring-clean:
+	helm -n cattle-monitoring-system delete rancher-monitoring || true
+	helm -n cattle-monitoring-system delete rancher-monitoring-crd || true
+	kubectl delete namespace cattle-dashboards cattle-monitoring-system || true
+
 omec-clean:
 	helm delete -n omec $$(helm -n omec ls -qa) || true
 	@echo ""
@@ -479,6 +513,7 @@ oaisim-clean: reset-ue
 	@sudo ip route del 192.168.252.0/24 || true
 	@cd $(M); rm -f oaisim-lo
 
+4g-test: test
 test: | 4g-core $(M)/oaisim
 	@sleep 5
 	@echo "Test1: ping from UE to SGI network gateway"

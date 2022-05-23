@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hss-metrics
+  namespace: omec
+  labels:
+    app.kubernetes.io/name: hss-metrics
+spec:
+  clusterIP: None
+  ports:
+    - name: metrics9089
+      port: 9089
+      targetPort: 9089
+      protocol: TCP
+  selector:
+    app: hss
+  type: ClusterIP
