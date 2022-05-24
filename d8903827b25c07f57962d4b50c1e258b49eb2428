@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "035a3cdd_3efb94a8",
+        "filename": "Makefile",
+        "patchSetId": 9
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1000864
+      },
+      "writtenOn": "2022-05-24T17:24:52Z",
+      "side": 1,
+      "message": "I don\u0027t think so, I wrote it according to 20-aiab-enb.network. By default there is another netplan configuration in which all interfaces started with \u0027en\u0027 would use dhcp, by adding this static configuration I was able to overwrite it.",
+      "parentUuid": "1043c103_966fd6ce",
+      "range": {
+        "startLine": 128,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 60
+      },
+      "revId": "d8903827b25c07f57962d4b50c1e258b49eb2428",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7ee802bb_02d24452",
         "filename": "Makefile",
         "patchSetId": 9
@@ -37,6 +61,30 @@
       "writtenOn": "2022-05-24T17:15:33Z",
       "side": 1,
       "message": "Looks like a bunch of these lines start with spaces instead of a tab",
+      "range": {
+        "startLine": 151,
+        "startChar": 0,
+        "endLine": 151,
+        "endChar": 4
+      },
+      "revId": "d8903827b25c07f57962d4b50c1e258b49eb2428",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b338e83_24d958b0",
+        "filename": "Makefile",
+        "patchSetId": 9
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1000864
+      },
+      "writtenOn": "2022-05-24T17:24:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ee802bb_02d24452",
       "range": {
         "startLine": 151,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c2c8c4b_b28b9e3e",
+        "filename": "Makefile",
+        "patchSetId": 9
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1000864
+      },
+      "writtenOn": "2022-05-24T17:24:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee9bd88e_f79e3c36",
+      "range": {
+        "startLine": 162,
+        "startChar": 0,
+        "endLine": 162,
+        "endChar": 30
+      },
+      "revId": "d8903827b25c07f57962d4b50c1e258b49eb2428",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "778cebd5_c684e7d5",
@@ -83,6 +155,30 @@
       "writtenOn": "2022-05-24T17:15:33Z",
       "side": 1,
       "message": "tabs needed",
+      "range": {
+        "startLine": 192,
+        "startChar": 0,
+        "endLine": 192,
+        "endChar": 8
+      },
+      "revId": "d8903827b25c07f57962d4b50c1e258b49eb2428",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0dd66b8f_63abacda",
+        "filename": "Makefile",
+        "patchSetId": 9
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1000864
+      },
+      "writtenOn": "2022-05-24T17:24:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "778cebd5_c684e7d5",
       "range": {
         "startLine": 192,
         "startChar": 0,
