@@ -8,7 +8,7 @@ resources:
   - ./spgwc-monitor.yaml
   - ./upf-monitor.yaml
 
-configmapGenerator:
+configMapGenerator:
   - name: grafana-ops-dashboards
     namespace: cattle-dashboards
     files:
