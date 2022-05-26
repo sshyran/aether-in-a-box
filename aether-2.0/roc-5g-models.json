@@ -386,7 +386,7 @@
     },
     "Deletes": {},
     "Extensions": {
-        "model-version-101": "2.0.0",
+        "model-version-101": "2.0.x",
         "model-type-102": "Aether"
     }
 }

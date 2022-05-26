@@ -144,6 +144,7 @@ $(M)/initial-setup: | $(M) $(M)/interface-check
 	sudo apt update; sudo apt install -y software-properties-common python3 python3-pip python3-venv jq httpie ipvsadm apparmor apparmor-utils
 	systemctl list-units --full -all | grep "docker.service" || sudo apt install -y docker.io
 	sudo adduser $(USER) docker || true
+	touch $(M)/initial-setup
 
 ifeq ($(PROXY_ENABLED),true)
 $(M)/proxy-setting: | $(M)
