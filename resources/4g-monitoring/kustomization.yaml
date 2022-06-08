@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 resources:
+  - ./enodebd-monitor.yaml
   - ./hss-monitor.yaml
   - ./mme-monitor.yaml
   - ./spgwc-monitor.yaml
@@ -13,6 +14,7 @@ configMapGenerator:
     namespace: cattle-dashboards
     files:
       - ./aiab-dashboard.json
+      - ./enodebd-dashboard.json
     options:
       labels:
         grafana_dashboard: "1"
