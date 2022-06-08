@@ -64,6 +64,9 @@ RANCHER_MONITORING_CRD_CHART := rancher/rancher-monitoring-crd
 RANCHER_MONITORING_CHART     := rancher/rancher-monitoring
 MONITORING_VALUES            ?= $(MAKEDIR)/monitoring.yaml
 
+# aether applications
+ENODEBD_CHART         := aether/enodebd
+
 NODE_IP ?= $(shell ip route get 8.8.8.8 | grep -oP 'src \K\S+')
 ifndef NODE_IP
 $(error NODE_IP is not set)
@@ -528,6 +531,17 @@ monitoring-4g: $(M)/monitoring
 	kubectl create namespace cattle-dashboards || true
 	kubectl apply -k resources/4g-monitoring
 
+enodebd:
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+		--namespace=aether-apps \
+		--create-namespace \
+		enodebd \
+		/home/weiyu/cord/aether-helm-charts/apps/enodebd
+	touch $(M)/enodebd
+
+enodebd-clean:
+	helm -n aether-apps delete aether-enodebd || true
+	rm $(M)/enodebd
 
 monitoring-clean:
 	helm -n cattle-monitoring-system delete rancher-monitoring || true
