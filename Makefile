@@ -531,6 +531,17 @@ monitoring-4g: $(M)/monitoring
 	kubectl create namespace cattle-dashboards || true
 	kubectl apply -k resources/4g-monitoring
 
+enodebd:
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+		--namespace=aether-apps \
+		--create-namespace \
+		enodebd \
+		${ENODEBD_CHART}
+	touch $(M)/enodebd
+
+enodebd-clean:
+	helm -n aether-apps delete enodebd || true
+	rm $(M)/enodebd
 
 monitoring-clean:
 	helm -n cattle-monitoring-system delete rancher-monitoring || true
