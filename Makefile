@@ -333,7 +333,7 @@ $(M)/5g-core:
 	else \
 	        helm repo update; \
 	fi
-	NODE_IP=${NODE_IP} DATA_IFACE=${DATA_IFACE} RAN_SUBNET=${RAN_SUBNET} envsubst < $(5G_CORE_VALUES) | \
+	NODE_IP=${NODE_IP} DATA_IFACE=${DATA_IFACE} RAN_SUBNET=${RAN_SUBNET} ENABLE_GNBSIM=${ENABLE_GNBSIM} envsubst < $(5G_CORE_VALUES) | \
 	helm upgrade --create-namespace --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace omec \
 		--values - \
