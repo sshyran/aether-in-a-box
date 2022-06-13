@@ -162,7 +162,7 @@ omec-user-plane:
             hostname: "upf"
 
 5g-ran-sim:
-  enable: true
+  enable: ${ENABLE_GNBSIM}
   resources:
     enabled: false
   images:
