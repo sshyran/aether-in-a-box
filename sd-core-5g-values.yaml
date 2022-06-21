@@ -18,6 +18,10 @@
     managedByConfigPod:
       enabled: true
       # syncUrl: http://sdcore-adapter-v2-1.aether-roc.svc:8080/synchronize
+
+    sctplb:
+      deploy: false
+
     smf:
       cfgFiles:
         # https://github.com/free5gc/free5gc/blob/main/config/pcfcfg.yaml
@@ -172,6 +176,7 @@ omec-user-plane:
   config:
     gnbsim:
       singleInterface: false #default multiInterface. Works well for AIAB
+      execInParallel: false #run all profiles in parallel
       yamlCfgFiles:
         gnb.conf:
           logger:
@@ -180,7 +185,12 @@ omec-user-plane:
              #gnbs: # pool of gNodeBs
              #  gnb1:
              #    n3IpAddr: "POD_IP" # set if singleInterface is true
-             profiles: # profile information
+              gnbs: # pool of gNodeBs
+               gnb1:
+                 defaultAmf:
+                   hostName: amf # Host name of AMF
+                   port: 38412 # AMF port
+              profiles: # profile information
               - profileType: register # profile type
                 profileName: profile1 # uniqely identifies a profile within application
                 enable: false # Set true to execute the profile, false otherwise.
@@ -191,6 +201,9 @@ omec-user-plane:
                 plmnId: # Public Land Mobile Network ID, <PLMN ID> = <MCC><MNC>
                   mcc: 208 # Mobile Country Code (3 digits string, digit: 0~9)
                   mnc: 93 # Mobile Network Code (2 or 3 digits string, digit: 0~9)
+                opc: "981d464c7c52eb6e5036234984ad0bcf"
+                key: "5122250214c33e723a5dd523fc145fc0"
+                sequenceNumber: "16f3b3f70fc2"
               - profileType: pdusessest
                 profileName: profile2
                 enable: true
@@ -202,6 +215,9 @@ omec-user-plane:
                   mcc: 208
                   mnc: 93
                 dataPktCount: 5 # Number of UL user data packets to be transmitted. Common for all UEs
+                opc: "981d464c7c52eb6e5036234984ad0bcf"
+                key: "5122250214c33e723a5dd523fc145fc0"
+                sequenceNumber: "16f3b3f70fc2"
               - profileType: anrelease
                 profileName: profile3
                 enable: false
@@ -212,6 +228,9 @@ omec-user-plane:
                 plmnId:
                   mcc: 208
                   mnc: 93
+                opc: "981d464c7c52eb6e5036234984ad0bcf"
+                key: "5122250214c33e723a5dd523fc145fc0"
+                sequenceNumber: "16f3b3f70fc2"
               - profileType: uetriggservicereq
                 profileName: profile4
                 enable: false
@@ -222,6 +241,9 @@ omec-user-plane:
                   mcc: 208
                   mnc: 93
                 defaultAs: "192.168.250.1" #default icmp pkt destination
+                opc: "981d464c7c52eb6e5036234984ad0bcf"
+                key: "5122250214c33e723a5dd523fc145fc0"
+                sequenceNumber: "16f3b3f70fc2"
               - profileType: deregister
                 profileName: profile5
                 enable: false
@@ -232,6 +254,9 @@ omec-user-plane:
                 plmnId:
                   mcc: 208
                   mnc: 93
+                opc: "981d464c7c52eb6e5036234984ad0bcf"
+                key: "5122250214c33e723a5dd523fc145fc0"
+                sequenceNumber: "16f3b3f70fc2"
               - profileType: nwtriggeruedereg # profile type
                 profileName: profile6 # uniqely identifies a profile within application
                 enable: false # Set true to execute the profile, false otherwise.
@@ -243,6 +268,9 @@ omec-user-plane:
                 plmnId: # Public Land Mobile Network ID, <PLMN ID> = <MCC><MNC>. Should match startImsi
                   mcc: 208 # Mobile Country Code (3 digits string, digit: 0~9)
                   mnc: 93 # Mobile Network Code (2 or 3 digits string, digit: 0~9)
+                opc: "981d464c7c52eb6e5036234984ad0bcf"
+                key: "5122250214c33e723a5dd523fc145fc0"
+                sequenceNumber: "16f3b3f70fc2"
               - profileType: uereqpdusessrelease # profile type
                 profileName: profile7 # uniqely identifies a profile within application
                 enable: false # Set true to execute the profile, false otherwise.
@@ -253,4 +281,7 @@ omec-user-plane:
                   mcc: 208 # Mobile Country Code (3 digits string, digit: 0~9)
                   mnc: 93 # Mobile Network Code (2 or 3 digits string, digit: 0~9)
                 defaultAs: "192.168.250.1" #default icmp pkt destinationomec-control-plane:
+                opc: "981d464c7c52eb6e5036234984ad0bcf"
+                key: "5122250214c33e723a5dd523fc145fc0"
+                sequenceNumber: "16f3b3f70fc2"
   enable4G: false
