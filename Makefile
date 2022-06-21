@@ -356,6 +356,7 @@ download-ue-image: | $(M)/k8s-ready $(BUILD)/openairinterface
 $(M)/ue-image: | $(M)/k8s-ready $(BUILD)/openairinterface
 	cd $(BUILD)/openairinterface; \
 	sg docker -c "docker build . --target lte-uesoftmodem \
+		--network=host \
 		--build-arg http_proxy=$(HTTP_PROXY)/ \
 		--build-arg build_base=omecproject/oai-base:1.1.0 \
 		--file Dockerfile.ue \
@@ -374,6 +375,7 @@ download-ue-image: | $(M)/k8s-ready $(BUILD)/openairinterface
 $(M)/ue-image: $(M)/k8s-ready $(BUILD)/openairinterface
 	cd $(BUILD)/openairinterface; \
 	sg docker -c "docker build . --target lte-uesoftmodem \
+		--network=host \
 		--build-arg http_proxy=$(HTTP_PROXY)/ \
 		--build-arg build_base=omecproject/oai-base:1.1.0 \
 		--file Dockerfile.ue \
