@@ -18,6 +18,7 @@ ROC_VALUES     ?= $(MAKEDIR)/roc-values.yaml
 ROC_4G_MODELS  ?= $(MAKEDIR)/roc-4g-models.json
 ROC_5G_MODELS  ?= $(MAKEDIR)/roc-5g-models.json
 TEST_APP_VALUES?= $(MAKEDIR)/5g-test-apps-values.yaml
+GET_HELM        = get_helm.sh
 
 KUBESPRAY_VERSION ?= release-2.17
 DOCKER_VERSION    ?= '20.10'
@@ -258,9 +259,9 @@ $(M)/k8s-ready: | $(M)/setup
 	touch $@
 
 $(M)/helm-ready: | $(M)/k8s-ready
-	curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-	chmod 700 get_helm.sh
-	sudo DESIRED_VERSION=$(HELM_VERSION) ./get_helm.sh
+	curl -fsSL -o ${GET_HELM} https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+	chmod 700 ${GET_HELM}
+	sudo DESIRED_VERSION=$(HELM_VERSION) ./${GET_HELM}
 	helm repo add incubator https://charts.helm.sh/incubator
 	helm repo add cord https://charts.opencord.org
 	helm repo add atomix https://charts.atomix.io
@@ -509,6 +510,7 @@ roc-clean:
 	sed -i 's/    port: 5000/  #   port: 5000/' $(5G_CORE_VALUES)
 	kubectl delete namespace aether-roc || true
 	rm -rf $(M)/roc
+	rm -f ${GET_HELM}
 
 monitoring: $(M)/monitoring
 $(M)/monitoring: $(M)/helm-ready
