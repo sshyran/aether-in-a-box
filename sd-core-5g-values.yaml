@@ -11,10 +11,17 @@
     usePassword: false
     persistence:
       enabled: false
+    #enable following 2 lines if cluster needs to be enabled
+    #architecture: replicaset
+    #replicaCount: 3
   resources:
     enabled: false
 
   config:
+    #mongodb:
+    #  name: free5gc
+    #  url: mongodb://mongodb-arbiter-headless #enable if cluster deployment required
+
     managedByConfigPod:
       enabled: true
       # syncUrl: http://sdcore-adapter-v2-1.aether-roc.svc:8080/synchronize
@@ -22,33 +29,21 @@
     sctplb:
       deploy: false
 
-    smf:
-      cfgFiles:
-        # https://github.com/free5gc/free5gc/blob/main/config/pcfcfg.yaml
-        smfcfg.conf:
-          configuration:
-            mongodb:       # the mongodb connected by this PCF
-              name: smf # name of the mongodb
-              url: mongodb://mongodb:27017
-    pcf:
-      cfgFiles:
-        # https://github.com/free5gc/free5gc/blob/main/config/pcfcfg.yaml
-        pcfcfg.conf:
-          info:
-            version: 1.0.0
-            description: PCF initial local configuration
-          configuration:
-            mongodb:       # the mongodb connected by this PCF
-              name: free5gc                  # name of the mongodb
-              url: mongodb://mongodb:27017
-    nrf:
-      cfgFiles:
-        # https://github.com/free5gc/free5gc/blob/main/config/nrfcfg.yaml
-        nrfcfg.conf:
-          configuration:
-            MongoDBName: free5gc # database name in MongoDB
-            MongoDBUrl: mongodb://mongodb:27017
-            #MongoDBUrl: mongodb://mongodb:27017 #works with db in omec name space
+    #smf:
+    #  cfgFiles:
+    #    smfcfg.conf:
+    #      configuration:
+
+    #pcf:
+    #  cfgFiles:
+    #    pcfcfg.conf:
+    #      configuration:
+
+    #nrf:
+    #  cfgFiles:
+    #    nrfcfg.conf:
+    #      configuration:
+
 
 omec-sub-provision:
   enable: true
@@ -137,6 +132,10 @@ omec-user-plane:
   enable: true
   resources:
     enabled: false
+  images:
+    repository: "registry.opennetworking.org/docker.io/"
+    #tags:
+    #  bess: <bess image tag>
   config:
     upf:
       name: "oaisim"
@@ -171,8 +170,8 @@ omec-user-plane:
     enabled: false
   images:
     repository: "registry.opennetworking.org/docker.io/"
-  #  tags:
-  #    gnbsim: add overriding image tag here
+    #tags:
+    #  gnbsim: <gnbsim image tag>
   config:
     gnbsim:
       singleInterface: false #default multiInterface. Works well for AIAB
