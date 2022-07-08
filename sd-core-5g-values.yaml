@@ -176,6 +176,8 @@ omec-user-plane:
           cpiface:
             dnn: "internet"
             hostname: "upf"
+            enable_ue_ip_alloc: false
+            ue_ip_pool: "172.250.0.0/16"
 
 5g-ran-sim:
   enable: ${ENABLE_GNBSIM}
