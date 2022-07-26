@@ -29,20 +29,33 @@
     sctplb:
       deploy: false
 
-    #smf:
-    #  cfgFiles:
-    #    smfcfg.conf:
-    #      configuration:
+    upfadapter:
+      deploy: true
+
+    amf:
+      cfgFiles:
+        amfcfg.conf:
+          configuration:
+            enableDBStore: false
+
+    smf:
+      cfgFiles:
+        smfcfg.conf:
+          configuration:
+            enableDBStore: false
 
     #pcf:
     #  cfgFiles:
     #    pcfcfg.conf:
     #      configuration:
 
-    #nrf:
-    #  cfgFiles:
-    #    nrfcfg.conf:
-    #      configuration:
+    nrf:
+      cfgFiles:
+        nrfcfg.conf:
+          configuration:
+            mongoDBStreamEnable: false
+            nfProfileExpiryEnable: false
+            nfKeepAliveTime: 60
 
 
 omec-sub-provision:
