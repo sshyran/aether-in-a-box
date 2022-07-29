@@ -597,7 +597,7 @@ test: | 4g-core $(M)/oaisim
 	else \
 		kubectl -n omec exec gnbsim-0 -- ./gnbsim 2>&1 | sed -u "s,\x1B\[[0-9;]*[a-zA-Z],,g" | tee /tmp/gnbsim.out; \
 	fi
-	@grep -q "Profile Status: PASS" /tmp/gnbsim.out
+	@grep -q "Simulation Result: PASS\|Profile Status: PASS" /tmp/gnbsim.out
 
 reset-test: | oaisim-clean omec-clean router-clean
 	@cd $(M); rm -f omec oaisim 5g-core
