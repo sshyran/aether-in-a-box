@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38dcabb7_07a966c8",
+        "filename": "5g-test-apps-values.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000580
+      },
+      "writtenOn": "2022-08-29T18:45:56Z",
+      "side": 1,
+      "message": "default replica can be 1?",
+      "revId": "106c5a68aed5cddacd7aa8c6d1df37dc0f528ae9",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c886eff6_c5e29d45",
+        "filename": "get_helm.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1000580
+      },
+      "writtenOn": "2022-08-29T18:45:56Z",
+      "side": 1,
+      "message": "what is this file for ?",
+      "revId": "106c5a68aed5cddacd7aa8c6d1df37dc0f528ae9",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
