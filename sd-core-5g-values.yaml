@@ -107,8 +107,8 @@ omec-sub-provision:
                 mtu: 1460
                 ue-ip-pool: "172.250.0.0/16"
                 ue-dnn-qos:
-                  dnn-mbr-downlink: 20000000
-                  dnn-mbr-uplink:    4000000
+                  dnn-mbr-downlink: 200000000
+                  dnn-mbr-uplink:    20000000
                   bitrate-unit: bps
                   traffic-class:  #default bearer QCI/ARP
                     name: "platinum"
