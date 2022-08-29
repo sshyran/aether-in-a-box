@@ -1,6 +1,10 @@
+# SPDX-FileCopyrightText: 2022-present Intel Corporation
 # Copyright 2019-present Open Networking Foundation
 #
 # SPDX-License-Identifier: Apache-2.0
+
+omec-control-plane:
+  enable4G: false
 
 5g-control-plane:
   enable5G: true
@@ -12,15 +16,15 @@
     persistence:
       enabled: false
     #enable following 2 lines if cluster needs to be enabled
-    #architecture: replicaset
-    #replicaCount: 3
+    architecture: replicaset
+    replicaCount: 2
   resources:
     enabled: false
 
   config:
-    #mongodb:
-    #  name: free5gc
-    #  url: mongodb://mongodb-arbiter-headless #enable if cluster deployment required
+    mongodb:
+      name: free5gc
+      url: mongodb://mongodb-arbiter-headless #enable if cluster deployment required
 
     managedByConfigPod:
       enabled: true
@@ -75,9 +79,9 @@ omec-sub-provision:
             #   addr: subscriber-proxy.aether-roc.svc.cluster.local
             #   port: 5000
             subscribers:
-            - ueId-start: 208930100007487
-              ueId-end: 208930100007501
-              plmnId: 20893
+            - ueId-start: "208930100007487"
+              ueId-end: "208930100007501"
+              plmnId: "20893"
               opc: "981d464c7c52eb6e5036234984ad0bcf"
               op: ""
               key: "5122250214c33e723a5dd523fc145fc0"
@@ -107,8 +111,8 @@ omec-sub-provision:
                 mtu: 1460
                 ue-ip-pool: "172.250.0.0/16"
                 ue-dnn-qos:
-                  dnn-mbr-downlink: 20000000
-                  dnn-mbr-uplink:    4000000
+                  dnn-mbr-downlink: 200000000
+                  dnn-mbr-uplink:    20000000
                   bitrate-unit: bps
                   traffic-class:  #default bearer QCI/ARP
                     name: "platinum"
@@ -210,6 +214,7 @@ omec-user-plane:
                 startImsi: 208930100007487 #First IMSI. Subsequent values will be used if ueCount is mo    re than 1
                 ueCount: 5 # Number of UEs for for which the profile will be executed
                 defaultAs: "192.168.250.1" #default icmp pkt destination
+                perUserTimeout: 100 #if no expected event received in this time then treat it as failure
                 plmnId: # Public Land Mobile Network ID, <PLMN ID> = <MCC><MNC>
                   mcc: 208 # Mobile Country Code (3 digits string, digit: 0~9)
                   mnc: 93 # Mobile Network Code (2 or 3 digits string, digit: 0~9)
@@ -223,6 +228,7 @@ omec-user-plane:
                 startImsi: 208930100007492
                 ueCount: 5
                 defaultAs: "192.168.250.1" #default icmp pkt destination
+                perUserTimeout: 100 #if no expected event received in this time then treat it as failure
                 plmnId:
                   mcc: 208
                   mnc: 93
@@ -237,6 +243,7 @@ omec-user-plane:
                 startImsi: 208930100007497
                 ueCount: 5
                 defaultAs: "192.168.250.1" #default icmp pkt destination
+                perUserTimeout: 100 #if no expected event received in this time then treat it as failure
                 plmnId:
                   mcc: 208
                   mnc: 93
@@ -253,6 +260,7 @@ omec-user-plane:
                   mcc: 208
                   mnc: 93
                 defaultAs: "192.168.250.1" #default icmp pkt destination
+                perUserTimeout: 100 #if no expected event received in this time then treat it as failure
                 opc: "981d464c7c52eb6e5036234984ad0bcf"
                 key: "5122250214c33e723a5dd523fc145fc0"
                 sequenceNumber: "16f3b3f70fc2"
@@ -263,6 +271,7 @@ omec-user-plane:
                 startImsi: 208930100007497
                 ueCount: 5
                 defaultAs: "192.168.250.1" #default icmp pkt destination
+                perUserTimeout: 100 #if no expected event received in this time then treat it as failure
                 plmnId:
                   mcc: 208
                   mnc: 93
@@ -293,7 +302,7 @@ omec-user-plane:
                   mcc: 208 # Mobile Country Code (3 digits string, digit: 0~9)
                   mnc: 93 # Mobile Network Code (2 or 3 digits string, digit: 0~9)
                 defaultAs: "192.168.250.1" #default icmp pkt destinationomec-control-plane:
+                perUserTimeout: 100 #if no expected event received in this time then treat it as failure
                 opc: "981d464c7c52eb6e5036234984ad0bcf"
                 key: "5122250214c33e723a5dd523fc145fc0"
                 sequenceNumber: "16f3b3f70fc2"
-  enable4G: false
