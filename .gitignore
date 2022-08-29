@@ -4,3 +4,4 @@
 
 resources/aether.registry.yaml
 build/*
+get_helm.sh

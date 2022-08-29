@@ -12,15 +12,15 @@
     persistence:
       enabled: false
     #enable following 2 lines if cluster needs to be enabled
-    #architecture: replicaset
-    #replicaCount: 3
+    architecture: replicaset
+    replicaCount: 2
   resources:
     enabled: false
 
   config:
-    #mongodb:
-    #  name: free5gc
-    #  url: mongodb://mongodb-arbiter-headless #enable if cluster deployment required
+    mongodb:
+      name: free5gc
+      url: mongodb://mongodb-arbiter-headless #enable if cluster deployment required
 
     managedByConfigPod:
       enabled: true
@@ -107,8 +107,8 @@ omec-sub-provision:
                 mtu: 1460
                 ue-ip-pool: "172.250.0.0/16"
                 ue-dnn-qos:
-                  dnn-mbr-downlink: 20000000
-                  dnn-mbr-uplink:    4000000
+                  dnn-mbr-downlink: 200000000
+                  dnn-mbr-uplink:    20000000
                   bitrate-unit: bps
                   traffic-class:  #default bearer QCI/ARP
                     name: "platinum"
