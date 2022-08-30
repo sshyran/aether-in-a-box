@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d22d364_04e4757e",
+        "filename": "sd-core-5g-values.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000580
+      },
+      "writtenOn": "2022-08-30T04:34:31Z",
+      "side": 1,
+      "message": "we can use fullnameoverride field here to change name of the mongodb from arbiter-headless to just mongodb.",
+      "revId": "c83876041e2e90fe95daef8020b420122a95c844",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
