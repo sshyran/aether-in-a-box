@@ -69,6 +69,24 @@
       "parentUuid": "c886eff6_c5e29d45",
       "revId": "106c5a68aed5cddacd7aa8c6d1df37dc0f528ae9",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b4cd7ba_1e04675d",
+        "filename": "get_helm.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1000640
+      },
+      "writtenOn": "2022-08-30T02:26:36Z",
+      "side": 1,
+      "message": "removed this file. So no need to worry",
+      "parentUuid": "be2158c9_843f08da",
+      "revId": "106c5a68aed5cddacd7aa8c6d1df37dc0f528ae9",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
