@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a8171620_bbc25340",
+        "filename": "sd-core-5g-values.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000640
+      },
+      "writtenOn": "2022-08-30T20:18:03Z",
+      "side": 1,
+      "message": "I am not sure. We need to discuss this to discuss this comment.",
+      "parentUuid": "7d22d364_04e4757e",
+      "revId": "c83876041e2e90fe95daef8020b420122a95c844",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c0e3f3be_35ac30d8",
         "filename": "sd-core-5g-values.yaml",
         "patchSetId": 5
@@ -31,6 +49,30 @@
       "writtenOn": "2022-08-30T13:08:13Z",
       "side": 1,
       "message": "i couldn\u0027t update this patch. please keep these values in double quotes",
+      "range": {
+        "startLine": 78,
+        "startChar": 12,
+        "endLine": 80,
+        "endChar": 27
+      },
+      "revId": "c83876041e2e90fe95daef8020b420122a95c844",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dac500ae_f9938c9a",
+        "filename": "sd-core-5g-values.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1000640
+      },
+      "writtenOn": "2022-08-30T20:18:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0e3f3be_35ac30d8",
       "range": {
         "startLine": 78,
         "startChar": 12,
