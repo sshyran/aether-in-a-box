@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0acfa2c6_3b0dfef4",
+        "filename": "5g-test-apps-values.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000640
+      },
+      "writtenOn": "2022-08-31T22:42:21Z",
+      "side": 1,
+      "message": "Add intel copyright",
+      "revId": "bfdc2c64a8a78832a7a440545277d43c1e33ae07",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
