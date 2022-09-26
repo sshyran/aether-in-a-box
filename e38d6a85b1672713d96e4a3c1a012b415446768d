@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d82af80f_7d2304df",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000941
+      },
+      "writtenOn": "2022-09-26T18:20:30Z",
+      "side": 1,
+      "message": "Can we make these smalls fixes before this is merged?",
+      "revId": "e38d6a85b1672713d96e4a3c1a012b415446768d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25d144b4_a5b6983c",
+        "filename": "sd-core-5g-values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1000941
+      },
+      "writtenOn": "2022-09-26T18:20:30Z",
+      "side": 1,
+      "message": "\"uniquely\"",
+      "revId": "e38d6a85b1672713d96e4a3c1a012b415446768d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7446e500_1576c44d",
+        "filename": "sd-core-5g-values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1000941
+      },
+      "writtenOn": "2022-09-26T18:20:30Z",
+      "side": 1,
+      "message": "can you delete one \"for\"?",
+      "revId": "e38d6a85b1672713d96e4a3c1a012b415446768d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d31cf68_07084e86",
+        "filename": "sd-core-5g-values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1000941
+      },
+      "writtenOn": "2022-09-26T18:20:30Z",
+      "side": 1,
+      "message": "can you delete one \"for\"?",
+      "revId": "e38d6a85b1672713d96e4a3c1a012b415446768d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "239861d9_a315aad8",
+        "filename": "sd-core-5g-values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1000941
+      },
+      "writtenOn": "2022-09-26T18:20:30Z",
+      "side": 1,
+      "message": "can you delete one \"for\"?",
+      "revId": "e38d6a85b1672713d96e4a3c1a012b415446768d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
