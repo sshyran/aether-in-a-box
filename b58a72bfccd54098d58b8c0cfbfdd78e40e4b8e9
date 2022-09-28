@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65abf686_51bd9f9b",
+        "filename": "sd-core-5g-values.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000580
+      },
+      "writtenOn": "2022-09-28T21:20:08Z",
+      "side": 1,
+      "message": "lets update the comment to : \"This value will be sent to registered NF during registration/update process.\"",
+      "revId": "b58a72bfccd54098d58b8c0cfbfdd78e40e4b8e9",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
