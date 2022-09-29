@@ -49,7 +49,7 @@ DATA_IFACE ?= data
 ifeq ($(DATA_IFACE), data)
 	RAN_SUBNET := 192.168.251.0/24
 else
-	RAN_SUBNET := $(shell ip route | grep $${DATA_IFACE} | awk '/kernel/ {print $$1}')
+	RAN_SUBNET := $(shell ip route | grep $${DATA_IFACE} | awk '/kernel/ {print $$1}' | head -1)
 	DATA_IFACE_PATH := $(shell find /*/systemd/network -maxdepth 1 -not -type d -name '*$(DATA_IFACE).network' -print)
 	DATA_IFACE_CONF ?= $(shell basename $(DATA_IFACE_PATH)).d
 endif
