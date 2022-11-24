@@ -533,6 +533,11 @@ monitoring-4g: $(M)/monitoring
 	kubectl create namespace cattle-dashboards || true
 	kubectl apply -k resources/4g-monitoring
 
+monitoring-5g: $(M)/monitoring
+	kubectl create namespace omec || true
+	kubectl create namespace cattle-dashboards || true
+	kubectl apply -k resources/5g-monitoring
+
 enodebd:
 	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace=aether-apps \
