@@ -17,6 +17,9 @@ omec-control-plane:
     #  amf: # add new image name
     # refer above helm chart to add other NF images
 
+  kafka:
+    deploy: false
+
   mongodb:
     usePassword: false
     persistence:
@@ -43,6 +46,9 @@ omec-control-plane:
     upfadapter:
       deploy: false # if enabled then deploy upf adapter pod. Once backend code is stable,
                     # this option will be enabled by default
+
+    metricfunc:
+      deploy: false
 
     # Change AMF config here if rquired Most of the AMF config comes from Slice APIs
     # but some of the config is directly provided  thorugh helm chart

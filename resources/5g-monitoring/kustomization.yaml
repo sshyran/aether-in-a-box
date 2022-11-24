@@ -1,0 +1,16 @@
+# Copyright 2022-present Open Networking Foundation
+# 
+# SPDX-License-Identifier: Apache-2.0
+
+resources:
+  - ./metricfunc-monitor.yaml
+  - ./upf-monitor.yaml
+
+configMapGenerator:
+  - name: grafana-ops-dashboards
+    namespace: cattle-dashboards
+    files:
+      - ./aiab5g-dashboard.json
+    options:
+      labels:
+        grafana_dashboard: "1"
