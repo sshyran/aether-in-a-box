@@ -16,6 +16,24 @@
       "message": "At what point in time we will enable this ? Once helm chart committed ?\nAlso, if this is disabled but amf/smf config still has Kafka config then what will\nhappen in smf/amf. Will smf/amf get blocked for Kafka ? May be some of the questions will get answered when I see helm chart changes. but want to know your opinion on this.",
       "revId": "9b9707ab9869c69d55682af715cadc65c5b0ece5",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "677626fc_7e01ac28",
+        "filename": "sd-core-5g-values.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000767
+      },
+      "writtenOn": "2022-11-25T03:43:08Z",
+      "side": 1,
+      "message": "Kafka and MetricFunc pod shall always be running by default. Once sd-core helm chart changes are checked in, we shall enable enable kafka/MetricFunc too in AIAB override file. 5g-monitoring can be enabled/disabled at will.",
+      "parentUuid": "9380bac0_9c3d03f9",
+      "revId": "9b9707ab9869c69d55682af715cadc65c5b0ece5",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
