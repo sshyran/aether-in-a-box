@@ -3,14 +3,15 @@
 # SPDX-License-Identifier: Apache-2.0
 
 global:
-  storage:
-    controller: "atomix-controller.kube-system:5679"
-  store:
-    consensus:
-      enabled: true
-      clusters: 1
-      replicas: 1
-      partitions: 1
+  atomix:
+    storage:
+      controller: "atomix-controller.kube-system:5679"
+    store:
+      consensus:
+        enabled: true
+        clusters: 1
+        replicas: 3
+        partitions: 30
 
 import:
   aether-roc-gui:
@@ -41,12 +42,6 @@ import:
       enabled: false
   subscriber-proxy:
     enabled: false
-
-onos-gui:
-  ingress:
-    enabled: false
-  service:
-    type: NodePort
 
 aether-roc-gui-v2-1:
   ingress:
