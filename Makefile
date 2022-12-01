@@ -442,16 +442,24 @@ $(M)/roc: $(M)/helm-ready
 	kubectl get namespace aether-roc 2> /dev/null || kubectl create namespace aether-roc
 	helm repo update
 	if [ "$(CHARTS)" == "local" ]; then helm dep up $(AETHER_ROC_UMBRELLA_CHART); fi
-	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
-		--namespace kube-system \
-		--values $(ROC_VALUES) \
-		atomix-controller \
-		$(ATOMIX_CONTROLLER_CHART)
-	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
-		--namespace kube-system \
-		--values $(ROC_VALUES) \
-		atomix-raft-storage \
-		$(ATOMIX_RAFT_STORAGE_CHART)
+	if [ "$(CHARTS)" == "aether-2.0" -o "$(CHARTS)" == "aether-1.6" ]; then \
+		helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+			--namespace kube-system \
+			--values $(ROC_VALUES) \
+			atomix-controller \
+			$(ATOMIX_CONTROLLER_CHART); \
+		helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+			--namespace kube-system \
+			--values $(ROC_VALUES) \
+			atomix-raft-storage \
+			$(ATOMIX_RAFT_STORAGE_CHART); \
+	else \
+		helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+			--namespace kube-system \
+			--values $(ROC_VALUES) \
+			atomix-runtime \
+			$(ATOMIX_RUNTIME_CHART); \
+	fi
 	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace kube-system \
 		--values $(ROC_VALUES) \
