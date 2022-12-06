@@ -18,7 +18,7 @@ omec-control-plane:
     # refer above helm chart to add other NF images
 
   kafka:
-    deploy: false
+    deploy: true
 
   mongodb:
     usePassword: false
@@ -48,7 +48,7 @@ omec-control-plane:
                     # this option will be enabled by default
 
     metricfunc:
-      deploy: false
+      deploy: true
 
     # Change AMF config here if rquired Most of the AMF config comes from Slice APIs
     # but some of the config is directly provided  thorugh helm chart
