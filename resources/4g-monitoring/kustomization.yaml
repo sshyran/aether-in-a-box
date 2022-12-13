@@ -15,6 +15,6 @@ configMapGenerator:
     files:
       - ./aiab-dashboard.json
       - ./enodebd-dashboard.json
-    options:
-      labels:
-        grafana_dashboard: "1"
+generatorOptions:
+  labels:
+    grafana_dashboard: "1"

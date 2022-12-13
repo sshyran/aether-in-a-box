@@ -11,6 +11,6 @@ configMapGenerator:
     namespace: cattle-dashboards
     files:
       - ./aiab5g-dashboard.json
-    options:
-      labels:
-        grafana_dashboard: "1"
+generatorOptions:
+  labels:
+    grafana_dashboard: "1"
