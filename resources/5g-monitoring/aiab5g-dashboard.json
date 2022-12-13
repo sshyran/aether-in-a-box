@@ -24,7 +24,6 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 36,
   "links": [],
   "panels": [
     {
@@ -83,6 +82,7 @@
           "exemplar": true,
           "expr": "smf_pdu_sessions",
           "hide": false,
+          "instant": true,
           "interval": "",
           "legendFormat": "",
           "range": true,
@@ -168,6 +168,7 @@
           "exemplar": true,
           "expr": "nf_status{nfType=\"UPF\"}",
           "hide": false,
+          "instant": true,
           "interval": "",
           "legendFormat": "{{ Nfname }}",
           "range": true,
@@ -249,6 +250,7 @@
           "exemplar": true,
           "expr": "nf_status{nfType=\"GNB\"}",
           "hide": false,
+          "instant": true,
           "interval": "",
           "legendFormat": "{{ Nfname }}",
           "refId": "A"
@@ -326,7 +328,7 @@
           },
           "editorMode": "builder",
           "exemplar": true,
-          "expr": "sum(core_subscriber{state=\"Connected\"}) by (imsi, slice)",
+          "expr": "sum(core_subscriber) by (imsi, slice, state)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -344,13 +346,15 @@
           "id": "organize",
           "options": {
             "excludeByName": {
-              "Time": true
+              "Time": true,
+              "Value": true
             },
             "indexByName": {},
             "renameByName": {
               "Value": "Status",
               "imsi": "IMSI",
-              "slice": "Slice"
+              "slice": "Slice",
+              "state": "State"
             }
           }
         }
@@ -399,13 +403,13 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "bps"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 9,
+        "w": 24,
         "x": 0,
         "y": 8
       },
@@ -443,84 +447,6 @@
       "timeShift": null,
       "title": "UPF Throughput",
       "type": "timeseries"
-    },
-    {
-      "datasource": null,
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "graph": false,
-              "legend": false,
-              "tooltip": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 8
-      },
-      "id": 10,
-      "options": {
-        "graph": {},
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltipOptions": {
-          "mode": "single"
-        }
-      },
-      "pluginVersion": "7.5.11",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(smf_svc_stats) by (msgtype)",
-          "interval": "",
-          "legendFormat": "{{ msgtype }}",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "SMF Messages",
-      "type": "timeseries"
     }
   ],
   "refresh": "5s",
@@ -531,12 +457,12 @@
     "list": []
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "AIAB_5g Copy",
+  "title": "AIAB 5G Dashboard",
   "uid": "XpijtYd4z",
-  "version": 8
+  "version": 1
 }
