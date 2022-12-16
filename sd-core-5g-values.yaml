@@ -28,7 +28,7 @@ omec-control-plane:
     architecture: replicaset
     replicaCount: 2
   resources:
-    enabled: false
+    enabled: true
 
   config:
     mongodb:
