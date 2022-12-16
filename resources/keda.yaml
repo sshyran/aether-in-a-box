@@ -1,0 +1,29 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+ name: smf-scale
+ namespace: omec
+spec:
+ scaleTargetRef:
+   kind: Deployment
+   name: smf
+ minReplicaCount: 1
+ maxReplicaCount: 5
+ cooldownPeriod: 30
+ pollingInterval: 1
+ triggers:
+ - type: memory
+   metadata:
+     type: Utilization # Deprecated in favor of trigger.metricType; allowed types are 'Utilization' or 'AverageValue'
+     value: "60"
+ - type: cpu
+   metadata:
+     type: Utilization # Deprecated in favor of trigger.metricType; allowed types are 'Utilization' or 'AverageValue'
+     value: "60"
+ - type: prometheus
+   metadata:
+     serverAddress: http://rancher-monitoring-prometheus.cattle-monitoring-system.svc:9090
+     metricName: n4_messages_total
+     query: |
+       sum(n4_messages_total{job="smf"})
+     threshold: "50"
