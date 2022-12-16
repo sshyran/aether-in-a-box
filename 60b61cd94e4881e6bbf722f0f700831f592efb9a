@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "93c167e7_e76aeb09",
+        "filename": "resources/5g-monitoring/smf-monitor.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1000580
+      },
+      "writtenOn": "2022-12-16T18:27:37Z",
+      "side": 1,
+      "message": "Added this file to scrape metrics from smf directly. wanted to get the n4 messages count. that increases faster and thus could be used to scale for demo. \nneed to check if metricfunc takes all metrics exported by smf or specific ones",
+      "parentUuid": "7eb3a373_eb960a6c",
+      "revId": "60b61cd94e4881e6bbf722f0f700831f592efb9a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "efde4e43_a326a4bf",
         "filename": "resources/keda.yaml",
         "patchSetId": 2
@@ -31,6 +49,24 @@
       "writtenOn": "2022-12-16T18:16:59Z",
       "side": 1,
       "message": "Interval is second or mins?",
+      "revId": "60b61cd94e4881e6bbf722f0f700831f592efb9a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4a07165_acd46047",
+        "filename": "resources/keda.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000580
+      },
+      "writtenOn": "2022-12-16T18:27:37Z",
+      "side": 1,
+      "message": "seconds : https://keda.sh/docs/2.9/concepts/scaling-jobs/",
+      "parentUuid": "efde4e43_a326a4bf",
       "revId": "60b61cd94e4881e6bbf722f0f700831f592efb9a",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     },
@@ -54,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9bcdb484_b4e936c3",
+        "filename": "resources/keda.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000580
+      },
+      "writtenOn": "2022-12-16T18:27:37Z",
+      "side": 1,
+      "message": "This is telling keda to query this prometheus server and get the metrics. we already run this as part of the make monitoring-5g in aiab. in real deployment case, we would need to give url of prometheus wherever it is running",
+      "parentUuid": "4c4c8621_8ea2b990",
+      "revId": "60b61cd94e4881e6bbf722f0f700831f592efb9a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a504810d_663dd377",
         "filename": "sd-core-5g-values.yaml",
         "patchSetId": 2
@@ -65,6 +119,24 @@
       "writtenOn": "2022-12-16T18:16:59Z",
       "side": 1,
       "message": "This also means then we should allocate right memory \u0026 cpu for SMF. Currently looks like by default we assign 1 core and some memory. Can you review that as well.",
+      "revId": "60b61cd94e4881e6bbf722f0f700831f592efb9a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3fd53d7_f7595e0a",
+        "filename": "sd-core-5g-values.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000580
+      },
+      "writtenOn": "2022-12-16T18:27:37Z",
+      "side": 1,
+      "message": "Yes. we need to assign correct amount of core and memory.",
+      "parentUuid": "a504810d_663dd377",
       "revId": "60b61cd94e4881e6bbf722f0f700831f592efb9a",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
