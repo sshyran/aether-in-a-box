@@ -65,6 +65,8 @@ ROUTER_HOST_NETCONF   := /etc/systemd/network/10-aiab-access.netdev /etc/systemd
 UE_NAT_CONF           := /etc/systemd/system/aiab-ue-nat.service
 
 # monitoring
+AUTOSCALE_CHART              := kedacore/keda
+AUTOSCALE_VALUES             ?= $(MAKEDIR)/autoscale.yaml
 RANCHER_MONITORING_CRD_CHART := rancher/rancher-monitoring-crd
 RANCHER_MONITORING_CHART     := rancher/rancher-monitoring
 MONITORING_VALUES            ?= $(MAKEDIR)/monitoring.yaml
@@ -565,6 +567,19 @@ roc-clean:
 	rm -rf $(M)/roc
 	rm -f ${GET_HELM}
 
+autoscale: $(M)/autoscale
+$(M)/autoscale: $(M)/helm-ready
+	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
+		--namespace=autoscale \
+		--create-namespace \
+		--values=$(AUTOSCALE_VALUES) \
+		keda-aiab \
+		$(AUTOSCALE_CHART)
+	touch $(M)/autoscale
+
+autoscale-aiab: $(M)/autoscale
+	kubectl apply -f resources/keda.yaml
+
 monitoring: $(M)/monitoring
 $(M)/monitoring: $(M)/helm-ready
 	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
@@ -625,7 +640,13 @@ upf-clean:
 	done
 	@echo "1" > ${UPF_COUNT}
 
-omec-clean: upf-clean
+autoscale-clean:
+	kubectl delete -f resources/keda.yaml
+	helm -n autoscale delete keda-aiab || true
+	kubectl delete namespace autoscale || true
+	rm $(M)/autoscale
+
+omec-clean:
 	helm delete -n omec $$(helm -n omec ls -qa) || true
 	kubectl delete namespace omec || true
 	@rm -f $(UPF_COUNT)
