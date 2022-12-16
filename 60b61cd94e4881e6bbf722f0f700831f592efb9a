@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7eb3a373_eb960a6c",
+        "filename": "resources/5g-monitoring/smf-monitor.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1000640
+      },
+      "writtenOn": "2022-12-16T18:16:59Z",
+      "side": 1,
+      "message": "what is need of this file ?",
+      "revId": "60b61cd94e4881e6bbf722f0f700831f592efb9a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "efde4e43_a326a4bf",
+        "filename": "resources/keda.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000640
+      },
+      "writtenOn": "2022-12-16T18:16:59Z",
+      "side": 1,
+      "message": "Interval is second or mins?",
+      "revId": "60b61cd94e4881e6bbf722f0f700831f592efb9a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c4c8621_8ea2b990",
+        "filename": "resources/keda.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000640
+      },
+      "writtenOn": "2022-12-16T18:16:59Z",
+      "side": 1,
+      "message": "How this is used ?",
+      "revId": "60b61cd94e4881e6bbf722f0f700831f592efb9a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a504810d_663dd377",
+        "filename": "sd-core-5g-values.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000640
+      },
+      "writtenOn": "2022-12-16T18:16:59Z",
+      "side": 1,
+      "message": "This also means then we should allocate right memory \u0026 cpu for SMF. Currently looks like by default we assign 1 core and some memory. Can you review that as well.",
+      "revId": "60b61cd94e4881e6bbf722f0f700831f592efb9a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
