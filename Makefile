@@ -279,6 +279,7 @@ endif
 
 node-prep: | $(M)/helm-ready /opt/cni/bin/static
 
+router-pod: | $(M)/router-pod
 $(M)/router-pod: $(ROUTER_POD_NETCONF)
 	sudo systemctl restart systemd-networkd
 	DATA_IFACE=$(DATA_IFACE) envsubst < $(RESOURCEDIR)/router.yaml | kubectl apply -f -
