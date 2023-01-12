@@ -98,76 +98,76 @@
                     {
                         "sim-id": "aiab-sim-1",
                         "display-name": "UE 1 Sim",
-                        "imsi": 208930100007487
+                        "imsi": "208930100007487"
                     },
                     {
                         "sim-id": "aiab-sim-2",
                         "display-name": "UE 2 Sim",
-                        "imsi": 208930100007488
+                        "imsi": "208930100007488"
                     },
                     {
                         "sim-id": "aiab-sim-3",
                         "display-name": "UE 3 Sim",
-                        "imsi": 208930100007489
+                        "imsi": "208930100007489"
                     },
                     {
                         "sim-id": "aiab-sim-4",
                         "display-name": "UE 4 Sim",
-                        "imsi": 208930100007490
+                        "imsi": "208930100007490"
                     },
                     {
                         "sim-id": "aiab-sim-5",
                         "display-name": "UE 5 Sim",
-                        "imsi": 208930100007491
+                        "imsi": "208930100007491"
                     },
                     {
                         "sim-id": "aiab-sim-6",
                         "display-name": "UE 6 Sim",
-                        "imsi": 208930100007492
+                        "imsi": "208930100007492"
                     },
                     {
                         "sim-id": "aiab-sim-7",
                         "display-name": "UE 7 Sim",
-                        "imsi": 208930100007493
+                        "imsi": "208930100007493"
                     },
                     {
                         "sim-id": "aiab-sim-8",
                         "display-name": "UE 8 Sim",
-                        "imsi": 208930100007494
+                        "imsi": "208930100007494"
                     },                                {
                         "sim-id": "aiab-sim-9",
                         "display-name": "UE 9 Sim",
-                        "imsi": 208930100007495
+                        "imsi": "208930100007495"
                     },
                     {
                         "sim-id": "aiab-sim-10",
                         "display-name": "UE 10 Sim",
-                        "imsi": 208930100007496
+                        "imsi": "208930100007496"
                     },
                     {
                         "sim-id": "aiab-sim-11",
                         "display-name": "UE 11 Sim",
-                        "imsi": 208930100007497
+                        "imsi": "208930100007497"
                     },
                     {
                         "sim-id": "aiab-sim-12",
                         "display-name": "UE 12 Sim",
-                        "imsi": 208930100007498
+                        "imsi": "208930100007498"
                     },
                     {
                         "sim-id": "aiab-sim-13",
                         "display-name": "UE 13 Sim",
-                        "imsi": 208930100007499
+                        "imsi": "208930100007499"
                     },
                     {
                         "sim-id": "aiab-sim-14",
                         "display-name": "UE 14 Sim",
-                        "imsi": 208930100007500
+                        "imsi": "208930100007500"
                     },
                     {
                         "sim-id": "aiab-sim-15",
                         "display-name": "UE 15 Sim",
-                        "imsi": 208930100007501
+                        "imsi": "208930100007501"
                     }
                 ],
                 "device-group": [
@@ -286,8 +286,8 @@
                         "filter": [],
                         "slice-id": "aiab-vcs",
                         "connectivity-service": "5g",
-                        "sd": 66051,
-                        "sst": 1,
+                        "sd": "10203",
+                        "sst": "1",
                         "upf": "aiab-upf",
                         "mbr": {
                             "uplink": 10000000,
@@ -295,49 +295,7 @@
                         },
                         "priority-traffic-rule": []
                     }
-                ],
-                "additionalProperties": {
-                    "enterprise-id": "aiab-enterprise"
-                }
-            },
-            {
-                "description": "Global Default Site",
-                "display-name": "Global Default Site",
-                "site-id": "defaultent-defaultsite",
-                "imsi-definition": {
-                    "mcc": "000",
-                    "mnc": "00",
-                    "enterprise": 0,
-                    "format": "SSSSSSSSSSSSSSS"
-                },
-                "device-group": [
-                    {
-                        "display-name": "Unknown Inventory",
-                        "device-group-id": "defaultent-defaultsite-default",
-                        "mbr": {
-                            "uplink": 1000000,
-                            "downlink": 1000000
-                        },
-                        "traffic-class": "class-1",
-                        "ip-domain": "defaultent-defaultip"
-                    }
-                ],
-                "ip-domain": [
-                    {
-                        "admin-status": "ENABLE",
-                        "description": "Global Default IP Domain",
-                        "display-name": "Global Default IP Domain",
-                        "dns-primary": "8.8.8.1",
-                        "dns-secondary": "8.8.8.2",
-                        "dnn": "dnnglobal",
-                        "ip-domain-id": "defaultent-defaultip",
-                        "mtu": 57600,
-                        "subnet": "192.168.0.0/24"
-                    }
-                ],
-                "additionalProperties": {
-                    "enterprise-id": "defaultent"
-                }
+                ]
             }
         ],
         "traffic-class-2.1.0": [
@@ -348,29 +306,12 @@
                 "pdb": 100,
                 "arp": 1,
                 "pelr": 3,
-                "qci": 1,
-                "additionalProperties": {
-                    "enterprise-id": "aiab-enterprise"
-                }
-            },
-            {
-                "traffic-class-id": "class-1",
-                "description": "Default traffic-class for defaultent",
-                "display-name": "Class 1",
-                "qci": 10,
-                "arp": 1,
-                "pelr": 10,
-                "pdb": 100,
-                "additionalProperties": {
-                    "enterprise-id": "defaultent"
-                }
+                "qci": 1
             }
         ]
     },
     "Deletes": {},
     "Extensions": {
-        "transaction-strategy-111": 1,
-        "model-version-101": "2.1.x",
-        "model-type-102": "Aether"
+        "transaction-strategy-111": 1
     }
 }

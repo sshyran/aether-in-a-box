@@ -11,14 +11,15 @@ RESOURCEDIR	:= $(MAKEDIR)/resources
 WORKSPACE	?= $(HOME)
 VENV		?= $(BUILD)/venv/aiab
 
-4G_CORE_VALUES ?= $(MAKEDIR)/sd-core-4g-values.yaml
-5G_CORE_VALUES ?= $(MAKEDIR)/sd-core-5g-values.yaml
-OAISIM_VALUES  ?= $(MAKEDIR)/oaisim-values.yaml
-ROC_VALUES     ?= $(MAKEDIR)/roc-values.yaml
-ROC_4G_MODELS  ?= $(MAKEDIR)/roc-4g-models.json
-ROC_5G_MODELS  ?= $(MAKEDIR)/roc-5g-models.json
-TEST_APP_VALUES?= $(MAKEDIR)/5g-test-apps-values.yaml
-GET_HELM        = get_helm.sh
+4G_CORE_VALUES       ?= $(MAKEDIR)/sd-core-4g-values.yaml
+5G_CORE_VALUES       ?= $(MAKEDIR)/sd-core-5g-values.yaml
+OAISIM_VALUES        ?= $(MAKEDIR)/oaisim-values.yaml
+ROC_VALUES           ?= $(MAKEDIR)/roc-values.yaml
+ROC_DEFAULTENT_MODEL ?= $(MAKEDIR)/roc-defaultent-model.json
+ROC_4G_MODELS        ?= $(MAKEDIR)/roc-4g-models.json
+ROC_5G_MODELS        ?= $(MAKEDIR)/roc-5g-models.json
+TEST_APP_VALUES      ?= $(MAKEDIR)/5g-test-apps-values.yaml
+GET_HELM              = get_helm.sh
 
 KUBESPRAY_VERSION ?= release-2.17
 DOCKER_VERSION    ?= '20.10'
@@ -482,10 +483,16 @@ roc-4g-models: $(M)/roc
 		sed -i 's/#   addr: sub/  addr: sub/' $(4G_CORE_VALUES) ; \
 		sed -i 's/#   port: 5000/  port: 5000/' $(4G_CORE_VALUES) ; \
 	fi
-	$(eval ONOS_CLI_POD := $(shell kubectl -n aether-roc get pods -l name=onos-cli -o name))
+	@$(eval ONOS_CLI_POD := $(shell kubectl -n aether-roc get pods -l name=onos-cli -o name))
 	echo "ONOS CLI pod: ${ONOS_CLI_POD}"
+	@$(eval API_SERVICE := $(shell kubectl -n aether-roc get --no-headers=true services -l app.kubernetes.io/name=aether-roc-api | awk '{print $$1}'))
+	echo "API SERVICE : ${API_SERVICE}"
 	until kubectl -n aether-roc exec ${ONOS_CLI_POD} -- \
-		curl -s -f -L -X PATCH "http://aether-roc-api:8181/aether-roc-api" \
+		curl -s -f -L -X PATCH "http://${API_SERVICE}:8181/aether-roc-api" \
+		--header 'Content-Type: application/json' \
+		--data-raw "$$(cat ${ROC_DEFAULTENT_MODEL})"; do sleep 5; done
+	until kubectl -n aether-roc exec ${ONOS_CLI_POD} -- \
+		curl -s -f -L -X PATCH "http://${API_SERVICE}:8181/aether-roc-api" \
 		--header 'Content-Type: application/json' \
 		--data-raw "$$(cat ${ROC_4G_MODELS})"; do sleep 5; done
 
@@ -498,10 +505,16 @@ roc-5g-models: $(M)/roc
 		sed -i 's/#   addr: sub/  addr: sub/' $(5G_CORE_VALUES) ; \
 		sed -i 's/#   port: 5000/  port: 5000/' $(5G_CORE_VALUES) ; \
 	fi
-	$(eval ONOS_CLI_POD := $(shell kubectl -n aether-roc get pods -l name=onos-cli -o name))
+	@$(eval ONOS_CLI_POD := $(shell kubectl -n aether-roc get pods -l name=onos-cli -o name))
 	echo "ONOS CLI pod: ${ONOS_CLI_POD}"
+	@$(eval API_SERVICE := $(shell kubectl -n aether-roc get --no-headers=true services -l app.kubernetes.io/name=aether-roc-api | awk '{print $$1}'))
+	echo "API SERVICE : ${API_SERVICE}"
 	until kubectl -n aether-roc exec ${ONOS_CLI_POD} -- \
-		curl -s -f -L -X PATCH "http://aether-roc-api:8181/aether-roc-api" \
+		curl -s -f -L -X PATCH "http://${API_SERVICE}:8181/aether-roc-api" \
+		--header 'Content-Type: application/json' \
+		--data-raw "$$(cat ${ROC_DEFAULTENT_MODEL})"; do sleep 5; done
+	until kubectl -n aether-roc exec ${ONOS_CLI_POD} -- \
+		curl -s -f -L -X PATCH "http://${API_SERVICE}:8181/aether-roc-api" \
 		--header 'Content-Type: application/json' \
 		--data-raw "$$(cat ${ROC_5G_MODELS})"; do sleep 5; done
 
