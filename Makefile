@@ -11,14 +11,15 @@ RESOURCEDIR	:= $(MAKEDIR)/resources
 WORKSPACE	?= $(HOME)
 VENV		?= $(BUILD)/venv/aiab
 
-4G_CORE_VALUES ?= $(MAKEDIR)/sd-core-4g-values.yaml
-5G_CORE_VALUES ?= $(MAKEDIR)/sd-core-5g-values.yaml
-OAISIM_VALUES  ?= $(MAKEDIR)/oaisim-values.yaml
-ROC_VALUES     ?= $(MAKEDIR)/roc-values.yaml
-ROC_4G_MODELS  ?= $(MAKEDIR)/roc-4g-models.json
-ROC_5G_MODELS  ?= $(MAKEDIR)/roc-5g-models.json
-TEST_APP_VALUES?= $(MAKEDIR)/5g-test-apps-values.yaml
-GET_HELM        = get_helm.sh
+4G_CORE_VALUES       ?= $(MAKEDIR)/sd-core-4g-values.yaml
+5G_CORE_VALUES       ?= $(MAKEDIR)/sd-core-5g-values.yaml
+OAISIM_VALUES        ?= $(MAKEDIR)/oaisim-values.yaml
+ROC_VALUES           ?= $(MAKEDIR)/roc-values.yaml
+ROC_DEFAULTENT_VALUES?= $(MAKEDIR)/roc-defaultent-values.json
+ROC_4G_MODELS        ?= $(MAKEDIR)/roc-4g-models.json
+ROC_5G_MODELS        ?= $(MAKEDIR)/roc-5g-models.json
+TEST_APP_VALUES      ?= $(MAKEDIR)/5g-test-apps-values.yaml
+GET_HELM              = get_helm.sh
 
 KUBESPRAY_VERSION ?= release-2.17
 DOCKER_VERSION    ?= '20.10'
@@ -487,6 +488,10 @@ roc-4g-models: $(M)/roc
 	until kubectl -n aether-roc exec ${ONOS_CLI_POD} -- \
 		curl -s -f -L -X PATCH "http://aether-roc-api:8181/aether-roc-api" \
 		--header 'Content-Type: application/json' \
+		--data-raw "$$(cat ${ROC_DEFAULTENT_VALUES})"; do sleep 5; done
+	until kubectl -n aether-roc exec ${ONOS_CLI_POD} -- \
+		curl -s -f -L -X PATCH "http://aether-roc-api:8181/aether-roc-api" \
+		--header 'Content-Type: application/json' \
 		--data-raw "$$(cat ${ROC_4G_MODELS})"; do sleep 5; done
 
 # Load the ROC 5G models.  Disable loading network slice from SimApp.
@@ -500,6 +505,10 @@ roc-5g-models: $(M)/roc
 	fi
 	$(eval ONOS_CLI_POD := $(shell kubectl -n aether-roc get pods -l name=onos-cli -o name))
 	echo "ONOS CLI pod: ${ONOS_CLI_POD}"
+	until kubectl -n aether-roc exec ${ONOS_CLI_POD} -- \
+		curl -s -f -L -X PATCH "http://aether-roc-api:8181/aether-roc-api" \
+		--header 'Content-Type: application/json' \
+		--data-raw "$$(cat ${ROC_DEFAULTENT_VALUES})"; do sleep 5; done
 	until kubectl -n aether-roc exec ${ONOS_CLI_POD} -- \
 		curl -s -f -L -X PATCH "http://aether-roc-api:8181/aether-roc-api" \
 		--header 'Content-Type: application/json' \
