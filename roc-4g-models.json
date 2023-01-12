@@ -1,5 +1,5 @@
 {
-    "default-target": "defaultent",
+    "default-target": "aiab-enterprise",
     "Updates": {
         "site-2.1.0": [
             {
@@ -33,12 +33,12 @@
                     {
                         "sim-id": "aiab-sim-1",
                         "display-name": "UE 1 Sim",
-                        "imsi": 208010167891201
+                        "imsi": "208010167891201"
                     },
                     {
                         "sim-id": "aiab-sim-2",
                         "display-name": "UE 2 Sim",
-                        "imsi": 208010167891202
+                        "imsi": "208010167891202"
                     }
                 ],
                 "device-group": [
@@ -105,8 +105,8 @@
                         "filter": [],
                         "slice-id": "aiab-vcs",
                         "connectivity-service": "4g",
-                        "sd": 66051,
-                        "sst": 1,
+                        "sd": "66051",
+                        "sst": "1",
                         "upf": "aiab-upf",
                         "mbr": {
                             "uplink": 100000000,
@@ -114,49 +114,7 @@
                         },
                         "priority-traffic-rule": []
                     }
-                ],
-                "additionalProperties": {
-                    "enterprise-id": "aiab-enterprise"
-                }
-            },
-            {
-                "description": "Global Default Site",
-                "display-name": "Global Default Site",
-                "site-id": "defaultent-defaultsite",
-                "imsi-definition": {
-                    "mcc": "000",
-                    "mnc": "00",
-                    "enterprise": 0,
-                    "format": "SSSSSSSSSSSSSSS"
-                },
-                "device-group": [
-                    {
-                        "display-name": "Unknown Inventory",
-                        "device-group-id": "defaultent-defaultsite-default",
-                        "mbr": {
-                            "uplink": 1000000,
-                            "downlink": 1000000
-                        },
-                        "traffic-class": "class-1",
-                        "ip-domain": "defaultent-defaultip"
-                    }
-                ],
-                "ip-domain": [
-                    {
-                        "admin-status": "ENABLE",
-                        "description": "Global Default IP Domain",
-                        "display-name": "Global Default IP Domain",
-                        "dns-primary": "8.8.8.1",
-                        "dns-secondary": "8.8.8.2",
-                        "dnn": "dnnglobal",
-                        "ip-domain-id": "defaultent-defaultip",
-                        "mtu": 57600,
-                        "subnet": "192.168.0.0/24"
-                    }
-                ],
-                "additionalProperties": {
-                    "enterprise-id": "defaultent"
-                }
+                ]
             }
         ],
         "traffic-class-2.1.0": [
@@ -166,29 +124,12 @@
                 "pdb": 300,
                 "arp": 6,
                 "pelr": 6,
-                "qci": 9,
-                "additionalProperties": {
-                    "enterprise-id": "aiab-enterprise"
-                }
-            },
-            {
-                "traffic-class-id": "class-1",
-                "description": "Default traffic-class for defaultent",
-                "display-name": "Class 1",
-                "qci": 10,
-                "arp": 1,
-                "pelr": 10,
-                "pdb": 100,
-                "additionalProperties": {
-                    "enterprise-id": "defaultent"
-                }
+                "qci": 9
             }
         ]
     },
     "Deletes": {},
     "Extensions": {
-        "transaction-strategy-111": 1,
-        "model-version-101": "2.1.x",
-        "model-type-102": "Aether"
+        "transaction-strategy-111": 1
     }
 }
