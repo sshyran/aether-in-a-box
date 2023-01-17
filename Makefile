@@ -21,13 +21,13 @@ ROC_5G_MODELS        ?= $(MAKEDIR)/roc-5g-models.json
 TEST_APP_VALUES      ?= $(MAKEDIR)/5g-test-apps-values.yaml
 GET_HELM              = get_helm.sh
 
-KUBESPRAY_VERSION ?= release-2.17
+KUBESPRAY_VERSION ?= release-2.20
 DOCKER_VERSION    ?= '20.10'
-HELM_VERSION	  ?= v3.6.3
-KUBECTL_VERSION   ?= v1.23.0
+HELM_VERSION	  ?= v3.10.3
+KUBECTL_VERSION   ?= v1.26.0
 
-RKE2_K8S_VERSION  ?= v1.23.4+rke2r1
-K8S_VERSION       ?= v1.20.11
+RKE2_K8S_VERSION  ?= v1.26.0+rke2r2
+K8S_VERSION       ?= v1.26.0
 
 OAISIM_UE_IMAGE ?= andybavier/lte-uesoftmodem:1.1.0-$(shell uname -r)
 ENABLE_ROUTER ?= true
