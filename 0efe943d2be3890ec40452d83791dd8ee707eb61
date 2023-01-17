@@ -16,6 +16,24 @@
       "message": "Do we update aiab chart version ?",
       "revId": "0efe943d2be3890ec40452d83791dd8ee707eb61",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e2d7757_85000731",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000342
+      },
+      "writtenOn": "2023-01-17T18:48:41Z",
+      "side": 1,
+      "message": "thanks for review\nThis fix is just for latest - there is not a branch in there for `aether-2.1` yet because it\u0027s not released",
+      "parentUuid": "3c1101d0_f3a3c7cc",
+      "revId": "0efe943d2be3890ec40452d83791dd8ee707eb61",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
