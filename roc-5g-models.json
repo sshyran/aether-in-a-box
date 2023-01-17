@@ -286,7 +286,7 @@
                         "filter": [],
                         "slice-id": "aiab-vcs",
                         "connectivity-service": "5g",
-                        "sd": "10203",
+                        "sd": "010203",
                         "sst": "1",
                         "upf": "aiab-upf",
                         "mbr": {
