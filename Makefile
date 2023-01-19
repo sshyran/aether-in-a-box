@@ -21,7 +21,7 @@ ROC_5G_MODELS        ?= $(MAKEDIR)/roc-5g-models.json
 TEST_APP_VALUES      ?= $(MAKEDIR)/5g-test-apps-values.yaml
 GET_HELM              = get_helm.sh
 
-KUBESPRAY_VERSION ?= release-2.17.1
+KUBESPRAY_VERSION ?= release-2.17
 DOCKER_VERSION    ?= '20.10'
 HELM_VERSION	  ?= v3.10.3
 KUBECTL_VERSION   ?= v1.23.15
