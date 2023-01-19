@@ -24,9 +24,9 @@ GET_HELM              = get_helm.sh
 KUBESPRAY_VERSION ?= release-2.17
 DOCKER_VERSION    ?= '20.10'
 HELM_VERSION	  ?= v3.10.3
-KUBECTL_VERSION   ?= v1.25.5
+KUBECTL_VERSION   ?= v1.23.15
 
-RKE2_K8S_VERSION  ?= v1.25.5+rke2r1
+RKE2_K8S_VERSION  ?= v1.23.15+rke2r1
 K8S_VERSION       ?= v1.23.0
 
 OAISIM_UE_IMAGE ?= andybavier/lte-uesoftmodem:1.1.0-$(shell uname -r)
