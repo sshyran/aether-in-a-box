@@ -29,7 +29,8 @@ KUBECTL_VERSION   ?= v1.23.15
 RKE2_K8S_VERSION  ?= v1.23.15+rke2r1
 K8S_VERSION       ?= v1.21.6
 
-OAISIM_UE_IMAGE ?= andybavier/lte-uesoftmodem:1.1.0-$(shell uname -r)
+#OAISIM_UE_IMAGE ?= andybavier/lte-uesoftmodem:1.1.0-$(shell uname -r)
+OAISIM_UE_IMAGE ?= omecproject/lte-uesoftmodem:1.1.0-$(shell uname -r)
 ENABLE_ROUTER ?= true
 ENABLE_OAISIM ?= true
 ENABLE_GNBSIM ?= true
