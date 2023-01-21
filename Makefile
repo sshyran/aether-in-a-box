@@ -13,6 +13,7 @@ VENV		?= $(BUILD)/venv/aiab
 
 4G_CORE_VALUES       ?= $(MAKEDIR)/sd-core-4g-values.yaml
 5G_CORE_VALUES       ?= $(MAKEDIR)/sd-core-5g-values.yaml
+5G_UPF2_VALUES       ?= $(MAKEDIR)/upf2-5g-values.yaml
 OAISIM_VALUES        ?= $(MAKEDIR)/oaisim-values.yaml
 ROC_VALUES           ?= $(MAKEDIR)/roc-values.yaml
 ROC_DEFAULTENT_MODEL ?= $(MAKEDIR)/roc-defaultent-model.json
@@ -343,6 +344,17 @@ $(M)/5g-core:
 		--values - \
 		sd-core \
 		$(SD_CORE_CHART)
+	touch $@
+
+# Install second UPF
+5g-upf2: $(M)/5g-upf2
+$(M)/5g-upf2:
+	NODE_IP=${NODE_IP} DATA_IFACE=${DATA_IFACE} RAN_SUBNET=${RAN_SUBNET} envsubst < $(5G_UPF2_VALUES) | \
+	helm upgrade --create-namespace --install --wait $(HELM_GLOBAL_ARGS) \
+		--namespace upf2 \
+		--values - \
+		bess-upf \
+		$(UPF_CHART)
 	touch $@
 
 # UE images includes kernel module, ue_ip.ko
