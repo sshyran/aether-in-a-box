@@ -340,7 +340,7 @@ omec-user-plane:
               profiles: # profile information
               - profileType: register # profile type
                 profileName: profile1 # uniqely identifies a profile within application
-                enable: false # Set true to execute the profile, false otherwise.
+                enable: true # Set true to execute the profile, false otherwise.
                 gnbName: gnb1 # gNB to be used for this profile
                 execInParallel: false #run all subscribers in this profile parallel
                 startImsi: 208930100007487 #First IMSI. Subsequent values will be used if ueCount is mo    re than 1
@@ -371,7 +371,7 @@ omec-user-plane:
                 sequenceNumber: "16f3b3f70fc2"
               - profileType: anrelease
                 profileName: profile3
-                enable: false
+                enable: true
                 execInParallel: false #run all subscribers in this profile parallel
                 gnbName: gnb1
                 startImsi: 208930100007497
@@ -386,7 +386,7 @@ omec-user-plane:
                 sequenceNumber: "16f3b3f70fc2"
               - profileType: uetriggservicereq
                 profileName: profile4
-                enable: false
+                enable: true
                 gnbName: gnb1
                 execInParallel: false #run all subscribers in this profile parallel
                 startImsi: 208930100007497
@@ -401,7 +401,7 @@ omec-user-plane:
                 sequenceNumber: "16f3b3f70fc2"
               - profileType: deregister
                 profileName: profile5
-                enable: false
+                enable: true
                 gnbName: gnb1
                 execInParallel: false #run all subscribers in this profile parallel
                 startImsi: 208930100007497
@@ -416,7 +416,7 @@ omec-user-plane:
                 sequenceNumber: "16f3b3f70fc2"
               - profileType: nwtriggeruedereg # profile type
                 profileName: profile6 # uniqely identifies a profile within application
-                enable: false # Set true to execute the profile, false otherwise.
+                enable: true # Set true to execute the profile, false otherwise.
                 gnbName: gnb1 # gNB to be used for this profile
                 execInParallel: false #run all subscribers in this profile parallel
                 startImsi: 208930100007497 # First IMSI. Subsequent values will be used if ueCount is more than 1
@@ -431,7 +431,7 @@ omec-user-plane:
                 sequenceNumber: "16f3b3f70fc2"
               - profileType: uereqpdusessrelease # profile type
                 profileName: profile7 # uniqely identifies a profile within application
-                enable: false # Set true to execute the profile, false otherwise.
+                enable: true # Set true to execute the profile, false otherwise.
                 gnbName: gnb1 # gNB to be used for this profile
                 execInParallel: false #run all subscribers in this profile parallel
                 startImsi: 208930100007497 # First IMSI. Subsequent values will be used if ueCount is more than 1
