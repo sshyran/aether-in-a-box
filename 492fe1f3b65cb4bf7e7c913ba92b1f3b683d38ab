@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ac99dc9_e031d3a2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2023-03-02T19:33:17Z",
+      "side": 1,
+      "message": "This looks fine. A better solution may be to remove every setting having to do with the subscriber proxy because this never fully worked and probably won\u0027t be developed further.",
+      "revId": "492fe1f3b65cb4bf7e7c913ba92b1f3b683d38ab",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
