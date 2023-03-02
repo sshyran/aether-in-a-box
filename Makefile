@@ -533,7 +533,7 @@ roc-clean:
 	sed -i 's/  syncUrl/  # syncUrl/' $(5G_CORE_VALUES)
 	sed -i 's/  sub-proxy-endpt:/  # sub-proxy-endpt:/' $(5G_CORE_VALUES)
 	sed -i 's/    addr: sub/  #   addr: sub/' $(5G_CORE_VALUES)
-	sed -i 's/    port: 5000/  #   port: 5000/' $(5G_CORE_VALUES)
+	sed -i 's/              port: 5000/            #   port: 5000/' $(5G_CORE_VALUES)
 	kubectl delete namespace aether-roc || true
 	rm -rf $(M)/roc
 	rm -f ${GET_HELM}
