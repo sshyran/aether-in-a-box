@@ -13,12 +13,14 @@ VENV		?= $(BUILD)/venv/aiab
 
 4G_CORE_VALUES       ?= $(MAKEDIR)/sd-core-4g-values.yaml
 5G_CORE_VALUES       ?= $(MAKEDIR)/sd-core-5g-values.yaml
+5G_UPF_VALUES        ?= $(MAKEDIR)/upf-5g-values.yaml
 OAISIM_VALUES        ?= $(MAKEDIR)/oaisim-values.yaml
 ROC_VALUES           ?= $(MAKEDIR)/roc-values.yaml
 ROC_DEFAULTENT_MODEL ?= $(MAKEDIR)/roc-defaultent-model.json
 ROC_4G_MODELS        ?= $(MAKEDIR)/roc-4g-models.json
 ROC_5G_MODELS        ?= $(MAKEDIR)/roc-5g-models.json
 TEST_APP_VALUES      ?= $(MAKEDIR)/5g-test-apps-values.yaml
+UPF_COUNT             = $(MAKEDIR)/upf-count.txt
 GET_HELM              = get_helm.sh
 
 KUBESPRAY_VERSION ?= release-2.17
@@ -75,6 +77,12 @@ endif
 MME_IP  ?=
 
 HELM_GLOBAL_ARGS ?=
+
+ifneq ("$(wildcard $(UPF_COUNT))","")
+  UPF_NUMBER = $(shell cat $(UPF_COUNT))
+else
+  UPF_NUMBER = 0
+endif
 
 # Allow installing local charts or specific versions of published charts.
 # E.g., to install the Aether 1.5 release:
@@ -343,7 +351,31 @@ $(M)/5g-core:
 		--values - \
 		sd-core \
 		$(SD_CORE_CHART)
+	@echo "1" > ${UPF_COUNT}
 	touch $@
+
+# Install additional UPF(s)
+5g-upf:
+	@if [[ $(UPF_NUMBER) -lt 1 ]]; then \
+	      echo "Deploy '5g-core' before adding additional UPF(s)"; \
+				exit 1; \
+	fi
+	NODE_IP=${NODE_IP} DATA_IFACE=${DATA_IFACE} RAN_SUBNET=${RAN_SUBNET} envsubst < $(5G_UPF_VALUES) | \
+	helm upgrade --create-namespace --install --wait $(HELM_GLOBAL_ARGS) \
+		--namespace upf-${UPF_NUMBER} \
+		--values - \
+		bess-upf \
+		$(UPF_CHART)
+	$(eval IP_BEFORE=$(shell echo $$((3+$(UPF_NUMBER)-1))))
+	$(eval IP_AFTER=$(shell echo $$((1+$(IP_BEFORE)))))
+	$(eval IP_UE_BEFORE=$(shell echo $$((250+1-$(UPF_NUMBER)))))
+	$(eval IP_UE_AFTER=$(shell echo $$(($(IP_UE_BEFORE)-1))))
+	@sed -i 's/ip: 192.168.252.$(IP_BEFORE)/ip: 192.168.252.$(IP_AFTER)/' $(5G_UPF_VALUES)
+	@sed -i 's/ip: 192.168.250.$(IP_BEFORE)/ip: 192.168.250.$(IP_AFTER)/' $(5G_UPF_VALUES)
+	@sed -i 's/ue_ip_pool: "172.$(IP_UE_BEFORE).0.0/ue_ip_pool: "172.$(IP_UE_AFTER).0.0/' $(5G_UPF_VALUES)
+	kubectl -n default exec -ti router -- ip route add 172.$(IP_UE_AFTER).0.0/16 via 192.168.250.$(IP_AFTER)
+	$(eval UPF_NUMBER=$(shell echo $$(($(UPF_NUMBER)+1))))
+	@echo $(UPF_NUMBER) > ${UPF_COUNT}
 
 # UE images includes kernel module, ue_ip.ko
 # which should be built in the exactly same kernel version of the host machine
@@ -582,8 +614,31 @@ monitoring-clean:
 	kubectl delete namespace cattle-dashboards cattle-monitoring-system || true
 	rm $(M)/monitoring
 
-omec-clean:
+upf-clean:
+	$(eval TO_REMOVE=$(shell echo $$(($(UPF_NUMBER)-1))))
+	@echo Removing $(TO_REMOVE) additional UPFs
+	@number=$(UPF_NUMBER) ; \
+	while [[ $$number -gt 1 ]] ; do \
+					((number = number - 1)) ; \
+					((addr = 250 - number)) ; \
+					helm delete -n upf-$$number $$(helm -n upf-$$number ls -qa) || true ; \
+					echo "Wait for all pods to terminate..." ; \
+					kubectl wait -n upf-$$number --for=delete --all=true -l app!=ue pod --timeout=180s || true ; \
+					kubectl delete namespace upf-$$number || true ; \
+					kubectl -n default exec -ti router -- ip route delete 172.$$addr.0.0/16 || true ; \
+					echo "" ; \
+	done
+	$(eval IP_BEFORE=$(shell echo $$((3+$(UPF_NUMBER)-1))))
+	$(eval IP_UE_BEFORE=$(shell echo $$((250+1-$(UPF_NUMBER)))))
+	@sed -i 's/ip: 192.168.252.$(IP_BEFORE)/ip: 192.168.252.4/' $(5G_UPF_VALUES)
+	@sed -i 's/ip: 192.168.250.$(IP_BEFORE)/ip: 192.168.250.4/' $(5G_UPF_VALUES)
+	@sed -i 's/ue_ip_pool: "172.$(IP_UE_BEFORE).0.0/ue_ip_pool: "172.249.0.0/' $(5G_UPF_VALUES)
+	@echo "1" > ${UPF_COUNT}
+
+omec-clean: upf-clean
 	helm delete -n omec $$(helm -n omec ls -qa) || true
+	kubectl delete namespace omec || true
+	@rm -f $(UPF_COUNT)
 	@echo ""
 	@echo "Wait for all pods to terminate..."
 	kubectl wait -n omec --for=delete --all=true -l app!=ue pod --timeout=180s || true

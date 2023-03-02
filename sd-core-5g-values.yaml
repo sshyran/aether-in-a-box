@@ -254,8 +254,10 @@ omec-user-plane:
         subnet: ${RAN_SUBNET} #this is your gNB network
       access:
         iface: ${DATA_IFACE}
+        # ip: 192.168.252.3/24   # this is the default in the Helm chart
       core:
         iface: ${DATA_IFACE}
+        # ip: 192.168.250.3/24   # this is the default in the Helm chart
       cfgFiles:
         upf.json:
           mode: af_packet  #this mode means no dpdk
@@ -282,6 +284,9 @@ omec-user-plane:
     #  gnbsim: 5gc-gnbsim:0.0.1-dev-local5
   config:
     gnbsim:
+      networkTopo:
+        - upfAddr: "192.168.252.0/24"
+          upfGw: "192.168.251.1"
       singleInterface: false #default multiInterface. Works well for AIAB
       execInParallel: false #run all profiles in parallel
       goProfile:
