@@ -33,6 +33,23 @@
       "message": "How can the Jenkins job be re-triggered? I do not why it failed here because, as shown below, the 5g-test passes with no problem in my local setup\n\n$ CHARTS\u003dlatest make 5g-test\n...\n...\n2023-03-02T20:46:03Z [INFO][GNBSIM][ProfUeCtx][imsi-208930100007491] imsiStateMachine received result\n2023-03-02T20:46:03Z [INFO][GNBSIM][ProfUeCtx][imsi-208930100007491] Procedure Result: PASS, imsi: imsi-208930100007491\n2023-03-02T20:46:03Z [INFO][GNBSIM][Profile][profile2] No more procedures left\n2023-03-02T20:46:03Z [INFO][GNBSIM][ProfUeCtx][imsi-208930100007491] imsiStateMachine no more proc to execute\n2023-03-02T20:46:03Z [INFO][GNBSIM][ProfUeCtx][imsi-208930100007491] imsiStateMachine ended\n2023-03-02T20:46:03Z [INFO][GNBSIM][Profile][profile2] ExecuteProfile ended\n2023-03-02T20:46:03Z [INFO][GNBSIM][Summary] Profile Name: profile2 , Profile Type: pdusessest\n2023-03-02T20:46:03Z [INFO][GNBSIM][Summary] Ue\u0027s Passed: 5 , Ue\u0027s Failed: 0\n2023-03-02T20:46:03Z [INFO][GNBSIM][Summary] Profile Status: PASS\n",
       "revId": "0bf94c284e2634a17a309c08e7701bd2b05d1b98",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9198da0e_7054c452",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000941
+      },
+      "writtenOn": "2023-03-02T22:57:54Z",
+      "side": 1,
+      "message": "retest this please!",
+      "revId": "0bf94c284e2634a17a309c08e7701bd2b05d1b98",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
