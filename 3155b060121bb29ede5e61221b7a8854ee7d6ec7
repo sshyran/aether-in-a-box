@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f18fc381_341f09d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000941
+      },
+      "writtenOn": "2023-03-02T01:49:02Z",
+      "side": 1,
+      "message": "This PR is a minor change when `roc-clean` is executed such that the entire AiaB repo properly gets back to its original state. Otherwise, there is an extra edit in the `sd-core-5g-values.yaml` when `roc-clean` is executed due to blank spaces",
+      "revId": "3155b060121bb29ede5e61221b7a8854ee7d6ec7",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
