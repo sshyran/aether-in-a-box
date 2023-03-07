@@ -111,6 +111,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9a6c9dc8_7bda6b25",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1000941
+      },
+      "writtenOn": "2023-03-07T18:59:30Z",
+      "side": 1,
+      "message": "Sure, where would you think is the best place to add these targets (aiab.rst or aiabhw5g.rst)? Or should I create a new rst file and reference it from the aiab.rst and/or aiabhw5g.rst?",
+      "parentUuid": "57af0abd_1f05228b",
+      "range": {
+        "startLine": 357,
+        "startChar": 0,
+        "endLine": 357,
+        "endChar": 27
+      },
+      "revId": "0bf94c284e2634a17a309c08e7701bd2b05d1b98",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0358cfc2_beea56d2",
         "filename": "Makefile",
         "patchSetId": 1
