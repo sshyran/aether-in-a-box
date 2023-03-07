@@ -120,7 +120,7 @@ omec-sub-provision:
               key: "5122250214c33e723a5dd523fc145fc0"
               sequenceNumber: "16f3b3f70fc2"
             - ueId-start: "208930100007501"
-              ueId-end: "208930100007599"
+              ueId-end: "208930100007519"
               plmnId: "20893"
               opc: "981d464c7c52eb6e5036234984ad0bcf"
               op: ""
@@ -129,7 +129,7 @@ omec-sub-provision:
 
             # Configure More than one device Group as per your need
             device-groups:
-            - name:  "5g-gnbsim-user-group1"
+            - name:  "gnbsim-user-group1"
               imsis:
                 - "208930100007487"
                 - "208930100007488"
@@ -164,7 +164,7 @@ omec-sub-provision:
               site-info: "aiab"
             #configure only 1 device group if you want UPF to allocate UE address.
             #if smf is allocating IP address then having 2 separate pools is not a problem.
-            - name:  "5g-gnbsim-user-group2" # second device Group
+            - name:  "gnbsim-user-group2" # second device Group
               imsis:
                 - "208930100007501"
                 - "208930100007502"
@@ -199,8 +199,8 @@ omec-sub-provision:
                 sd: "010203"
                 sst: 1
               site-device-group:
-              - "5g-gnbsim-user-group1"  #all UEs mentioned in this device group are assigned to this slice
-              - "5g-gnbsim-user-group2"
+              - "gnbsim-user-group1"  #all UEs mentioned in this device group are assigned to this slice
+              - "gnbsim-user-group2"
               # below list of applicaiton filter controls what user can access.
               # by default user can access all networks.
               application-filtering-rules:
