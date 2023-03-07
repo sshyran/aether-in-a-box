@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "de4f29df_86dedc1c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000941
+      },
+      "writtenOn": "2023-03-07T22:57:15Z",
+      "side": 1,
+      "message": "This PR includes the following:\n- It adds a Python script to do the sync-up (read YAML and write JSON)\n- It does an initial sync-up of the roc-5g-values.json file\n- Some minor modifications were needed in the sd-core-5g-values (e.g., change name of device group because ROC does not accept names that start with numbers such as start with 5g)\n",
+      "revId": "fd373c92b13ac0a74b4fafcab5f5d242652ccca9",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
