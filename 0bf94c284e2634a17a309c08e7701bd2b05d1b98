@@ -84,6 +84,52 @@
       "message": "recheck",
       "revId": "0bf94c284e2634a17a309c08e7701bd2b05d1b98",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57af0abd_1f05228b",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2023-03-07T16:00:09Z",
+      "side": 1,
+      "message": "Can you add documentation on how to use these new Makefile targets?",
+      "range": {
+        "startLine": 357,
+        "startChar": 0,
+        "endLine": 357,
+        "endChar": 27
+      },
+      "revId": "0bf94c284e2634a17a309c08e7701bd2b05d1b98",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0358cfc2_beea56d2",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2023-03-07T16:00:09Z",
+      "side": 1,
+      "message": "Can we instead combine with the \"envsubst\" above?  I mean, calculate the values in the config based on UPF_NUMBER and pass them in via \"envsubst\".  That would seem to be a bit less fragile than using `sed` to modify the file.",
+      "range": {
+        "startLine": 369,
+        "startChar": 0,
+        "endLine": 375,
+        "endChar": 103
+      },
+      "revId": "0bf94c284e2634a17a309c08e7701bd2b05d1b98",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
