@@ -544,6 +544,7 @@ roc-5g-models: $(M)/roc
             --header 'Content-Type: application/json' \
             --data-raw "$$(cat ${ROC_DEFAULTENT_MODEL})"; do sleep 5; done; \
 	fi
+	python3 $(SCRIPTDIR)/sdCore_to_roc_values.py
 	until kubectl -n aether-roc exec ${ONOS_CLI_POD} -- \
 		curl -s -f -L -X PATCH "http://${API_SERVICE}:8181/aether-roc-api" \
 		--header 'Content-Type: application/json' \
@@ -561,6 +562,7 @@ roc-clean:
 	sed -i 's/  sub-proxy-endpt:/  # sub-proxy-endpt:/' $(5G_CORE_VALUES)
 	sed -i 's/    addr: sub/  #   addr: sub/' $(5G_CORE_VALUES)
 	sed -i 's/              port: 5000/            #   port: 5000/' $(5G_CORE_VALUES)
+	git checkout -- $(ROC_5G_MODELS)
 	kubectl delete namespace aether-roc || true
 	rm -rf $(M)/roc
 	rm -f ${GET_HELM}
