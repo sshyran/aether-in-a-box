@@ -154,6 +154,30 @@
       },
       "revId": "0bf94c284e2634a17a309c08e7701bd2b05d1b98",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3937b25_239ed0ba",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1000941
+      },
+      "writtenOn": "2023-03-07T19:04:53Z",
+      "side": 1,
+      "message": "Done. Thanks for the suggestion. In fact, it is way much better than using `sed`. Please take a look at the changes",
+      "parentUuid": "0358cfc2_beea56d2",
+      "range": {
+        "startLine": 369,
+        "startChar": 0,
+        "endLine": 375,
+        "endChar": 103
+      },
+      "revId": "0bf94c284e2634a17a309c08e7701bd2b05d1b98",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
