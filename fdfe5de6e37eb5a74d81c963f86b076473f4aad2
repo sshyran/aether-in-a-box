@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "93ea61c3_3687e52c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000941
+      },
+      "writtenOn": "2023-03-08T22:56:24Z",
+      "side": 1,
+      "message": "Slightly modified the python script to handle cases when the MCC/IMSI starts with \"0\" or \"00\"",
+      "revId": "fdfe5de6e37eb5a74d81c963f86b076473f4aad2",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
