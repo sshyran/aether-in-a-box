@@ -16,6 +16,23 @@
       "message": "Slightly modified the python script to handle cases when the MCC/IMSI starts with \"0\" or \"00\"",
       "revId": "fdfe5de6e37eb5a74d81c963f86b076473f4aad2",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "443ba19d_ac87b70c",
+        "filename": "Makefile",
+        "patchSetId": 5
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2023-03-22T17:47:11Z",
+      "side": 1,
+      "message": "It\u0027s nice to have this script, but I\u0027m not sure if we want to automatically run it here.  It seems like it could overwrite changes to the ROC models that were intentionally made by the user.  I\u0027d prefer that we just document the script and let the user run it if desired.",
+      "revId": "fdfe5de6e37eb5a74d81c963f86b076473f4aad2",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
