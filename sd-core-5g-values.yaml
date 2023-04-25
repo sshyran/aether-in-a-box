@@ -308,6 +308,10 @@ omec-user-plane:
                  defaultAmf:
                    hostName: amf # Host name of AMF
                    port: 38412 # AMF port
+               gnb2:
+                 defaultAmf:
+                   hostName: amf # Host name of AMF
+                   port: 38412 # AMF port
               customProfiles:
                 customProfiles1:
                   profileType: custom # profile type
