@@ -69,6 +69,24 @@
       "parentUuid": "1e4f14e3_6b4a1988",
       "revId": "fdfe5de6e37eb5a74d81c963f86b076473f4aad2",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "683445cf_bfed4419",
+        "filename": "Makefile",
+        "patchSetId": 5
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2023-04-26T16:23:27Z",
+      "side": 1,
+      "message": "Agreed, that sounds clearer to me",
+      "parentUuid": "1e4f14e3_6b4a1988",
+      "revId": "fdfe5de6e37eb5a74d81c963f86b076473f4aad2",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
