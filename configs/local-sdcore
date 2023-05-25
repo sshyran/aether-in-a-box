@@ -8,5 +8,5 @@ SD_CORE_CHART            := $(WORKSPACE)/cord/sdcore-helm-charts/sdcore-helm-cha
 
 # Support testing aether-roc-umbrella chart
 AETHER_ROC_UMBRELLA_CHART := $(WORKSPACE)/cord/roc-helm-charts/aether-roc-umbrella
-ATOMIX_RUNTIME_CHART      := atomix/atomix-runtime
+ATOMIX_CHART              := atomix/atomix
 ONOS_OPERATOR_CHART       := onosproject/onos-operator

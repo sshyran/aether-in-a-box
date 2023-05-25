@@ -486,8 +486,8 @@ $(M)/roc: $(M)/helm-ready
 		helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 			--namespace kube-system \
 			--values $(ROC_VALUES) \
-			atomix-runtime \
-			$(ATOMIX_RUNTIME_CHART); \
+			atomix \
+			$(ATOMIX_CHART); \
 	fi
 	helm upgrade --install --wait $(HELM_GLOBAL_ARGS) \
 		--namespace kube-system \
