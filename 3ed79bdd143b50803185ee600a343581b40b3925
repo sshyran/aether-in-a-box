@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ecb2090_d7b3ce90",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000947
+      },
+      "writtenOn": "2023-05-25T17:27:09Z",
+      "side": 1,
+      "message": "Looks consistent and makes sense.   Is there doc somewhere else or within dev conversations describing why the two charts were removed?    Were they consolidated, optimized, or simply no longer useful?",
+      "revId": "3ed79bdd143b50803185ee600a343581b40b3925",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
