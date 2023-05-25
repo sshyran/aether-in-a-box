@@ -33,6 +33,24 @@
       "message": "Changes looks good",
       "revId": "3ed79bdd143b50803185ee600a343581b40b3925",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9bf8b91_48d89cdb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000342
+      },
+      "writtenOn": "2023-05-25T18:03:42Z",
+      "side": 1,
+      "message": "did you mean in configs/latest? I just removed 2 unused variables - the charts are no longer in use in latest",
+      "parentUuid": "8ecb2090_d7b3ce90",
+      "revId": "3ed79bdd143b50803185ee600a343581b40b3925",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
