@@ -51,6 +51,23 @@
       "parentUuid": "8ecb2090_d7b3ce90",
       "revId": "3ed79bdd143b50803185ee600a343581b40b3925",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09de4d29_ca637f9b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000342
+      },
+      "writtenOn": "2023-05-25T18:06:05Z",
+      "side": 1,
+      "message": "@daf the reference doc about these atomix changes is at https://docs.aetherproject.org/master/developer/roc.html#installing-prerequisites",
+      "revId": "3ed79bdd143b50803185ee600a343581b40b3925",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
