@@ -33,6 +33,24 @@
       "message": "Probably need a bit of generality, which if I have the right\nunderstanding, means first installing iscsi tooling (since we\nassume a clean Ubuntu install).\n\nsudo systemctl enable iscsid.service\nFailed to enable unit: Unit file iscsid.service does not exist.",
       "revId": "665bc929880380f85a8e7d60df8904bbd9f7d9b8",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4d05d89_c0e062a3",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1000009
+      },
+      "writtenOn": "2023-06-02T23:09:26Z",
+      "side": 1,
+      "message": "Comment removed by: Larry Peterson; Reason: Unnecessary",
+      "parentUuid": "948f118f_130d3820",
+      "revId": "665bc929880380f85a8e7d60df8904bbd9f7d9b8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
