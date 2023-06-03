@@ -51,6 +51,24 @@
       "parentUuid": "948f118f_130d3820",
       "revId": "665bc929880380f85a8e7d60df8904bbd9f7d9b8",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d4c8db1_3b71c382",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1000009
+      },
+      "writtenOn": "2023-06-03T14:34:45Z",
+      "side": 1,
+      "message": "I think adding the following to the initial-setup target fixes the \"clean Ubuntu\" problem:\n\nsystemctl list-units --full -all | grep \"iscsid.service\" || sudo apt install open-iscsi",
+      "parentUuid": "d4d05d89_c0e062a3",
+      "revId": "665bc929880380f85a8e7d60df8904bbd9f7d9b8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
