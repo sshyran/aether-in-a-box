@@ -30,6 +30,7 @@ KUBECTL_VERSION   ?= v1.23.15
 
 RKE2_K8S_VERSION  ?= v1.23.15+rke2r1
 K8S_VERSION       ?= v1.21.6
+LPP_VERSION       ?= v0.0.24
 
 OAISIM_UE_IMAGE ?= andybavier/lte-uesoftmodem:1.1.0-$(shell uname -r)
 ENABLE_ROUTER ?= true
@@ -267,7 +268,15 @@ $(M)/k8s-ready: | $(M)/setup
 	sudo chown -R $(shell id -u):$(shell id -g) $(HOME)/.kube
 	touch $@
 
-$(M)/helm-ready: | $(M)/k8s-ready
+$(M)/storage-ready: | $(M)/setup
+	@$(eval STORAGE_CLASS := $(shell kubectl get storageclass -o name))
+	@echo "STORAGE_CLASS: ${STORAGE_CLASS}"
+	if [ "$(STORAGE_CLASS)" == "" ]; then \
+		kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/$(LPP_VERSION)/deploy/local-path-storage.yaml --wait=true; \
+		kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'; \
+	fi
+
++$(M)/helm-ready: | $(M)/k8s-ready $(M)/storage-ready
 	curl -fsSL -o ${GET_HELM} https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 	chmod 700 ${GET_HELM}
 	sudo DESIRED_VERSION=$(HELM_VERSION) ./${GET_HELM}
