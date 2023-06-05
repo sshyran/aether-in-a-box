@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91215f30_afd56085",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000009
+      },
+      "writtenOn": "2023-06-05T22:11:43Z",
+      "side": 1,
+      "message": "Much simpler!\n\nDoes this work equally well for 2.1.35 (and earlier), or will it need to be conditional on 2.1.36?",
+      "revId": "bebbbd33934d95ffcfc73999c4b65806f89a027c",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
