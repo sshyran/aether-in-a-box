@@ -16,6 +16,24 @@
       "message": "Much simpler!\n\nDoes this work equally well for 2.1.35 (and earlier), or will it need to be conditional on 2.1.36?",
       "revId": "bebbbd33934d95ffcfc73999c4b65806f89a027c",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f56e1dfd_763f6f07",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000342
+      },
+      "writtenOn": "2023-06-06T08:11:48Z",
+      "side": 1,
+      "message": "The way AiaB is set up there is no way to go to earlier 2.1 releases when a new one is added. To install earlier ones would require a manual task (ie install older atomix)\n\nHaving said that, I think this local-path-provisioner should not cause any problems with earlier 2.1 versions if you were to add it manually",
+      "parentUuid": "91215f30_afd56085",
+      "revId": "bebbbd33934d95ffcfc73999c4b65806f89a027c",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
