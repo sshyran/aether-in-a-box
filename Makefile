@@ -99,7 +99,7 @@ os_vendor	:= $(shell lsb_release -i -s)
 os_release	:= $(shell lsb_release -r -s)
 USER		:= $(shell whoami)
 
-.PHONY: 4g-core 5g-core oaisim test reset-test reset-ue reset-5g-test node-prep clean
+.PHONY: 4g-core 5g-core oaisim test reset-test reset-ue reset-5g-test node-prep sgx-node-config clean
 
 $(M):
 	mkdir -p $(M)
@@ -710,6 +710,10 @@ dbtestapp:
 		--values $(TEST_APP_VALUES) \
 		$(5G_TEST_APPS_CHART)
 	@echo "Finished to dbtestapp"
+
+sgx-node-config:
+        @echo "Configuring SGX on host..."
+        python3 $(SCRIPTDIR)/configure_sgx.py
 
 clean-systemd:
 	cd /etc/systemd/network && sudo rm -f 10-aiab* 20-aiab* */macvlan.conf
